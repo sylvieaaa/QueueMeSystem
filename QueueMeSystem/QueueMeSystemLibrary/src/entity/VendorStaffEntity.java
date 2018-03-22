@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import util.enumeration.EmployeeAccessRightEnum;
+import util.security.CryptographicHelper;
 
 /**
  *
@@ -33,19 +34,24 @@ public class VendorStaffEntity implements Serializable {
     private EmployeeAccessRightEnum accessRightEnum;
     @Column(unique = true)
     private String username;
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String password;
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
+    private String salt;
     @ManyToOne
     private VendorEntity vendorEntity;
 
     public VendorStaffEntity() {
+        this.salt = CryptographicHelper.getInstance().generateRandomString(32);
     }
 
     public VendorStaffEntity(String firstName, String lastName, EmployeeAccessRightEnum accessRightEnum, String username, String password) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.accessRightEnum = accessRightEnum;
         this.username = username;
-        this.password = password;
+        this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
     }
 
     public Long getVendorStaffId() {
@@ -85,7 +91,19 @@ public class VendorStaffEntity implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if(password != null) {
+            this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
+        } else {
+            this.password = null;
+        }
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     @Override

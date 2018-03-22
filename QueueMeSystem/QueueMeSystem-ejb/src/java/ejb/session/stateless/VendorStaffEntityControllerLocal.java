@@ -5,9 +5,11 @@
  */
 package ejb.session.stateless;
 
+import entity.VendorEntity;
 import entity.VendorStaffEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.VendorStaffNotFoundException;
 
 /**
@@ -26,5 +28,9 @@ public interface VendorStaffEntityControllerLocal {
     public VendorStaffEntity retrieveVendorStaffById(Long vendorStaffId) throws VendorStaffNotFoundException;
 
     public VendorStaffEntity createVendorStaff(VendorStaffEntity vendorStaffEntity);
+
+    public VendorStaffEntity retrieveVendorStaffByUsername(String username) throws VendorStaffNotFoundException;
+
+    public VendorStaffEntity vendorStaffLogin(String username, String password) throws InvalidLoginCredentialException;
     
 }

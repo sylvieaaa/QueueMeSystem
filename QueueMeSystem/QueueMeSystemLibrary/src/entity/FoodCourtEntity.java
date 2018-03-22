@@ -44,9 +44,6 @@ public class FoodCourtEntity implements Serializable {
     
     @OneToMany(mappedBy = "foodCourtEntity")
     private List<VendorEntity> vendorEntities;
-    @ManyToOne
-    @JoinColumn(nullable = true)
-    private AdminEntity adminEntity;
 
     public FoodCourtEntity() {
         this.vendorEntities = new ArrayList<>();
@@ -178,12 +175,4 @@ public class FoodCourtEntity implements Serializable {
         this.vendorEntities = vendorEntities;
     }
 
-    public AdminEntity getAdminEntity() {
-        return adminEntity;
-    }
-
-    public void setAdminEntity(AdminEntity adminEntity) {
-        this.adminEntity = adminEntity;
-    }
-    
 }

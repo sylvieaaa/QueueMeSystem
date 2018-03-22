@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet  library="css" name="default.css"/>
+        <h:outputStylesheet library="css" name="font-awesome/font-awesome.css"/>
+        <title>Queue Me</title>
+
+    </h:head>
+
+    <h:body>
+
+        <p:layout fullPage="true">
+            <p:layoutUnit position="north" size="100">
+
+                <h:form>
+                    <p:menubar>
+                        <p:menuitem><h:link outcome="/index.xhmtl"><p:graphicImage value="/images/logo.png" height="75px" width="75px" style="margin-left: 50px; float: left"/></h:link></p:menuitem>
+                        <p:menuitem value="Home" url="index.xhtml" icon="fa fa-home fa-3x" />
+                        <p:menuitem value="About" url="#" icon="ui-icon-info"/>
+                        <f:facet name="login"><ezcomp:LoginComponent /></f:facet>
+                    </p:menubar>
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <ui:insert name="content">Content</ui:insert>
+            </p:layoutUnit>
+            <p:layoutUnit position="south">
+                <h6>&copy; 2018 Queue Me. All Rights Reserved.</h6>
+            </p:layoutUnit>
+        </p:layout>
+
+    </h:body>
+
+</html>

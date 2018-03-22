@@ -16,5 +16,5 @@ import javax.ejb.Local;
 public interface VendorEntityControllerLocal {
 
     public VendorEntity createVendorEntity(VendorEntity vendorEntity);
-    
+
 }
