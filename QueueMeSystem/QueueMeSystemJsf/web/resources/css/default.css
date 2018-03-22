@@ -32,3 +32,12 @@ a:link:hover, a:visited:hover  {
     background-color: #D3D3D3;
 }
 
+.ui-menuitem-text{
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 6px;
+}
+.ui-icon {
+    width: 30px;
+    height: 30px
+}
