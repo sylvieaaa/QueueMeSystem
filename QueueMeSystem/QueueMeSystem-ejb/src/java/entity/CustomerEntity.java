@@ -6,13 +6,9 @@
 package entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
@@ -20,20 +16,15 @@ import javax.persistence.OneToMany;
  * @author User
  */
 @Entity
-public class CustomerEntity implements Serializable {
+public class CustomerEntity extends BusinessEntity implements Serializable{
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long customerId;
+
     private String firstName;
     private String lastName;
     private String contactNumber;
     private String address;
-    private BigDecimal creditBalance;
-    private String emailAddress;
-    private String password;
-    
+
     @OneToMany(mappedBy = "customerEntity")
     private List<CreditCardEntity> creditCardEntities;
 
@@ -47,33 +38,21 @@ public class CustomerEntity implements Serializable {
     private List<ReviewEntity> reviewEntities;
     
     public CustomerEntity() {
+        super();
         this.creditCardEntities = new ArrayList<>();
         this.saleTransactionEntities = new ArrayList<>();
         this.orderEntities = new ArrayList<>();
         this.reviewEntities = new ArrayList<>();
     }
 
-    public CustomerEntity(Long customerId, String firstName, String lastName, String contactNumber, String address, BigDecimal creditBalance, String emailAddress, String password) {
-        this();
-        this.customerId = customerId;
+    public CustomerEntity(String firstName, String lastName, String contactNumber, String address, String emailAddress, String password) {
+        super();
         this.firstName = firstName;
         this.lastName = lastName;
         this.contactNumber = contactNumber;
         this.address = address;
-        this.creditBalance = creditBalance;
-        this.emailAddress = emailAddress;
-        this.password = password;
-    }
-
-    public CustomerEntity(String firstName, String lastName, String contactNumber, String address, BigDecimal creditBalance, String emailAddress, String password) {
-        this();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.contactNumber = contactNumber;
-        this.address = address;
-        this.creditBalance = creditBalance;
-        this.emailAddress = emailAddress;
-        this.password = password;
+        super.setUsername(emailAddress);
+        super.setPassword(password);
     }
 
     public String getContactNumber() {
@@ -90,38 +69,6 @@ public class CustomerEntity implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public BigDecimal getCreditBalance() {
-        return creditBalance;
-    }
-
-    public void setCreditBalance(BigDecimal creditBalance) {
-        this.creditBalance = creditBalance;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
     }
 
     public String getFirstName() {
@@ -143,7 +90,7 @@ public class CustomerEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (customerId != null ? customerId.hashCode() : 0);
+        hash += (this.getBusinessId() != null ? this.getBusinessId().hashCode() : 0);
         return hash;
     }
 
@@ -154,7 +101,7 @@ public class CustomerEntity implements Serializable {
             return false;
         }
         CustomerEntity other = (CustomerEntity) object;
-        if ((this.customerId == null && other.customerId != null) || (this.customerId != null && !this.customerId.equals(other.customerId))) {
+        if ((this.getBusinessId() == null && other.getBusinessId() != null) || (this.getBusinessId() != null && !this.getBusinessId().equals(other.getBusinessId()))) {
             return false;
         }
         return true;
@@ -162,7 +109,7 @@ public class CustomerEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.CustomerEntity[ id=" + customerId + " ]";
+        return "entity.CustomerEntity[ id=" + this.getBusinessId() + " ]";
     }
 
     public List<CreditCardEntity> getCreditCardEntities() {

@@ -11,11 +11,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
@@ -24,12 +19,9 @@ import javax.persistence.Temporal;
  * @author User
  */
 @Entity
-public class FoodCourtEntity implements Serializable {
+public class FoodCourtEntity extends BusinessEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long foodCourtId;
     private String name;
     private String description;
     private String address;
@@ -39,13 +31,12 @@ public class FoodCourtEntity implements Serializable {
     private Calendar startTime;
     @Temporal(javax.persistence.TemporalType.TIME)
     private Calendar endTime;
-    private String username;
-    private String password;
     
     @OneToMany(mappedBy = "foodCourtEntity")
     private List<VendorEntity> vendorEntities;
 
     public FoodCourtEntity() {
+        super();
         this.vendorEntities = new ArrayList<>();
     }
 
@@ -58,16 +49,8 @@ public class FoodCourtEntity implements Serializable {
         this.ratings = ratings;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.username = username;
-        this.password = password;
-    }
-
-    public Long getFoodCourtId() {
-        return foodCourtId;
-    }
-
-    public void setFoodCourtId(Long foodCourtId) {
-        this.foodCourtId = foodCourtId;
+        super.setUsername(username);
+        super.setPassword(password);
     }
 
     public String getName() {
@@ -121,7 +104,7 @@ public class FoodCourtEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (foodCourtId != null ? foodCourtId.hashCode() : 0);
+        hash += (this.getBusinessId() != null ? this.getBusinessId().hashCode() : 0);
         return hash;
     }
 
@@ -132,7 +115,7 @@ public class FoodCourtEntity implements Serializable {
             return false;
         }
         FoodCourtEntity other = (FoodCourtEntity) object;
-        if ((this.foodCourtId == null && other.foodCourtId != null) || (this.foodCourtId != null && !this.foodCourtId.equals(other.foodCourtId))) {
+        if ((this.getBusinessId() == null && other.getBusinessId() != null) || (this.getBusinessId() != null && !this.getBusinessId().equals(other.getBusinessId()))) {
             return false;
         }
         return true;
@@ -140,7 +123,7 @@ public class FoodCourtEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.FoodCourtEntity[ id=" + foodCourtId + " ]";
+        return "entity.FoodCourtEntity[ id=" + getBusinessId() + " ]";
     }
 
     public String getPostalCode() {
@@ -149,22 +132,6 @@ public class FoodCourtEntity implements Serializable {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public List<VendorEntity> getVendorEntities() {

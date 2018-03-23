@@ -6,49 +6,35 @@
 package entity;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import util.security.CryptographicHelper;
 
 /**
  *
  * @author User
  */
 @Entity
-public class AdminEntity implements Serializable {
+public class AdminEntity extends BusinessEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long adminId;
     private String firstName;
     private String lastName;
-    private String username;
-    @Column(columnDefinition = "CHAR(32) NOT NULL")
-    private String password;
-    @Column(columnDefinition = "CHAR(32) NOT NULL")
-    private String salt;
-    
 
     public AdminEntity() {
-        this.salt = CryptographicHelper.getInstance().generateRandomString(32);
+        super();
     }
 
     public AdminEntity(String firstName, String lastName, String username, String password) {
-        this();
+        super();
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = username;
-        this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
+        super.setUsername(username);
+        super.setPassword(password);
     }
     
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (adminId != null ? adminId.hashCode() : 0);
+        hash += (this.getBusinessId() != null ? this.getBusinessId().hashCode() : 0);
         return hash;
     }
 
@@ -59,7 +45,7 @@ public class AdminEntity implements Serializable {
             return false;
         }
         AdminEntity other = (AdminEntity) object;
-        if ((this.adminId == null && other.adminId != null) || (this.adminId != null && !this.adminId.equals(other.adminId))) {
+        if ((this.getBusinessId() == null && other.getBusinessId() != null) || (this.getBusinessId() != null && !this.getBusinessId().equals(other.getBusinessId()))) {
             return false;
         }
         return true;
@@ -67,17 +53,9 @@ public class AdminEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.AdminEntity[ id=" + adminId + " ]";
+        return "entity.AdminEntity[ id=" + getBusinessId() + " ]";
     }
     
-    public Long getAdminId() {
-        return adminId;
-    }
-
-    public void setAdminId(Long adminId) {
-        this.adminId = adminId;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -92,34 +70,6 @@ public class AdminEntity implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        if(password != null) {
-            this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
-        } else {
-            this.password = null;
-        }
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
 }

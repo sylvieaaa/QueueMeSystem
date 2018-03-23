@@ -6,15 +6,15 @@
 package ejb.session.singleton;
 
 import ejb.session.stateless.AdminEntityControllerLocal;
+import ejb.session.stateless.CustomerEntityControllerLocal;
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
 import ejb.session.stateless.MenuItemEntityControllerLocal;
 import ejb.session.stateless.VendorEntityControllerLocal;
-import ejb.session.stateless.VendorStaffEntityControllerLocal;
 import entity.AdminEntity;
+import entity.CustomerEntity;
 import entity.FoodCourtEntity;
 import entity.MenuItemEntity;
 import entity.VendorEntity;
-import entity.VendorStaffEntity;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import javax.annotation.PostConstruct;
@@ -33,8 +33,8 @@ import util.exception.AdminNotFoundException;
 @Startup
 public class DataInitializationSessionBean {  
 
-    @EJB(name = "VendorStaffEntityControllerLocal")
-    private VendorStaffEntityControllerLocal vendorStaffEntityControllerLocal;
+    @EJB
+    private CustomerEntityControllerLocal customerEntityControllerLocal;
 
     @EJB
     private MenuItemEntityControllerLocal menuItemEntityControllerLocal;
@@ -88,15 +88,12 @@ public class DataInitializationSessionBean {
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", new BigDecimal("4.00"), calendarStart, calendarEnd, "ABCFoodCourt", "password"));
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", new BigDecimal("5.00"), calendarStart, calendarEnd, "royalfoodcourt", "password"));
             
-            vendorStaffEntityControllerLocal.createVendorStaff(new VendorStaffEntity("John", "Doe", EmployeeAccessRightEnum.CASHIER, "johndoe", "password"));
-
-            
-            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Singapore Chinese Food", "Chinese", new BigDecimal("4.70"), "Best Chicken rice in KR!", calendarStart, calendarEnd, BigDecimal.ZERO));
-            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal", new BigDecimal("2.50"), "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO));
-            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Uncle Charlie's Western", "Western", new BigDecimal("4.80"), "Taste of USA in KR!", calendarStart, calendarEnd, BigDecimal.ZERO));
-            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Ah Seng Drink Stores", "Beverages", new BigDecimal("4.90"), "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO));
-            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Fruit Store", "Fruits", new BigDecimal("4.89"), "Eat me and be healthy", calendarEnd, calendarEnd, BigDecimal.ZERO));
-            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Muthu Curry", "Indian", new BigDecimal("1.89"), "Cheapest prata in SG!", calendarEnd, calendarEnd, BigDecimal.ZERO));
+            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Singapore Chinese Food", "Chinese", new BigDecimal("4.70"), "Best Chicken rice in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "chinese", "password"));
+            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal", new BigDecimal("2.50"), "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "malay", "password"));
+            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Uncle Charlie's Western", "Western", new BigDecimal("4.80"), "Taste of USA in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "western", "password"));
+            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Ah Seng Drink Stores", "Beverages", new BigDecimal("4.90"), "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "drink", "password"));
+            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Fruit Store", "Fruits", new BigDecimal("4.89"), "Eat me and be healthy", calendarEnd, calendarEnd, BigDecimal.ZERO, "fruit", "password"));
+            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Muthu Curry", "Indian", new BigDecimal("1.89"), "Cheapest prata in SG!", calendarEnd, calendarEnd, BigDecimal.ZERO, "indian", "password"));
             
             
             menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roti Prata", "Indian Pan Cake", new BigDecimal("0.90"), "www.pratapic.com"));
@@ -118,6 +115,7 @@ public class DataInitializationSessionBean {
             menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Fried Rice", "Best in town", new BigDecimal("7.90"), "www.flyricepic.com"));
             menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Beef Hor Fun", "Best beef hor fun", new BigDecimal("7.90"), "www.beefhorfun.com"));
         
+            customerEntityControllerLocal.createCustomer(new CustomerEntity("customer", "first", "98765432", "abc street", "customer@gmail.com", "password"));
         } catch (Exception ex) {
             System.err.println("********** DataInitializationSessionBean.initializeData(): An error has occurred while loading initial test data: " + ex.getMessage());
         }

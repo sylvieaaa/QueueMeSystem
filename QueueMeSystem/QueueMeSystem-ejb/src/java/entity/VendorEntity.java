@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -24,12 +21,9 @@ import javax.persistence.Temporal;
  * @author User
  */
 @Entity
-public class VendorEntity implements Serializable {
+public class VendorEntity extends BusinessEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long vendorId;
     private String vendorName;
     private String cuisineType;
     private BigDecimal rating;
@@ -49,16 +43,14 @@ public class VendorEntity implements Serializable {
     @OneToMany(mappedBy = "vendorEntity")
     private List<ReviewEntity> reviewEntities;
     
-    @OneToMany(mappedBy = "vendorEntity")
-    private List<VendorStaffEntity> vendorStaffEntities;
 
     public VendorEntity() {
+        super();
         this.orderEntities = new ArrayList<>();
         this.reviewEntities = new ArrayList<>();
-        this.vendorStaffEntities = new ArrayList<>();
     }
 
-    public VendorEntity(String vendorName, String cuisineType, BigDecimal rating, String information, Calendar startTime, Calendar endTime, BigDecimal creditReceived) {
+    public VendorEntity(String vendorName, String cuisineType, BigDecimal rating, String information, Calendar startTime, Calendar endTime, BigDecimal creditReceived, String username, String password) {
         this();
         this.vendorName = vendorName;
         this.cuisineType = cuisineType;
@@ -67,15 +59,8 @@ public class VendorEntity implements Serializable {
         this.startTime = startTime;
         this.endTime = endTime;
         this.creditReceived = creditReceived;
-    }
-
-   
-    public Long getVendorId() {
-        return vendorId;
-    }
-
-    public void setVendorId(Long vendorId) {
-        this.vendorId = vendorId;
+        super.setUsername(username);
+        super.setPassword(password);
     }
 
     public String getVendorName() {
@@ -137,7 +122,7 @@ public class VendorEntity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (vendorId != null ? vendorId.hashCode() : 0);
+        hash += (this.getBusinessId() != null ? this.getBusinessId().hashCode() : 0);
         return hash;
     }
 
@@ -148,7 +133,7 @@ public class VendorEntity implements Serializable {
             return false;
         }
         VendorEntity other = (VendorEntity) object;
-        if ((this.vendorId == null && other.vendorId != null) || (this.vendorId != null && !this.vendorId.equals(other.vendorId))) {
+        if ((this.getBusinessId() == null && other.getBusinessId() != null) || (this.getBusinessId() != null && !this.getBusinessId().equals(other.getBusinessId()))) {
             return false;
         }
         return true;
@@ -156,7 +141,7 @@ public class VendorEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.VendorEntity[ id=" + vendorId + " ]";
+        return "entity.VendorEntity[ id=" + this.getBusinessId() + " ]";
     }
 
     public FoodCourtEntity getFoodCourtEntity() {
@@ -191,12 +176,4 @@ public class VendorEntity implements Serializable {
         this.reviewEntities = reviewEntities;
     }
 
-    public List<VendorStaffEntity> getVendorStaffEntities() {
-        return vendorStaffEntities;
-    }
-
-    public void setVendorStaffEntities(List<VendorStaffEntity> vendorStaffEntities) {
-        this.vendorStaffEntities = vendorStaffEntities;
-    }
-    
 }
