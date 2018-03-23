@@ -19,21 +19,16 @@
 
         <p:layout fullPage="true">
             <p:layoutUnit position="north" size="100" style="border: none">
+
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-2">
-                    <h:link outcome="/index.xhmtl"><p:graphicImage value="/images/logo.png" height="75px" width="75px" style="margin-left: 50px; float: left"/></h:link>
+                        <h:link outcome="/index.xhmtl"><p:graphicImage value="/images/logo.png" height="75px" width="75px" style="margin-left: 50px; float: left"/></h:link>
                     </div>
-                    <div class="ui-g-12 ui-md-1" style="margin-top:15px"></div>
-                    <div class="ui-g-12 ui-md-3" style="margin-top:15px">
-<!--                    <h:form>
-                        <p:menubar>
-                            <p:menuitem value="Home" url="index.xhtml" />
-                            <p:menuitem value="About" url="#"/>
-                        </p:menubar>
-                    </h:form>-->
-                    </div>
-                    <div class="ui-g-1s ui-md-5" >
-                    <ezcomp:LoginComponent />
+                    <div class="ui-g-12 ui-md-8"></div>
+                    <div class="ui-g-1s ui-md-1" style="margin-top: 20px">
+                        <h:form>
+                            <p:commandButton value="Logout" actionListener="#{mainPageManagedBean.logout}"/>
+                        </h:form>
                     </div>
                 </div>
             </p:layoutUnit>

@@ -11,10 +11,8 @@ import entity.BusinessEntity;
 import entity.CustomerEntity;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
-import java.awt.event.ActionEvent;
+import javax.faces.event.ActionEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -41,6 +39,7 @@ public class IndexManagedBean {
      * Creates a new instance of IndexManagedBean
      */
     public IndexManagedBean() {
+        System.out.println("created");
     }
 
     public void login(ActionEvent event) throws IOException{
@@ -69,11 +68,6 @@ public class IndexManagedBean {
         } catch (InvalidLoginCredentialException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", null));
         }
-    }
-
-    public void logout(ActionEvent event) throws IOException{
-        ((HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
-        FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
     }
 
     public String getUsername() {
