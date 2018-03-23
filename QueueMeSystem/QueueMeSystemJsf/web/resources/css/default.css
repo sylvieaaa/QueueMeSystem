@@ -36,7 +36,6 @@ a:link:hover, a:visited:hover  {
     font-size: 1.4em;
     font-weight: bold;
     margin-top: 6px;
-    color:gray !important;
 }
 .ui-icon {
     width: 40px;
@@ -48,7 +47,9 @@ a:link:hover, a:visited:hover  {
     background-color: transparent;
     border: none;
 }
-
+.ui-menubar .ui-menuitem-link{
+    color:gray;
+}
 .ui-menu .ui-menuitem .ui-state-hover{
     background-color: transparent;
     box-shadow: 0px 0px 8px #FFFFFF;
