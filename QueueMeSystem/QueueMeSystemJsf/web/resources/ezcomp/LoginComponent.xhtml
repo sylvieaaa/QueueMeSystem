@@ -22,7 +22,7 @@
 
             <h:panelGroup rendered="#{!sessionScope['isLogin']}">
                                 
-                <h:form id="contentLoginForm">
+                <h:form id="contentLoginForm" style = " text-align: center">
                     
                     <p:growl autoUpdate="true" />
                     
@@ -31,13 +31,18 @@
                         <f:validateLength minimum="4" />
                     </p:inputText>
                     &nbsp;
+                    <br></br>
+                    <br></br>
                     <p:outputLabel for="password" value="Password"/>&nbsp;
                     <p:password id="password" value="#{indexManagedBean.password}" required="true" requiredMessage="Password is required">
                         <f:validateLength minimum="4" />
                     </p:password>
                     &nbsp;
+                    
+                    <br></br>
+                    <br></br>
                     <!--<p:commandButton type="reset" value="Clear" />&nbsp;-->
-                    <p:commandButton value="Login" update="@form" actionListener="#{indexManagedBean.login}"/>          
+                    <p:commandButton value="Login" update="@form" actionListener="#{indexManagedBean.login}" style ="left: 1%"/>          
                 </h:form>
 
             </h:panelGroup>

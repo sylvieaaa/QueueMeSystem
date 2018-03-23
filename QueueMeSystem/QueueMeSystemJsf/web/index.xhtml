@@ -1,13 +1,23 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                template="./template/defaultTemplate.xhtml"
-                xmlns:p="http://primefaces.org/ui">
-   
-    <ui:define name="content">
-        
-    </ui:define>
-</ui:composition>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>* QueueMeSystem Admin Page *</title>
+        <h:outputStylesheet library="css" name="default.css"/>
+    </h:head>
+    <h:body>
 
+        <div class ="container">
+           
+            <h1 class="intro"> QueueMeSystem Admin Page </h1>
+            
+            <ezcomp:LoginComponent>
+            </ezcomp:LoginComponent>
+          
+        </div>
+
+    </h:body>
+</html>
