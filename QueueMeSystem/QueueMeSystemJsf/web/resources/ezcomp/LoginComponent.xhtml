@@ -14,11 +14,7 @@
     <cc:implementation>
         <div style="margin-top: 30px;">
 
-            <h:panelGroup rendered="#{sessionScope['isLogin']}">
-
-                <h:outputText value="You are login as #{sessionScope['currentStaffEntity'].firstName} #{sessionScope['currentStaffEntity'].lastName}" />
-
-            </h:panelGroup>
+            
 
             <h:panelGroup rendered="#{!sessionScope['isLogin']}">
 
@@ -31,8 +27,8 @@
                         <f:validateLength minimum="4" />
                     </p:inputText>
                     &nbsp;
-                    <br></br>
-                    <br></br>
+                    <br/>
+                    <br/>
                     <p:outputLabel for="password" value="Password"/>&nbsp;
                     <p:password id="password" value="#{indexManagedBean.password}" required="true" requiredMessage="Password is required">
                         <f:validateLength minimum="4" />

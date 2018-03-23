@@ -5,9 +5,23 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.BusinessEntityControllerLocal;
+import entity.AdminEntity;
+import entity.BusinessEntity;
+import entity.CustomerEntity;
+import entity.FoodCourtEntity;
+import entity.VendorEntity;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+import util.exception.InvalidLoginCredentialException;
 
 /**
  *
@@ -17,22 +31,49 @@ import javax.enterprise.context.RequestScoped;
 @RequestScoped
 public class IndexManagedBean {
 
+    @EJB
+    private BusinessEntityControllerLocal businessEntityControllerLocal;
+
     private String username;
     private String password;
-    
-    
+
     /**
      * Creates a new instance of IndexManagedBean
      */
     public IndexManagedBean() {
     }
-    
-    public void login(ActionEvent event) {
-        
+
+    public void login(ActionEvent event) throws IOException{
+        try {
+            BusinessEntity businessEntity = businessEntityControllerLocal.login(username, password);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);
+            
+            String accountType;
+            if (businessEntity instanceof AdminEntity) {
+                accountType = "Admin";
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (AdminEntity)businessEntity);
+            } else if (businessEntity instanceof FoodCourtEntity) {
+                accountType = "FoodCourt";
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (FoodCourtEntity)businessEntity);
+            } else if (businessEntity instanceof VendorEntity) {
+                accountType = "Vendor";
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (VendorEntity)businessEntity);
+            } else {
+                accountType = "Customer";
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (CustomerEntity)businessEntity);
+            }
+            
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountType", accountType);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
+
+        } catch (InvalidLoginCredentialException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", null));
+        }
     }
-    
-    public void logout(ActionEvent event) {
-        
+
+    public void logout(ActionEvent event) throws IOException{
+        ((HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
+        FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
     }
 
     public String getUsername() {
@@ -50,5 +91,5 @@ public class IndexManagedBean {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
 }
