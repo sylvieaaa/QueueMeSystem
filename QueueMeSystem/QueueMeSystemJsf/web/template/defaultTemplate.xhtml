@@ -17,7 +17,7 @@
     <h:body>
 
         <p:layout fullPage="true">
-            <p:layoutUnit position="north" size="100" style="border: none">
+            <p:layoutUnit position="north" size="100" style="border: none" class="header" collapsible="true" gutter="0">
 
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-2">
@@ -37,7 +37,7 @@
             <p:layoutUnit position="center">
                 <ui:insert name="content">Content</ui:insert>
             </p:layoutUnit>
-            <p:layoutUnit position="south" style="border: none">
+            <p:layoutUnit position="south" style="border: none" collapsible="true" gutter="0">
                 <h6>&copy; 2018 Queue Me. All Rights Reserved.</h6>
             </p:layoutUnit>
         </p:layout>

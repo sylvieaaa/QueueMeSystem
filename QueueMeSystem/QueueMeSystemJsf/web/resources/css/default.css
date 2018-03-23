@@ -25,7 +25,19 @@ body {
     margin-top: 200px;
 
 }
+.header {
+    display: block;
+    width: 100%;
+    background-color: #ffa15c;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
 
+.header .ui-layout-unit-content.ui-widget-content{
+    background-color: #ffa15c;
+}
 #contentLoginForm{
     text-align: center;
     left: 0;
