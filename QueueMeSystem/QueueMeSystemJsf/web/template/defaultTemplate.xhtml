@@ -10,7 +10,7 @@
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet  library="css" name="default.css"/>
-        <h:outputStylesheet library="css" name="font-awesome/font-awesome.css"/>
+
         <title>Queue Me</title>
 
     </h:head>
@@ -18,22 +18,30 @@
     <h:body>
 
         <p:layout fullPage="true">
-            <p:layoutUnit position="north" size="120">
-
-                <h:form>
-                    <p:menubar>
-                        <p:menuitem><h:link outcome="/index.xhmtl"><p:graphicImage value="/images/logo.png" height="75px" width="75px" style="margin-left: 50px; float: left"/></h:link></p:menuitem>
-                        <p:menuitem value="Home" url="index.xhtml" icon="fa fa-home fa-2x" />
-                        <p:menuitem value="About" url="#" icon="fa fa-info-circle fa-2x"/>
-                        <f:facet name="login"><ezcomp:LoginComponent /></f:facet>
-                    </p:menubar>
-                </h:form>
+            <p:layoutUnit position="north" size="100" style="border: none">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-2">
+                    <h:link outcome="/index.xhmtl"><p:graphicImage value="/images/logo.png" height="75px" width="75px" style="margin-left: 50px; float: left"/></h:link>
+                    </div>
+                    <div class="ui-g-12 ui-md-1" style="margin-top:15px"></div>
+                    <div class="ui-g-12 ui-md-3" style="margin-top:15px">
+                    <h:form>
+                        <p:menubar>
+                            <p:menuitem value="Home" url="index.xhtml" />
+                            <p:menuitem value="About" url="#"/>
+                        </p:menubar>
+                    </h:form>
+                    </div>
+                    <div class="ui-g-12 ui-md-6">
+                    <ezcomp:LoginComponent />
+                    </div>
+                </div>
             </p:layoutUnit>
 
             <p:layoutUnit position="center">
                 <ui:insert name="content">Content</ui:insert>
             </p:layoutUnit>
-            <p:layoutUnit position="south">
+            <p:layoutUnit position="south" style="border: none">
                 <h6>&copy; 2018 Queue Me. All Rights Reserved.</h6>
             </p:layoutUnit>
         </p:layout>

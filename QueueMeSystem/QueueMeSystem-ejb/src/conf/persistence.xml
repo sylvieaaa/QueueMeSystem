@@ -2,20 +2,7 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="QueueMeSystem-ejbPU" transaction-type="JTA">
     <jta-data-source>jdbc/queuemesystem</jta-data-source>
-    <class>entity.AdminEntity</class>
-    <class>entity.CategoryEntity</class>
-    <class>entity.CreditCardEntity</class>
-    <class>entity.CustomerEntity</class>
-    <class>entity.FoodCourtEntity</class>
-    <class>entity.MenuEntity</class>
-    <class>entity.MenuItemEntity</class>
-    <class>entity.OrderEntity</class>
-    <class>entity.ReviewEntity</class>
-    <class>entity.SaleTransactionEntity</class>
-    <class>entity.SaleTransactionLineItemEntity</class>
-    <class>entity.VendorEntity</class>
-    <class>entity.VendorStaffEntity</class>
-    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
     </properties>
