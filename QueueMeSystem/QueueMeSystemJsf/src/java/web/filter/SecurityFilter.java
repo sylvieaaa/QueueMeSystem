@@ -92,6 +92,7 @@ public class SecurityFilter implements Filter {
 
     private Boolean excludeLoginCheck(String path) {
         if (path.equals("/index.xhtml")
+                || path.startsWith("/forgetPassword.xhtml")
                 || path.startsWith("/images")
                 || path.startsWith("/javax.faces.resource")) {
             return true;
