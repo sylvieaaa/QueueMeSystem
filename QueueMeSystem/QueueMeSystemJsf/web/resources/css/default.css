@@ -79,10 +79,6 @@ a:link:hover, a:visited:hover  {
     font-weight: bold;
     margin-top: 6px;
 }
-.ui-icon {
-    width: 40px;
-    height: 40px
-}
 
 .ui-menubar {
     float:left;
