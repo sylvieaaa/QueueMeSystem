@@ -41,8 +41,6 @@ public class SecurityFilter implements Filter {
         HttpSession httpSession = httpServletRequest.getSession(true);
         String requestServletPath = httpServletRequest.getServletPath();
 
-        System.err.println(requestServletPath);
-
         if (httpSession.getAttribute("isLogin") == null) {
             httpSession.setAttribute("isLogin", false);
         }
