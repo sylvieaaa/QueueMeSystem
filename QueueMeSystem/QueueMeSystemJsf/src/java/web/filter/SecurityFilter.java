@@ -46,12 +46,12 @@ public class SecurityFilter implements Filter {
         }
 
         Boolean isLogin = (Boolean) httpSession.getAttribute("isLogin");
-        
+
         if (isLogin && requestServletPath.equals("/index.xhtml")) {
             System.err.println("true");
             httpServletResponse.sendRedirect(CONTEXT_ROOT + "/mainPage.xhtml");
         }
-        
+
         if (!excludeLoginCheck(requestServletPath)) {
             if (isLogin) {
                 BusinessEntity businessEntity = (BusinessEntity) httpSession.getAttribute("businessEntity");
@@ -93,6 +93,7 @@ public class SecurityFilter implements Filter {
     private Boolean excludeLoginCheck(String path) {
         if (path.equals("/index.xhtml")
                 || path.equals("/forgetPassword.xhtml")
+                || path.equals("/error404.xhtml")
                 || path.startsWith("/images")
                 || path.startsWith("/javax.faces.resource")) {
             return true;
