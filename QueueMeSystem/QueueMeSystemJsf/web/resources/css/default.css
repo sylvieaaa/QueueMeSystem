@@ -9,7 +9,7 @@ body {
 
 @font-face{
     font-family:'Kirvy';
-    src: url(Kirvy-Bold.otf);
+    src: url('#{resource["fonts/Kirvy-Bold.otf"]}');
 
 }
 
@@ -78,10 +78,6 @@ a:link:hover, a:visited:hover  {
     font-size: 1.4em;
     font-weight: bold;
     margin-top: 6px;
-}
-.ui-icon {
-    width: 40px;
-    height: 40px
 }
 
 .ui-menubar {

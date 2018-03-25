@@ -34,19 +34,20 @@ public class IndexManagedBean {
 
     private String username;
     private String password;
-
+    private String email;
+    
     /**
      * Creates a new instance of IndexManagedBean
      */
     public IndexManagedBean() {
         System.out.println("created");
     }
-
+    
     public void login(ActionEvent event) throws IOException{
         try {
             BusinessEntity businessEntity = businessEntityControllerLocal.login(username, password);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);
-            
+        
             String accountType;
             if (businessEntity instanceof AdminEntity) {
                 accountType = "Admin";
@@ -60,14 +61,14 @@ public class IndexManagedBean {
             } else {
                 accountType = "Customer";
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (CustomerEntity)businessEntity);
-            }
-            
+    }
+    
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountType", accountType);
             FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
-
+        
         } catch (InvalidLoginCredentialException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", null));
-        }
+    }
     }
 
     public String getUsername() {
@@ -86,4 +87,12 @@ public class IndexManagedBean {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
 }
