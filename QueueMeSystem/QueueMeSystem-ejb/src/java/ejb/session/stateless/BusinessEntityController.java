@@ -14,6 +14,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.common.RandomGenerator;
 import util.exception.BusinessEntityNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 import util.security.CryptographicHelper;
@@ -45,7 +46,7 @@ public class BusinessEntityController implements BusinessEntityControllerLocal {
         try {
             BusinessEntity businessEntity = retrieveBusinessEntityByUsername(username);
             String passswordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + businessEntity.getSalt()));
-            if(businessEntity.getPassword().equals(passswordHash)) {
+            if (businessEntity.getPassword().equals(passswordHash)) {
                 return businessEntity;
             } else {
                 throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
@@ -54,6 +55,15 @@ public class BusinessEntityController implements BusinessEntityControllerLocal {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
 
+    }
+
+    @Override
+    public String generateRandomPassword(String username) throws BusinessEntityNotFoundException {
+        BusinessEntity businessEntity = retrieveBusinessEntityByUsername(username);
+        String newPassword = new RandomGenerator().generatePassword();
+        businessEntity.setPassword(newPassword);
+
+        return newPassword;
     }
 
 }

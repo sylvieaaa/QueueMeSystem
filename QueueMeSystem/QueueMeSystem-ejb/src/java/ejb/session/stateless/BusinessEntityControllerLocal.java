@@ -20,5 +20,7 @@ public interface BusinessEntityControllerLocal {
     public BusinessEntity retrieveBusinessEntityByUsername(String username) throws BusinessEntityNotFoundException;
 
     public BusinessEntity login(String username, String password) throws InvalidLoginCredentialException;
+
+    public String generateRandomPassword(String username) throws BusinessEntityNotFoundException;
     
 }

@@ -6,6 +6,7 @@
 package jsf.managedbean;
 
 import ejb.session.stateless.BusinessEntityControllerLocal;
+import ejb.session.stateless.EmailControllerLocal;
 import entity.AdminEntity;
 import entity.BusinessEntity;
 import entity.CustomerEntity;
@@ -13,12 +14,16 @@ import entity.FoodCourtEntity;
 import entity.VendorEntity;
 import javax.faces.event.ActionEvent;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import util.email.EmailManager;
+import util.exception.BusinessEntityNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 
 /**
@@ -30,45 +35,57 @@ import util.exception.InvalidLoginCredentialException;
 public class IndexManagedBean {
 
     @EJB
+    private EmailControllerLocal emailControllerLocal;
+
+    @EJB
     private BusinessEntityControllerLocal businessEntityControllerLocal;
+    
 
     private String username;
     private String password;
     private String email;
-    
+
     /**
      * Creates a new instance of IndexManagedBean
      */
     public IndexManagedBean() {
         System.out.println("created");
     }
-    
-    public void login(ActionEvent event) throws IOException{
+
+    public void login(ActionEvent event) throws IOException {
         try {
             BusinessEntity businessEntity = businessEntityControllerLocal.login(username, password);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);
-        
+
             String accountType;
             if (businessEntity instanceof AdminEntity) {
                 accountType = "Admin";
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (AdminEntity)businessEntity);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (AdminEntity) businessEntity);
             } else if (businessEntity instanceof FoodCourtEntity) {
                 accountType = "FoodCourt";
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (FoodCourtEntity)businessEntity);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (FoodCourtEntity) businessEntity);
             } else if (businessEntity instanceof VendorEntity) {
                 accountType = "Vendor";
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (VendorEntity)businessEntity);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (VendorEntity) businessEntity);
             } else {
                 accountType = "Customer";
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (CustomerEntity)businessEntity);
-    }
-    
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (CustomerEntity) businessEntity);
+            }
+
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountType", accountType);
             FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
-        
+
         } catch (InvalidLoginCredentialException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", null));
+        }
     }
+    
+    public void forgetPassword(ActionEvent event) {
+        try {
+            emailControllerLocal.forgetPasswordEmail(email);
+        } catch (BusinessEntityNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+        }
     }
 
     public String getUsername() {
@@ -94,5 +111,5 @@ public class IndexManagedBean {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
 }
