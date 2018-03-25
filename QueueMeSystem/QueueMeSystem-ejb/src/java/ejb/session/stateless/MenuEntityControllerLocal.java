@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.MenuEntity;
+import entity.VendorEntity;
 import javax.ejb.Local;
 
 /**
@@ -16,5 +17,7 @@ import javax.ejb.Local;
 public interface MenuEntityControllerLocal {
 
     public MenuEntity createMenu(MenuEntity menuEntity);
+
+    public MenuEntity retrieveMenuByVendor(VendorEntity vendorEntity);
     
 }

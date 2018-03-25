@@ -9,7 +9,18 @@
     <ui:define name="content">
 
         <h:form>
-            
+            <p:fieldset legend="Menu items">
+                <p:dataGrid id="menuItems" var="item" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="3" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+        rowsPerPageTemplate="6,12,16" style="text-align: center;">
+                    <p:panel id="itemPanel" header="#{item.menuItemName}">
+                        <h:panelGrid columns="1">
+                            <p:graphicImage  value="/images/food/#{item.photoURL}" height="100px" width="173px"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    
+                    <p:draggable for="itemPanel" revert="true" handle=".ui-panel-titlebar" stack=".ui-panel"/>
+                </p:dataGrid>
+            </p:fieldset>
         </h:form>
 
 

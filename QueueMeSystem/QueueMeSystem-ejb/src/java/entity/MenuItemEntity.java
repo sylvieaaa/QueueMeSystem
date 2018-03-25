@@ -9,11 +9,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
@@ -31,14 +32,16 @@ public class MenuItemEntity implements Serializable {
     private String description;
     private BigDecimal price;
     private String photoURL;
-    @ManyToOne
-    private CategoryEntity categoryEntity;
+    
+    @ManyToMany(mappedBy = "menuItemEntities")
+    private List<CategoryEntity> categoryEntities;
     
     @OneToMany(mappedBy = "menuItemEntity")
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
 
     public MenuItemEntity() {
         this.saleTransactionLineItemEntities = new ArrayList<>();
+        this.categoryEntities = new ArrayList<>();
     }
 
     public MenuItemEntity(String menuItemName, String description, BigDecimal price, String photo) {
@@ -115,12 +118,12 @@ public class MenuItemEntity implements Serializable {
         return "entity.MenuItemEntity[ id=" + menuItemId + " ]";
     }
 
-    public CategoryEntity getCategoryEntity() {
-        return categoryEntity;
+    public List<CategoryEntity> getCategoryEntities() {
+        return categoryEntities;
     }
 
-    public void setCategoryEntity(CategoryEntity categoryEntity) {
-        this.categoryEntity = categoryEntity;
+    public void setCategoryEntities(List<CategoryEntity> categoryEntities) {
+        this.categoryEntities = categoryEntities;
     }
 
     public List<SaleTransactionLineItemEntity> getSaleTransactionLineItemEntities() {

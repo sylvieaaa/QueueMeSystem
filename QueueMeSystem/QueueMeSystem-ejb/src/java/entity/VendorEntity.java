@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -36,7 +37,7 @@ public class VendorEntity extends BusinessEntity implements Serializable {
     
     @ManyToOne
     private FoodCourtEntity foodCourtEntity;
-    @OneToOne(mappedBy = "vendorEntity")
+    @OneToOne(mappedBy = "vendorEntity", cascade = CascadeType.PERSIST)
     private MenuEntity menuEntity;
     @OneToMany(mappedBy = "vendorEntity")
     private List<OrderEntity> orderEntities;

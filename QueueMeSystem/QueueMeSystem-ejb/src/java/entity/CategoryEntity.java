@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -30,13 +31,17 @@ public class CategoryEntity implements Serializable {
     
     @ManyToOne
     private MenuEntity menuEntity;
-    @OneToMany(mappedBy = "categoryEntity")
+    @ManyToMany
     private List<MenuItemEntity> menuItemEntities;
 
     public CategoryEntity() {
         this.menuItemEntities = new ArrayList<>();
     }
 
+    public CategoryEntity(String category) {
+        this.category = category;
+    }
+    
     public CategoryEntity(String category, MenuEntity menuEntity, List<MenuItemEntity> menuItemEntities) {
         this();
         this.category = category;
