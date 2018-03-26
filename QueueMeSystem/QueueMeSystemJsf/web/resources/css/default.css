@@ -23,9 +23,24 @@ body {
     color: #ffa15c;
 }
 
+.error{
+    text-align: center;
+    font-family: 'Kirvy';
+    font-weight: bold;
+    font-size: 70px;
+    color: #000000;
+
+
+}
+
+.error_button{
+    text-align: center;
+    font-size:20px;
+}
+
 .container{
 
-    margin-top: 200px;
+    margin-top: 150px;
 
 }
 .header {

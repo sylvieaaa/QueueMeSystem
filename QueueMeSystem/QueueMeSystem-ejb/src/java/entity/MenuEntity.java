@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,20 +27,15 @@ public class MenuEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long menuId;
-    private List<String> categories;
-    @OneToMany(mappedBy = "menuEntity")
+    @OneToMany(mappedBy = "menuEntity", cascade = CascadeType.PERSIST)
     private List<CategoryEntity> categoryEntities;
     
     @OneToOne
     private VendorEntity vendorEntity;
     
     public MenuEntity() {
-        categories = new ArrayList<>();
-    }
-
-    public MenuEntity(List<String> categories) {
-        this();
-        this.categories = categories;
+        categoryEntities = new ArrayList<>();
+        //categoryEntities.add(new CategoryEntity("Main"));
     }
 
     public Long getMenuId() {
@@ -48,14 +44,6 @@ public class MenuEntity implements Serializable {
 
     public void setMenuId(Long menuId) {
         this.menuId = menuId;
-    }
-
-    public List<String> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<String> categories) {
-        this.categories = categories;
     }
     
     @Override

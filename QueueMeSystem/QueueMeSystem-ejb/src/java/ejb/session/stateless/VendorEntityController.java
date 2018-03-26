@@ -5,6 +5,8 @@
  */
 package ejb.session.stateless;
 
+import entity.CategoryEntity;
+import entity.MenuEntity;
 import entity.VendorEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -22,6 +24,14 @@ public class VendorEntityController implements VendorEntityControllerLocal {
 
     @Override
     public VendorEntity createVendorEntity(VendorEntity vendorEntity) {
+        MenuEntity menuEntity = new MenuEntity();
+        vendorEntity.setMenuEntity(menuEntity);
+        menuEntity.setVendorEntity(vendorEntity);
+        
+        CategoryEntity categoryEntity = new CategoryEntity("Main");
+        menuEntity.getCategoryEntities().add(categoryEntity);
+        categoryEntity.setMenuEntity(menuEntity);
+        
         em.persist(vendorEntity);
         em.flush();
         em.refresh(vendorEntity);
