@@ -34,7 +34,7 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
     @Override
     public MenuItemEntity createMenuItem(MenuItemEntity menuItemEntity, VendorEntity vendorEntity) throws VendorNotFoundException{
         try {
-            vendorEntity = vendorEntityControllerLocal.retrieveVendorStaffById(vendorEntity.getBusinessId());
+            vendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorEntity.getBusinessId());
             menuItemEntity.setVendorEntity(vendorEntity);
             em.persist(menuItemEntity);
             vendorEntity.getMenuItemEntities().add(menuItemEntity);
