@@ -76,7 +76,8 @@ public class SecurityFilter implements Filter {
         } else if (businessEntity instanceof VendorEntity) {
             if (path.equals("/mainPage.xhtml")
                     || path.equals("/manageMenu.xhtml")
-                    || path.equals("/manageOrder.xhtml"))  {
+                    || path.equals("/manageOrder.xhtml")
+                    || path.equals("/manageCompletedOrder.xhtml"))  {
                 return true;
             }
         } else if (businessEntity instanceof CustomerEntity) {

@@ -10,13 +10,16 @@ import ejb.session.stateless.CategoryEntityControllerLocal;
 import ejb.session.stateless.CustomerEntityControllerLocal;
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
 import ejb.session.stateless.MenuItemEntityControllerLocal;
+import ejb.session.stateless.OrderEntityControllerLocal;
+import ejb.session.stateless.SaleTransactionLineItemEntityControllerLocal;
 import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.AdminEntity;
 import entity.CategoryEntity;
 import entity.CustomerEntity;
 import entity.FoodCourtEntity;
-import entity.MenuEntity;
 import entity.MenuItemEntity;
+import entity.OrderEntity;
+import entity.SaleTransactionLineItemEntity;
 import entity.VendorEntity;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -27,7 +30,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import util.enumeration.EmployeeAccessRightEnum;
 import util.exception.AdminNotFoundException;
 
 
@@ -35,6 +37,12 @@ import util.exception.AdminNotFoundException;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {  
+
+    @EJB
+    private SaleTransactionLineItemEntityControllerLocal saleTransactionLineItemEntityControllerLocal;
+
+    @EJB
+    private OrderEntityControllerLocal orderEntityControllerLocal;
 
     @EJB
     private CategoryEntityControllerLocal categoryEntityControllerLocal;
@@ -126,6 +134,17 @@ public class DataInitializationSessionBean {
             categoryEntity.getMenuItemEntities().add(chickenRice);
             categoryEntity.getMenuItemEntities().add(duckRice);
             
+            OrderEntity orderEntity = orderEntityControllerLocal.createOrder(new OrderEntity(calendarStart));
+            SaleTransactionLineItemEntity lineItem1 = saleTransactionLineItemEntityControllerLocal.createSaleTransactionLineItemEntity(new SaleTransactionLineItemEntity(1, 2, new BigDecimal("7.90"), new BigDecimal("16.80"), false, 0));
+            SaleTransactionLineItemEntity lineItem2 = saleTransactionLineItemEntityControllerLocal.createSaleTransactionLineItemEntity(new SaleTransactionLineItemEntity(1, 2, new BigDecimal("5.00"), new BigDecimal("10"), false, 0));
+            lineItem1.setMenuItemEntity(chickenRice);
+            lineItem2.setMenuItemEntity(duckRice);
+            orderEntity.getSaleTransactionLineItemEntities().add(lineItem1);
+            orderEntity.getSaleTransactionLineItemEntities().add(lineItem2);
+            lineItem1.setOrderEntity(orderEntity);
+            lineItem2.setOrderEntity(orderEntity);
+            orderEntity.setVendorEntity(chinese);
+    
             customerEntityControllerLocal.createCustomer(new CustomerEntity("customer", "first", "98765432", "abc street", "customer@gmail.com", "password"));
         } catch (Exception ex) {
             System.err.println("********** DataInitializationSessionBean.initializeData(): An error has occurred while loading initial test data: " + ex.getMessage());

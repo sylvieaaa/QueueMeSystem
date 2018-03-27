@@ -6,11 +6,15 @@
 package ejb.session.stateless;
 
 import entity.OrderEntity;
+import entity.SaleTransactionLineItemEntity;
+import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.OrderNotFoundException;
 
 /**
  *
@@ -43,4 +47,40 @@ public class OrderEntityController implements OrderEntityControllerLocal {
         
         return query.getResultList();
     }
+    
+    @Override
+    public OrderEntity retrieveOrderByOrderId(Long orderId) throws OrderNotFoundException {
+        OrderEntity orderEntity = em.find(OrderEntity.class, orderId);
+        
+        if(orderEntity != null)
+        {
+            return orderEntity;
+        }
+        else
+        {
+            throw new OrderNotFoundException("Order ID " + orderId + " does not exist!");
+        }               
+    }
+    
+    @Override
+    public List<SaleTransactionLineItemEntity> retrieveSaleTransactionLineItemEntities(Long orderId) {
+        
+        Query query = em.createQuery("SELECT l FROM LineItemEntity l WHERE l.orderId =:inOrderId");   
+        return query.getResultList();     
+    }
+    
+    public BigDecimal getEarnings (Long orderId) {
+        
+        Query query = em.createQuery("SELECT l FROM LineItemEntity l WHERE l.orderId =:inOrderId");
+        BigDecimal earnings = BigDecimal.ZERO;
+        List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = query.getResultList();
+        for (SaleTransactionLineItemEntity saleTransactionLineItemEntity: saleTransactionLineItemEntities) {
+            earnings.add(saleTransactionLineItemEntity.getSubTotal());
+        }
+        
+        return earnings;        
+    }
+   
+    
+
 }

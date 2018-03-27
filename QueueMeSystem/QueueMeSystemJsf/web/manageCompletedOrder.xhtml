@@ -4,7 +4,8 @@
                 template="./template/defaultTemplate.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="content">
         
@@ -16,8 +17,8 @@
             
             <p:messages id="messages" redisplay="false" closable="true" />
             
-            <p:dataTable id="dataTableAllCompletedOrders" widgetVar="dataTableAllCompletedOrders" value="#{productManagementManagedBean.productEntities}" var="productEntity" rowKey="#{productEntity.productId}" rowIndexVar="row"
-                         filteredValue="#{productManagementManagedBean.filteredProductEntities}"
+            <p:dataTable id="dataTableAllCompletedOrders" widgetVar="dataTableAllCompletedOrders" value="#{completedOrderManagedBean.orderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"
+                         filteredValue="#{completedOrderManagedBean.filteredOrderEntities}"
                          rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
                 
                 <f:facet name="header">
@@ -27,43 +28,23 @@
                     </p:outputPanel>
                 </f:facet>
                 
-                <p:column headerText="Order ID" sortBy="#{orderEntity.orderId}" filterBy="#{productEntity.productId}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.productId}" />
+                <p:column headerText="Order ID" sortBy="#{orderEntity.orderId}" filterBy="#{orderEntity.orderId}" filterMatchMode="contains">
+                    <h:outputText value="#{orderEntity.orderId}" />
                 </p:column>
                 
-                <p:column headerText="Date Time" sortBy="#{productEntity.skuCode}" filterBy="#{productEntity.skuCode}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.skuCode}" />
-                </p:column>
-                
-                <p:column headerText="Status" sortBy="#{productEntity.name}" filterBy="#{productEntity.name}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.name}" />
-                </p:column>
-                
-                <p:column headerText="Quantity on Hand" sortBy="#{productEntity.quantityOnHand}" filterBy="#{productEntity.quantityOnHand}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.quantityOnHand}" />
-                </p:column>
-                
-                <p:column headerText="Unit Price" sortBy="#{productEntity.unitPrice}" filterBy="#{productEntity.unitPrice}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.unitPrice}">
-                        <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                <p:column headerText="Date Time" sortBy="#{orderEntity.dateTime}" filterBy="#{orderEntity.dateTime}" filterMatchMode="contains">
+                    <h:outputText value="#{orderEntity.dateTime.time}">
+                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                     </h:outputText>
+
                 </p:column>
-                
-                <p:column headerText="Category" sortBy="#{productEntity.category}" filterBy="#{productEntity.category}" filterMatchMode="contains">
-                    <h:outputText value="#{productEntity.category}" />
-                </p:column>
-                
+               
+ 
                 <p:column headerText="Action" >
-                    <p:commandButton update="formViewProduct" oncomplete="PF('dialogViewProduct').show()" icon="ui-icon-document" title="View">
-                        <f:setPropertyActionListener value="#{productEntity}" target="#{productManagementManagedBean.selectedProductEntityToView}" />
+                    <p:commandButton update="formViewOrder" oncomplete="PF('dialogViewOrder').show()" icon="ui-icon-document" title="View">
+                        <f:setPropertyActionListener value="#{orderEntity}" target="#{completedOrderManagedBean.selectedOrderEntityToView}" />
                     </p:commandButton>
-                    <p:commandButton update="formUpdateProduct" oncomplete="PF('dialogUpdateProduct').show()" icon="ui-icon-pencil" title="Update">
-                        <f:setPropertyActionListener value="#{productEntity}" target="#{productManagementManagedBean.selectedProductEntityToUpdate}" />
-                    </p:commandButton>
-                    <p:commandButton icon="ui-icon-trash" actionListener="#{productManagementManagedBean.deleteProduct}" update="formAllProducts:dataTableAllProducts formAllProducts:messages">
-                        <f:attribute name="productEntityToDelete" value="#{productEntity}" />
-                        <p:confirm header="Confirmation" message="Are you sure you want to delete #{productEntity.name} (SKU Code: #{productEntity.skuCode})?" icon="ui-icon-alert" />
-                    </p:commandButton>
+       
                 </p:column>
                 
             </p:dataTable>
@@ -75,350 +56,50 @@
             
         </h:form>
         
-        <h:form id="formCreateNewProduct">
-            
-            <p:dialog id="dialogCreateNewProduct" widgetVar="dialogCreateNewProduct" header="Create New Product" closable="true">
-
-                <p:messages id="messagesCreateNewProduct" redisplay="false" />
-                
-                <p:panelGrid>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="skuCode" value="SKU Code: " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="skuCode" value="#{productManagementManagedBean.newProductEntity.skuCode}" required="true" requiredMessage="SKU Code is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="skuCode" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="name" value="Name: " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="name" value="#{productManagementManagedBean.newProductEntity.name}" required="true" requiredMessage="Name is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="name" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="description" value="Description " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="description" value="#{productManagementManagedBean.newProductEntity.description}" required="true" requiredMessage="Description is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="description" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="quantityOnHand" value="Quantity On Hand " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="quantityOnHand" value="#{productManagementManagedBean.newProductEntity.quantityOnHand}" required="true" requiredMessage="Quantity On Hand is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="quantityOnHand" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="reorderQuantity" value="Reorder Quantity " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="reorderQuantity" value="#{productManagementManagedBean.newProductEntity.reorderQuantity}" required="true" requiredMessage="Reorder Quantity is required" validator="reorderQuantityValidator" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="reorderQuantity" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="unitPrice" value="Unit Price " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="unitPrice" value="#{productManagementManagedBean.newProductEntity.unitPrice}" required="true" requiredMessage="Unit Price is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="unitPrice" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="category" value="Category " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="category" value="#{productManagementManagedBean.newProductEntity.category}" required="true" requiredMessage="Category is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="category" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="productRating" value="Product Rating " />
-                        </p:column>
-                        <p:column>
-                            <p:rating id="productRating" value="#{productManagementManagedBean.newProductEntity.productRating}" stars="5" required="true" requiredMessage="Product Rating is required">
-                                <f:validateLongRange minimum="1" maximum="5" />
-                            </p:rating>
-                        </p:column>
-                        <p:column>
-                            <p:message for="productRating" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column colspan="3">
-                            <p:commandButton type="reset" value="Clear" />&nbsp;
-                            <p:commandButton value="Create New Product" update="@form formAllProducts:dataTableAllProducts" actionListener="#{productManagementManagedBean.createNewProduct}" oncomplete="PF('dialogCreateNewProduct').show();" />
-                        </p:column>
-                    </p:row>
-                    
-                </p:panelGrid>
-
-            </p:dialog>
-            
-        </h:form>
         
-        <h:form id="formViewProduct">
+        <h:form id="formViewOrder">
             
-            <p:dialog id="dialogViewProduct" widgetVar="dialogViewProduct" header="View Product" closable="true">
+            <p:dialog id="dialogViewOrder" widgetVar="dialogViewOrder" header="View Order" closable="true">
+               
 
                 <p:panelGrid>
                     
                     <p:row>
                         <p:column>
-                            <h:outputLabel value="Product ID: " />
+                            <h:outputLabel value="Order ID: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToView.productId}" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="SKU Code: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToView.skuCode}" />
+                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.orderId}" />
                         </p:column>
                     </p:row>
                     
                     <p:row>
                         <p:column>
-                            <h:outputLabel value="Name: " />
+                            <h:outputLabel value="Date Time: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToView.name}" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Description: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToView.description}" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Quantity On Hand: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToView.quantityOnHand}" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Reorder Quantity: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToView.reorderQuantity}" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Unit Price: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToView.unitPrice}">
-                                <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.dateTime.time}" styleClass="date">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
                             </h:outputText>
                         </p:column>
                     </p:row>
                     
                     <p:row>
                         <p:column>
-                            <h:outputLabel value="Category: " />
+                            <h:outputLabel value="Menu Item: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToView.category}" />
+                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.saleTransactionLineItemEntities}" />
                         </p:column>
                     </p:row>
                     
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Product Rating: " />
-                        </p:column>
-                        <p:column>
-                            <p:rating id="productRating" value="#{productManagementManagedBean.selectedProductEntityToView.productRating}" stars="5" readonly="true" />
-                        </p:column>
-                    </p:row>
-                    
+    
                 </p:panelGrid>
 
             </p:dialog>
             
         </h:form>
-        
-        <h:form id="formUpdateProduct">
-            
-            <p:dialog id="dialogUpdateProduct" widgetVar="dialogUpdateProduct" header="Update Product" closable="true">
-
-                <p:messages id="messagesUpdateProduct" redisplay="false" />
-                
-                <p:panelGrid>
-                    
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Product ID: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToUpdate.productId}" />
-                        </p:column>
-                        <p:column>
-                            &nbsp;
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="SKU Code: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{productManagementManagedBean.selectedProductEntityToUpdate.skuCode}" />
-                        </p:column>
-                        <p:column>
-                            &nbsp;
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="name" value="Name: " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="name" value="#{productManagementManagedBean.selectedProductEntityToUpdate.name}" required="true" requiredMessage="Name is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="name" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="description" value="Description " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="description" value="#{productManagementManagedBean.selectedProductEntityToUpdate.description}" required="true" requiredMessage="Description is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="description" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="quantityOnHand" value="Quantity On Hand " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="quantityOnHand" value="#{productManagementManagedBean.selectedProductEntityToUpdate.quantityOnHand}" required="true" requiredMessage="Quantity On Hand is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="quantityOnHand" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="reorderQuantity" value="Reorder Quantity " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="reorderQuantity" value="#{productManagementManagedBean.selectedProductEntityToUpdate.reorderQuantity}" required="true" requiredMessage="Reorder Quantity is required" validator="reorderQuantityValidator" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="reorderQuantity" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="unitPrice" value="Unit Price " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="unitPrice" value="#{productManagementManagedBean.selectedProductEntityToUpdate.unitPrice}" required="true" requiredMessage="Unit Price is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="unitPrice" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="category" value="Category " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="category" value="#{productManagementManagedBean.selectedProductEntityToUpdate.category}" required="true" requiredMessage="Category is required" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="category" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="productRating" value="Product Rating " />
-                        </p:column>
-                        <p:column>
-                            <p:rating id="productRating" value="#{productManagementManagedBean.selectedProductEntityToUpdate.productRating}" stars="5" required="true" requiredMessage="Product Rating is required">
-                                <f:validateLongRange minimum="1" maximum="5" />
-                            </p:rating>
-                        </p:column>
-                        <p:column>
-                            <p:message for="productRating" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column colspan="3">
-                            <p:commandButton value="Update Product" update="@form formAllProducts:dataTableAllProducts" actionListener="#{productManagementManagedBean.updateProduct}" oncomplete="PF('dialogUpdateProduct').show();" />
-                        </p:column>
-                    </p:row>
-                    
-                </p:panelGrid>
-
-            </p:dialog>
-            
-        </h:form>
-        
+ 
     </ui:define>
 
 </ui:composition>

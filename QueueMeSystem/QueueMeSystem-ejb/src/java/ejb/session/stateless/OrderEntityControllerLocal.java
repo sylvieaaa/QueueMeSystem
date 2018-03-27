@@ -6,8 +6,11 @@
 package ejb.session.stateless;
 
 import entity.OrderEntity;
+import entity.SaleTransactionLineItemEntity;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.OrderNotFoundException;
 
 /**
  *
@@ -22,4 +25,10 @@ public interface OrderEntityControllerLocal {
     
     public List<OrderEntity> retrieveAllOrders();
     
+    public OrderEntity retrieveOrderByOrderId(Long orderId) throws OrderNotFoundException;
+    
+    public List<SaleTransactionLineItemEntity> retrieveSaleTransactionLineItemEntities(Long orderId);
+    
+    public BigDecimal getEarnings (Long orderId);
+  
 }

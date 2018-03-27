@@ -7,12 +7,14 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -37,8 +39,8 @@ public class OrderEntity implements Serializable {
     @JoinColumn(nullable = true)
     private VendorEntity vendorEntity;
     
-    @ManyToOne
-    private SaleTransactionLineItemEntity saleTransactionLineItemEntity;
+    @OneToMany(mappedBy = "orderEntity")
+    private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
 
     public OrderEntity() {
     }
@@ -104,12 +106,12 @@ public class OrderEntity implements Serializable {
         this.vendorEntity = vendorEntity;
     }
 
-    public SaleTransactionLineItemEntity getSaleTransactionLineItemEntity() {
-        return saleTransactionLineItemEntity;
+    public List<SaleTransactionLineItemEntity> getSaleTransactionLineItemEntities() {
+        return saleTransactionLineItemEntities;
     }
 
-    public void setSaleTransactionLineItemEntity(SaleTransactionLineItemEntity saleTransactionLineItemEntity) {
-        this.saleTransactionLineItemEntity = saleTransactionLineItemEntity;
+    public void setSaleTransactionLineItemEntity(List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities) {
+        this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
     }
     
 }

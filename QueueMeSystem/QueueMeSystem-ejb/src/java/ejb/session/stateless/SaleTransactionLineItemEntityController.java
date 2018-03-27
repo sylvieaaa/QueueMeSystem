@@ -9,6 +9,7 @@ import entity.SaleTransactionLineItemEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 
 @Stateless
@@ -24,5 +25,12 @@ public class SaleTransactionLineItemEntityController implements SaleTransactionL
         em.refresh(saleTransactionLineItemEntity);
         
         return saleTransactionLineItemEntity;
+    }
+    
+    private String getItemName(Long saleId) {
+        Query query = em.createQuery("SELECT m FROM MenuItemEntity m WHERE m.saleTransactionLineItemEntities.saleTransactionLineItemId = :inSaleId");
+        query.setParameter("inSaleId", saleId);
+
+        return (String) query.getSingleResult();
     }
 }

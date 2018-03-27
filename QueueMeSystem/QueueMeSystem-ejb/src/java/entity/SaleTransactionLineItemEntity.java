@@ -41,14 +41,13 @@ public class SaleTransactionLineItemEntity implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = true)
     private MenuItemEntity menuItemEntity;
-    @OneToMany(mappedBy = "saleTransactionLineItemEntity")
-    private List<OrderEntity> orderEntities;
+    @ManyToOne
+    private OrderEntity orderEntity;
     @ManyToOne
     private SaleTransactionEntity saleTransactionEntity;
     
 
     public SaleTransactionLineItemEntity() {
-        this.orderEntities = new ArrayList<>();
     }
 
     public SaleTransactionLineItemEntity(Integer serialNumber, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal, Boolean isTakeaway, Integer takeawayQty) {
@@ -154,12 +153,12 @@ public class SaleTransactionLineItemEntity implements Serializable {
         this.menuItemEntity = menuItemEntity;
     }
 
-    public List<OrderEntity> getOrderEntities() {
-        return orderEntities;
+    public OrderEntity getOrderEntity() {
+        return orderEntity;
     }
 
-    public void setOrderEntities(List<OrderEntity> orderEntities) {
-        this.orderEntities = orderEntities;
+    public void setOrderEntity(OrderEntity orderEntity) {
+        this.orderEntity = orderEntity;
     }
 
     public SaleTransactionEntity getSaleTransactionEntity() {
