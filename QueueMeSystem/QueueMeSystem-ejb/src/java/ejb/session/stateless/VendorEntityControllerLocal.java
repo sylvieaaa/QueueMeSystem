@@ -17,7 +17,7 @@ import util.exception.VendorNotFoundException;
 @Local
 public interface VendorEntityControllerLocal {
 
-    public VendorEntity retrieveVendorStaffById(Long vendorStaffId) throws VendorNotFoundException;
+    public VendorEntity retrieveVendorById(Long vendorStaffId) throws VendorNotFoundException;
 
     public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity);
 

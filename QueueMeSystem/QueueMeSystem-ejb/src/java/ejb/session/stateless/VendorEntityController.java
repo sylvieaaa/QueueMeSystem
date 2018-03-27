@@ -41,7 +41,7 @@ public class VendorEntityController implements VendorEntityControllerLocal {
     }
     
     @Override
-    public VendorEntity retrieveVendorStaffById(Long vendorStaffId) throws VendorNotFoundException {
+    public VendorEntity retrieveVendorById(Long vendorStaffId) throws VendorNotFoundException {
         VendorEntity vendorEntity = em.find(VendorEntity.class, vendorStaffId);
 
         if (vendorEntity != null) {
