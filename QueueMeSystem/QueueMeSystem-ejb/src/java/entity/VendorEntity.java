@@ -37,18 +37,21 @@ public class VendorEntity extends BusinessEntity implements Serializable {
     
     @ManyToOne
     private FoodCourtEntity foodCourtEntity;
-    @OneToOne(mappedBy = "vendorEntity", cascade = CascadeType.PERSIST)
-    private MenuEntity menuEntity;
+    @OneToOne(mappedBy = "vendorEntity")
+    private List<MenuEntity> menuEntities;
     @OneToMany(mappedBy = "vendorEntity")
     private List<OrderEntity> orderEntities;
     @OneToMany(mappedBy = "vendorEntity")
     private List<ReviewEntity> reviewEntities;
+    @OneToMany(mappedBy = "vendorEntity")
+    private List<MenuItemEntity> menuItemEntities;
     
 
     public VendorEntity() {
         super();
         this.orderEntities = new ArrayList<>();
         this.reviewEntities = new ArrayList<>();
+        menuItemEntities = new ArrayList<>();
     }
 
     public VendorEntity(String vendorName, String cuisineType, BigDecimal rating, String information, Calendar startTime, Calendar endTime, BigDecimal creditReceived, String username, String password) {
@@ -153,12 +156,20 @@ public class VendorEntity extends BusinessEntity implements Serializable {
         this.foodCourtEntity = foodCourtEntity;
     }
 
-    public MenuEntity getMenuEntity() {
-        return menuEntity;
+    public List<MenuEntity> getMenuEntities() {
+        return menuEntities;
     }
 
-    public void setMenuEntity(MenuEntity menuEntity) {
-        this.menuEntity = menuEntity;
+    public void setMenuEntities(List<MenuEntity> menuEntities) {
+        this.menuEntities = menuEntities;
+    }
+
+    public List<MenuItemEntity> getMenuItemEntities() {
+        return menuItemEntities;
+    }
+
+    public void setMenuItemEntities(List<MenuItemEntity> menuItemEntities) {
+        this.menuItemEntities = menuItemEntities;
     }
 
     public List<OrderEntity> getOrderEntities() {

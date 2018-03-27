@@ -27,7 +27,9 @@ public class MenuEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long menuId;
-    @OneToMany(mappedBy = "menuEntity", cascade = CascadeType.PERSIST)
+    private String name;
+    private Boolean selected;
+    @OneToMany(mappedBy = "menuEntity", cascade = CascadeType.REMOVE)
     private List<CategoryEntity> categoryEntities;
     
     @OneToOne
@@ -36,6 +38,11 @@ public class MenuEntity implements Serializable {
     public MenuEntity() {
         categoryEntities = new ArrayList<>();
         //categoryEntities.add(new CategoryEntity("Main"));
+    }
+
+    public MenuEntity(String name, Boolean selected) {
+        this.name = name;
+        this.selected = selected;
     }
 
     public Long getMenuId() {
@@ -85,6 +92,22 @@ public class MenuEntity implements Serializable {
 
     public void setVendorEntity(VendorEntity vendorEntity) {
         this.vendorEntity = vendorEntity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
     
 }

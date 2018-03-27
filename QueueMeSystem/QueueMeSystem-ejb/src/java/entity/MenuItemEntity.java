@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -38,6 +39,8 @@ public class MenuItemEntity implements Serializable {
     
     @OneToMany(mappedBy = "menuItemEntity")
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
+    @ManyToOne
+    private VendorEntity vendorEntity;
 
     public MenuItemEntity() {
         this.saleTransactionLineItemEntities = new ArrayList<>();
@@ -132,6 +135,14 @@ public class MenuItemEntity implements Serializable {
 
     public void setSaleTransactionLineItemEntities(List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities) {
         this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
+    }
+
+    public VendorEntity getVendorEntity() {
+        return vendorEntity;
+    }
+
+    public void setVendorEntity(VendorEntity vendorEntity) {
+        this.vendorEntity = vendorEntity;
     }
     
 }

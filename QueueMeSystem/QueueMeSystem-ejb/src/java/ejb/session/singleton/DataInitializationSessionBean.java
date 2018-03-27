@@ -9,6 +9,7 @@ import ejb.session.stateless.AdminEntityControllerLocal;
 import ejb.session.stateless.CategoryEntityControllerLocal;
 import ejb.session.stateless.CustomerEntityControllerLocal;
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
+import ejb.session.stateless.MenuEntityControllerLocal;
 import ejb.session.stateless.MenuItemEntityControllerLocal;
 import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.AdminEntity;
@@ -35,6 +36,9 @@ import util.exception.AdminNotFoundException;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {  
+
+    @EJB
+    private MenuEntityControllerLocal menuEntityControllerLocal;
 
     @EJB
     private CategoryEntityControllerLocal categoryEntityControllerLocal;
@@ -104,27 +108,32 @@ public class DataInitializationSessionBean {
             
             //chinese.getMenuEntity().getCategoryEntities().add(new CategoryEntity("Main"));
             
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roti Prata", "Indian Pan Cake", new BigDecimal("0.90"), "www.pratapic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Fish n Chips", "Authentic Fish n Chips", new BigDecimal("5.90"), "www.fishnchippic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Chop", "With pasta on the side", new BigDecimal("5.90"), "www.chickenchoppic.com"));
-            MenuItemEntity chickenRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Rice", "Roasted or white", new BigDecimal("2.90"), "chicken_rice.png"));
-            MenuItemEntity duckRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roasted Duck Rice", "Authentic HK taste", new BigDecimal("2.90"), "duck_rice.png"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Wanton Mee", "Authentic HK taste", new BigDecimal("3.90"), "www.1tonmeepic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Kopi O", "No sugar", new BigDecimal("0.90"), "www.kopiopic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Bandung", "Pink and sweet", new BigDecimal("1.40"), "www.bandungpic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Ice Lemon Tea", "Real lemon", new BigDecimal("1.40"), "www.lemonteapic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Nasi Lemak", "Power nasi lemak", new BigDecimal("3.90"), "www.nlpic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Nasi Briyani", "Bagus rice", new BigDecimal("3.90"), "www.nbpic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Honeydew", "one slice", new BigDecimal("0.50"), "www.honeydewpic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Papaya", "one slice", new BigDecimal("0.50"), "www.papayapic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Watermelon", "one slice", new BigDecimal("0.50"), "www.wmpic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Claypot Tofu", "Sizzling hot", new BigDecimal("7.90"), "www.cptofupic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Fried Rice", "Best in town", new BigDecimal("7.90"), "www.flyricepic.com"));
-            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Beef Hor Fun", "Best beef hor fun", new BigDecimal("7.90"), "www.beefhorfun.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roti Prata", "Indian Pan Cake", new BigDecimal("0.90"), "www.pratapic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Fish n Chips", "Authentic Fish n Chips", new BigDecimal("5.90"), "www.fishnchippic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Chop", "With pasta on the side", new BigDecimal("5.90"), "www.chickenchoppic.com"));
+            MenuItemEntity chickenRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Rice", "Roasted or white", new BigDecimal("2.90"), "chicken_rice.png"), chinese);
+            MenuItemEntity duckRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roasted Duck Rice", "Authentic HK taste", new BigDecimal("2.90"), "duck_rice.png"), chinese);
+            MenuItemEntity wantonMee = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Wanton Mee", "Authentic HK taste", new BigDecimal("3.90"), "wanton_mee.png"), chinese);
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Kopi O", "No sugar", new BigDecimal("0.90"), "www.kopiopic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Bandung", "Pink and sweet", new BigDecimal("1.40"), "www.bandungpic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Ice Lemon Tea", "Real lemon", new BigDecimal("1.40"), "www.lemonteapic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Nasi Lemak", "Power nasi lemak", new BigDecimal("3.90"), "www.nlpic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Nasi Briyani", "Bagus rice", new BigDecimal("3.90"), "www.nbpic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Honeydew", "one slice", new BigDecimal("0.50"), "www.honeydewpic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Papaya", "one slice", new BigDecimal("0.50"), "www.papayapic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Watermelon", "one slice", new BigDecimal("0.50"), "www.wmpic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Claypot Tofu", "Sizzling hot", new BigDecimal("7.90"), "www.cptofupic.com"));
+//            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Fried Rice", "Best in town", new BigDecimal("7.90"), "www.flyricepic.com"));
+            MenuItemEntity beefhorfun = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Beef Hor Fun", "Best beef hor fun", new BigDecimal("7.90"), "beef_hor_fun.png"), chinese);
         
-            CategoryEntity categoryEntity = chinese.getMenuEntity().getCategoryEntities().get(0);
+            MenuEntity menuEntity = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 1", Boolean.TRUE), chinese);
+            CategoryEntity categoryEntity = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity);
             categoryEntity.getMenuItemEntities().add(chickenRice);
             categoryEntity.getMenuItemEntities().add(duckRice);
+            
+//            CategoryEntity categoryEntity = chinese.getMenuEntity().getCategoryEntities().get(0);
+//            categoryEntity.getMenuItemEntities().add(chickenRice);
+//            categoryEntity.getMenuItemEntities().add(duckRice);
             
             customerEntityControllerLocal.createCustomer(new CustomerEntity("customer", "first", "98765432", "abc street", "customer@gmail.com", "password"));
         } catch (Exception ex) {

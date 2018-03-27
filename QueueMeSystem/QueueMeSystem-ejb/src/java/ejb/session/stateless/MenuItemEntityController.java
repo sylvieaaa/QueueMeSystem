@@ -6,12 +6,17 @@
 package ejb.session.stateless;
 
 import entity.MenuItemEntity;
+import entity.VendorEntity;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.MenuItemNotFoundException;
+import util.exception.VendorNotFoundException;
 
 /**
  *
@@ -20,16 +25,27 @@ import util.exception.MenuItemNotFoundException;
 @Stateless
 public class MenuItemEntityController implements MenuItemEntityControllerLocal {
 
+    @EJB
+    private VendorEntityControllerLocal vendorEntityControllerLocal;
+
     @PersistenceContext(unitName = "QueueMeSystem-ejbPU")
     private EntityManager em;
 
     @Override
-    public MenuItemEntity createMenuItem(MenuItemEntity menuItemEntity) {
-        em.persist(menuItemEntity);
-        em.flush();
-        em.refresh(menuItemEntity);
+    public MenuItemEntity createMenuItem(MenuItemEntity menuItemEntity, VendorEntity vendorEntity) throws VendorNotFoundException{
+        try {
+            vendorEntity = vendorEntityControllerLocal.retrieveVendorStaffById(vendorEntity.getBusinessId());
+            menuItemEntity.setVendorEntity(vendorEntity);
+            em.persist(menuItemEntity);
+            vendorEntity.getMenuItemEntities().add(menuItemEntity);
+            em.flush();
+            em.refresh(menuItemEntity);
 
-        return menuItemEntity;
+            return menuItemEntity;
+        } catch (VendorNotFoundException ex) {
+            throw ex;
+        }
+
     }
 
     @Override
@@ -53,6 +69,18 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
         } else {
             return menuItemEntities;
         }
+    }
+    
+    @Override
+    public List<MenuItemEntity> retrieveAllMenuItemEntityByVendor(VendorEntity vendorEntity) {
+        Query query = em.createQuery("SELECT m FROM MenuItemEntity m WHERE m.vendorEntity=:inVendorEntity");
+        query.setParameter("inVendorEntity", vendorEntity);
+        
+        List<MenuItemEntity> menuItemEntities = query.getResultList();
+
+      
+            return menuItemEntities;
+        
     }
 
     @Override
