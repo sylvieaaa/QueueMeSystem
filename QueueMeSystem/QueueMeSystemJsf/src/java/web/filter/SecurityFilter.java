@@ -75,6 +75,7 @@ public class SecurityFilter implements Filter {
 
         } else if (businessEntity instanceof VendorEntity) {
             if (path.equals("/mainPage.xhtml")
+                    || path.startsWith("/changePassword.xhtml")
                     || path.equals("/manageMenu.xhtml")) {
                 return true;
             }

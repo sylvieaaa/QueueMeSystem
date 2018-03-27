@@ -2,8 +2,8 @@ body {
     height: 100%;
     background-color: #f5f5f5;
     font-size: 12px;
-    /*font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;*/
-    font-family: 'Kirvy';
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    /*font-family: 'Arial';*/
     color: #000000;  
     margin: 10px;
 }
@@ -124,4 +124,8 @@ a:link:hover, a:visited:hover {
 
 .ui-selectonemenu-item.ui-selectonemenu-list-item.ui-state-highlight{
     background-color: #a9c6c9;
+}
+
+.ui-button-text {
+    font-family: 'Kirvy';
 }
