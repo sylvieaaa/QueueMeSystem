@@ -6,8 +6,10 @@
 package ejb.session.stateless;
 
 import entity.CategoryEntity;
+import entity.FoodCourtEntity;
 import entity.MenuEntity;
 import entity.VendorEntity;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,20 +22,18 @@ import util.exception.VendorNotFoundException;
 @Stateless
 public class VendorEntityController implements VendorEntityControllerLocal {
 
+    @EJB
+    private FoodCourtEntityControllerLocal foodCourtEntityControllerLocal;
+
     @PersistenceContext(unitName = "QueueMeSystem-ejbPU")
     private EntityManager em;
 
     @Override
-    public VendorEntity createVendorEntity(VendorEntity vendorEntity) {
-//        MenuEntity menuEntity = new MenuEntity();
-//        vendorEntity.setMenuEntity(menuEntity);
-//        menuEntity.setVendorEntity(vendorEntity);
-//        
-//        CategoryEntity categoryEntity = new CategoryEntity("Main");
-//        menuEntity.getCategoryEntities().add(categoryEntity);
-//        categoryEntity.setMenuEntity(menuEntity);
-//        
+    public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity) {
+        foodCourtEntity = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtEntity.getBusinessId());
+        vendorEntity.setFoodCourtEntity(foodCourtEntity);
         em.persist(vendorEntity);
+        foodCourtEntity.getVendorEntities().add(vendorEntity);
         em.flush();
         em.refresh(vendorEntity);
         

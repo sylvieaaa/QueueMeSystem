@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.FoodCourtEntity;
 import entity.VendorEntity;
 import javax.ejb.Local;
 import util.exception.VendorNotFoundException;
@@ -16,8 +17,8 @@ import util.exception.VendorNotFoundException;
 @Local
 public interface VendorEntityControllerLocal {
 
-    public VendorEntity createVendorEntity(VendorEntity vendorEntity);
-
     public VendorEntity retrieveVendorStaffById(Long vendorStaffId) throws VendorNotFoundException;
+
+    public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity);
 
 }

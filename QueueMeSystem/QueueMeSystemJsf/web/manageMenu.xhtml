@@ -36,7 +36,7 @@
             <p:fieldset>
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-5">
-                        <p:fieldset legend="All items" id="menuItemFieldset">
+                            <p:panel id="menuItemPanel" header="All Items">
                             <p:commandButton style="float: right" update="formEditMenuItems" oncomplete="PF('dialogEditMenuItems').show()" title="Edit" icon="ui-icon-plus" value="Create new item"/><br/><br/>
                             <p:dataGrid id="menuItems" var="item" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="3" rows="3" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                         rowsPerPageTemplate="5,10,15" style="text-align: center;">
@@ -48,7 +48,7 @@
 
                                 <p:draggable for="itemPanel" revert="true" handle=".ui-panel-titlebar" stack=".ui-panel"/>
                             </p:dataGrid>
-                        </p:fieldset>
+                            </p:panel>
 
 
 
@@ -80,7 +80,7 @@
                                         </p:dataList>
                                     </p:fieldset>
                                     <p:droppable for="catItems" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="menuForm:menuItems" onDrop="handleDrop">
-                                        <p:ajax listener="#{manageMenuManagedBean.onDrop}" update="menuForm:menuCategories menuForm:menuItemFieldset"/>
+                                        <p:ajax listener="#{manageMenuManagedBean.onDrop}" update="menuForm:menuCategories menuForm:menuItemPanel"/>
                                     </p:droppable>
                                 </p:tab>
                             </p:tabView>
@@ -107,6 +107,15 @@
                     </p:panel>
 
                 </p:dataGrid>
+            </p:dialog>
+        </h:form>
+        
+        <h:form id="formCreateNewItem">
+             
+            <p:dialog id="dialogCreateNewItem" widgetVar="dialogCreateNewItem" header="CreateNewItem" closable="true" resizable="true">
+                <p:panel>
+                    
+                </p:panel>
             </p:dialog>
         </h:form>
     </ui:define>

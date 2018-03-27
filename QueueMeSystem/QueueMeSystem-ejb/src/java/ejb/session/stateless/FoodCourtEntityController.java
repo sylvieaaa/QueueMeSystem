@@ -28,4 +28,15 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
         
         return foodCourtEntity;
     }
+    
+    @Override
+    public FoodCourtEntity retrieveFoodCourtById(Long foodCourtId) {
+        FoodCourtEntity foodCourtEntity = em.find(FoodCourtEntity.class, foodCourtId);
+        
+        if(foodCourtEntity != null) {
+            return foodCourtEntity;
+        } else {
+            return null;
+        }
+    }
 }

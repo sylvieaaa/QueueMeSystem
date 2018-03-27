@@ -30,8 +30,28 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
     
-        <error-page>
+    <error-page>
         <error-code>404</error-code>
         <location>/error404.xhtml</location>
     </error-page>
+    <mime-mapping>  
+        <extension>otf</extension>  
+        <mime-type>font/Kirvy-Bold</mime-type>  
+    </mime-mapping>
+    <mime-mapping>  
+        <extension>eot</extension>  
+        <mime-type>fa/fontawesome-webfont</mime-type>  
+    </mime-mapping>
+    <mime-mapping>  
+        <extension>woff</extension>  
+        <mime-type>fa/fontawesome-webfont</mime-type>  
+    </mime-mapping>
+    <mime-mapping>  
+        <extension>woff2</extension>  
+        <mime-type>fa/fontawesome-webfont</mime-type>  
+    </mime-mapping>
+    <mime-mapping> 
+        <extension>ttf</extension>  
+        <mime-type>fa/fontawesome-webfont</mime-type>  
+    </mime-mapping>
 </web-app>
