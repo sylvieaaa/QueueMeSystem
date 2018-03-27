@@ -6,9 +6,11 @@
 package ejb.session.stateless;
 
 import entity.MenuItemEntity;
+import entity.VendorEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.MenuItemNotFoundException;
+import util.exception.VendorNotFoundException;
 
 /**
  *
@@ -16,7 +18,7 @@ import util.exception.MenuItemNotFoundException;
  */
 @Local
 public interface MenuItemEntityControllerLocal {
-    public MenuItemEntity createMenuItem(MenuItemEntity menuItemEntity);
+    public MenuItemEntity createMenuItem(MenuItemEntity menuItemEntity, VendorEntity vendorEntity) throws VendorNotFoundException;
 
     public MenuItemEntity retrieveMenuItemById(Long menuItemId) throws MenuItemNotFoundException;
 
@@ -25,4 +27,6 @@ public interface MenuItemEntityControllerLocal {
     public void updateMenuItem(MenuItemEntity menuItemEntity);
 
     public void deleteMenuItem(Long menuItemId);
+
+    public List<MenuItemEntity> retrieveAllMenuItemEntityByVendor(VendorEntity vendorEntity);
 }

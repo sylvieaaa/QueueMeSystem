@@ -6,7 +6,12 @@
 package ejb.session.stateless;
 
 import entity.CategoryEntity;
+import entity.MenuEntity;
+import entity.MenuItemEntity;
 import javax.ejb.Local;
+import util.exception.CategoryNotFoundException;
+import util.exception.MenuItemNotFoundException;
+import util.exception.MenuNotFoundException;
 
 /**
  *
@@ -15,6 +20,10 @@ import javax.ejb.Local;
 @Local
 public interface CategoryEntityControllerLocal {
 
-    public CategoryEntity createCategory(CategoryEntity categoryEntity);
+    public CategoryEntity createCategory(CategoryEntity categoryEntity, MenuEntity menuEntity) throws MenuNotFoundException;
+
+    public CategoryEntity retrieveCategoryById(Long categoryId) throws CategoryNotFoundException;
+
+    public void addMenuItem(CategoryEntity categoryEntity, MenuItemEntity menuItemEntity) throws CategoryNotFoundException, MenuItemNotFoundException;
     
 }

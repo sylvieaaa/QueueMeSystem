@@ -6,24 +6,109 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
 
+
     <ui:define name="content">
+        <script type="text/javascript">
+            function handleDrop(event, ui) {
+                var droppedCar = ui.draggable;
+                droppedCar.fadeOut('fast');
+            }
+        </script>
 
         <h:form>
-            <p:fieldset legend="Menu items">
-                <p:dataGrid id="menuItems" var="item" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="5" rows="1" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-        rowsPerPageTemplate="5,10,15" style="text-align: center;">
-                    <p:panel id="itemPanel" header="#{item.menuItemName}">
-                        <h:panelGrid columns="1">
-                            <p:graphicImage  value="/images/food/#{item.photoURL}" height="100px" width="173px"/>
-                        </h:panelGrid>
-                    </p:panel>
-                    
-                    <p:draggable for="itemPanel" revert="true" handle=".ui-panel-titlebar" stack=".ui-panel"/>
-                </p:dataGrid>
+            <h:panelGrid columns="2" style="margin-bottom:10px; border:none">
+                <p:outputLabel for="menuOneMenu" value="Select menu:"/>
+                <p:selectOneMenu id="menuOneMenu" value="#{manageMenuManagedBean.selectedMenuEntity}" converter="menuEntityConverter" style="width:125px">
+                    <f:selectItem itemLabel="[SELECT ONE]" itemValue="null" noSelectionOption="true"/>
+                    <f:selectItems value="#{manageMenuManagedBean.selectItems}" var="menu"/>
+                    <p:ajax listener="#{manageMenuManagedBean.onChange}" update="menuForm:menuCategories" />
+                </p:selectOneMenu>
+                <f:facet name="actions">
+                    <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" id="iconOnly" icon="ui-icon-plus">
+                    </p:commandButton>
+                </f:facet>
+            </h:panelGrid>
+        </h:form>
+        <h:form id="menuForm">
+
+
+
+            <p:fieldset>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-5">
+                        <p:fieldset legend="All items" id="menuItemFieldset">
+                            <p:commandButton style="float: right" update="formEditMenuItems" oncomplete="PF('dialogEditMenuItems').show()" title="Edit" icon="ui-icon-plus" value="Create new item"/><br/><br/>
+                            <p:dataGrid id="menuItems" var="item" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="3" rows="3" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                        rowsPerPageTemplate="5,10,15" style="text-align: center;">
+                                <p:panel id="itemPanel" header="#{item.menuItemName}">
+                                    <h:panelGrid columns="1">
+                                        <p:graphicImage  value="/images/food/#{item.photoURL}" width="100%"/>
+                                    </h:panelGrid>
+                                </p:panel>
+
+                                <p:draggable for="itemPanel" revert="true" handle=".ui-panel-titlebar" stack=".ui-panel"/>
+                            </p:dataGrid>
+                        </p:fieldset>
+
+
+
+                    </div>
+
+                    <div class="ui-g-12 ui-md-7">
+
+                        <p:fieldset id="menuCategories">
+                            <p:tabView rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.categoryEntities}" var="category">
+
+                                <p:tab id="categoryTab" title="#{category.name}">
+
+                                    <p:fieldset id="catItems">
+                                        <p:dataList value="#{category.menuItemEntities}" var="menuItems" type="unordered" itemType="none">
+                                            <h:panelGrid columns="2" columnClasses="foodPhoto,detail" style="border: none" cellpadding="4">
+                                                <p:graphicImage style="border: none" value="/images/food/#{menuItems.photoURL}" width="220" height="124"/>
+
+                                                <p:outputPanel>
+                                                    <h:outputLabel for="foodName" value="Name: "/>
+                                                    <h:outputText id="foodName" value="#{menuItems.menuItemName}" style="color: blue"/><br/><br/>
+                                                    <h:outputLabel for="foodDescription" value="Description: "/>
+                                                    <h:outputText id="foodDescription" value="#{menuItems.description}" style="color: blue"/><br/><br/>
+                                                    <h:outputLabel for="foodPrice" value="Price: "/>
+                                                    <h:outputText id="foodPrice" value="#{menuItems.price}" style="color: blue"> 
+                                                        <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                                                    </h:outputText>
+                                                </p:outputPanel>
+                                            </h:panelGrid>
+                                        </p:dataList>
+                                    </p:fieldset>
+                                    <p:droppable for="catItems" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="menuForm:menuItems" onDrop="handleDrop">
+                                        <p:ajax listener="#{manageMenuManagedBean.onDrop}" update="menuForm:menuCategories menuForm:menuItemFieldset"/>
+                                    </p:droppable>
+                                </p:tab>
+                            </p:tabView>
+
+
+                        </p:fieldset>
+
+                    </div>
+                </div>
             </p:fieldset>
         </h:form>
 
+        <h:form id="formEditMenuItems">
+             
+            <p:dialog id="dialogEditMenuItems" widgetVar="dialogEditMenuItems" header="Edit Items" closable="true" resizable="false">
+                <p:commandButton style="float: right" title="Create new item" icon="ui-icon-plus" value="Create new item"/>
+                <p:commandButton style="float: right" title="Delete items" icon="fa fa-trash" value="Delete items"/><br/><br/>
+                <p:dataGrid id="menuItems" var="item" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="3" rows="12" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             style="text-align: center;">
+                    <p:panel id="itemPanel" header="#{item.menuItemName}">
+                        <h:panelGrid columns="1">
+                            <p:graphicImage  value="/images/food/#{item.photoURL}" width="150px" height="78px"/>
+                        </h:panelGrid>
+                    </p:panel>
 
+                </p:dataGrid>
+            </p:dialog>
+        </h:form>
     </ui:define>
 
 </ui:composition>

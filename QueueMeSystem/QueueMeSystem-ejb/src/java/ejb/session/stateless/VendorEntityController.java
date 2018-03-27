@@ -11,6 +11,7 @@ import entity.VendorEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.exception.VendorNotFoundException;
 
 /**
  *
@@ -24,19 +25,30 @@ public class VendorEntityController implements VendorEntityControllerLocal {
 
     @Override
     public VendorEntity createVendorEntity(VendorEntity vendorEntity) {
-        MenuEntity menuEntity = new MenuEntity();
-        vendorEntity.setMenuEntity(menuEntity);
-        menuEntity.setVendorEntity(vendorEntity);
-        
-        CategoryEntity categoryEntity = new CategoryEntity("Main");
-        menuEntity.getCategoryEntities().add(categoryEntity);
-        categoryEntity.setMenuEntity(menuEntity);
-        
+//        MenuEntity menuEntity = new MenuEntity();
+//        vendorEntity.setMenuEntity(menuEntity);
+//        menuEntity.setVendorEntity(vendorEntity);
+//        
+//        CategoryEntity categoryEntity = new CategoryEntity("Main");
+//        menuEntity.getCategoryEntities().add(categoryEntity);
+//        categoryEntity.setMenuEntity(menuEntity);
+//        
         em.persist(vendorEntity);
         em.flush();
         em.refresh(vendorEntity);
         
         return vendorEntity;
+    }
+    
+    @Override
+    public VendorEntity retrieveVendorStaffById(Long vendorStaffId) throws VendorNotFoundException {
+        VendorEntity vendorEntity = em.find(VendorEntity.class, vendorStaffId);
+
+        if (vendorEntity != null) {
+            return vendorEntity;
+        } else {
+            throw new VendorNotFoundException("Vendor Staff ID: " + vendorStaffId + " does not exist");
+        }
     }
     
     /*
