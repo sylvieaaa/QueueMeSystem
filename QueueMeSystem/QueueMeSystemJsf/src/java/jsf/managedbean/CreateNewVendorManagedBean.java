@@ -1,6 +1,7 @@
 package jsf.managedbean;
 
 import ejb.session.stateless.VendorEntityControllerLocal;
+import entity.FoodCourtEntity;
 import entity.VendorEntity;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -25,8 +26,9 @@ public class CreateNewVendorManagedBean {
         newVendorEntity = new VendorEntity();
     }
 
-    public void createNewProduct(ActionEvent event) {
-        VendorEntity vendorEntity = vendorEntityControllerLocal.createVendorEntity(newVendorEntity);
+    public void createNewVendor(ActionEvent event) {
+        FoodCourtEntity foodCourtEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        VendorEntity vendorEntity = vendorEntityControllerLocal.createVendorEntity(newVendorEntity, foodCourtEntity);
         newVendorEntity = new VendorEntity();
 
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New vendor created successfully (Vendor ID: " + vendorEntity.getVendorName() + ")", null));
