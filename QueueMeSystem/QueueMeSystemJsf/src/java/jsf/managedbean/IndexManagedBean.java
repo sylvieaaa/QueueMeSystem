@@ -83,6 +83,7 @@ public class IndexManagedBean {
     public void forgetPassword(ActionEvent event) {
         try {
             emailControllerLocal.forgetPasswordEmail(email);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sent", null));
         } catch (BusinessEntityNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
         }
