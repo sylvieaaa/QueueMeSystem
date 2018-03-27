@@ -27,7 +27,7 @@ public class CategoryEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
-    private String category;
+    private String name;
     
     @ManyToOne
     private MenuEntity menuEntity;
@@ -38,13 +38,13 @@ public class CategoryEntity implements Serializable {
         this.menuItemEntities = new ArrayList<>();
     }
 
-    public CategoryEntity(String category) {
-        this.category = category;
+    public CategoryEntity(String name) {
+        this.name = name;
     }
     
-    public CategoryEntity(String category, MenuEntity menuEntity, List<MenuItemEntity> menuItemEntities) {
+    public CategoryEntity(String name, MenuEntity menuEntity, List<MenuItemEntity> menuItemEntities) {
         this();
-        this.category = category;
+        this.name = name;
         this.menuEntity = menuEntity;
         this.menuItemEntities = menuItemEntities;
     }
@@ -84,12 +84,12 @@ public class CategoryEntity implements Serializable {
         return "entity.CategoryEntity[ id=" + categoryId + " ]";
     }
 
-    public String getCategory() {
-        return category;
+    public String getName() {
+        return name;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public MenuEntity getMenuEntity() {

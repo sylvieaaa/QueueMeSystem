@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.OrderEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -18,5 +19,7 @@ public interface OrderEntityControllerLocal {
     public void updateOrder(OrderEntity orderEntity);
 
     public OrderEntity createOrder(OrderEntity orderEntity);
+    
+    public List<OrderEntity> retrieveAllOrders();
     
 }

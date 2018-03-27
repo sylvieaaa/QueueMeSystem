@@ -13,10 +13,8 @@
 
             <h:panelGroup style="display:block; text-align:center">
                 
-            <h2> Welcome! </h2>
-<!--            <h:panelGroup rendered="#{sessionScope['isLogin']}">
-            <h:outputText value="Welcome, #{sessionScope['currentBusinessEntity'].firstName} #{sessionScope['currentBusinessEntity'].lastName}" />
-            </h:panelGroup>-->
+                <h2> Welcome, <h:outputText style="color:blue" value="#{sessionScope['businessEntity'].vendorName}"/></h2>
+                
             <br/>
             <br/>
             <br/>
@@ -35,10 +33,17 @@
             
             <p:button outcome="totalEarnings.xhtml" value="Earnings">
             </p:button>&nbsp;
+            
+            <p:button outcome="addOrder.xhtml" value="Add Order">
+            </p:button>&nbsp;
            
             
             <p:button outcome="review.xhtml" value="Reviews">
             </p:button>
+            
+            
+            
+            
             </font>
             
             

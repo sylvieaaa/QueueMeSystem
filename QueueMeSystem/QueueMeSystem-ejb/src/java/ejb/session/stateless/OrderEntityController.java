@@ -6,9 +6,11 @@
 package ejb.session.stateless;
 
 import entity.OrderEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -32,5 +34,13 @@ public class OrderEntityController implements OrderEntityControllerLocal {
     @Override
     public void updateOrder(OrderEntity orderEntity) {
         em.merge(orderEntity);
+    }
+    
+     @Override
+    public List<OrderEntity> retrieveAllOrders()
+    {
+        Query query = em.createQuery("SELECT p FROM OrderEntity p ORDER BY p.orderId ASC");
+        
+        return query.getResultList();
     }
 }
