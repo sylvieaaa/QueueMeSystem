@@ -22,7 +22,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import javax.servlet.http.HttpSession;
 
 @WebFilter(filterName = "SecurityFilter", urlPatterns = {"/*"})
@@ -80,12 +79,12 @@ public class SecurityFilter implements Filter {
     public Boolean checkAccessRight(String path, BusinessEntity businessEntity) {
         if (businessEntity instanceof FoodCourtEntity) {
             if (path.equals("/foodCourtMainPage.xhtml")
-                    || path.startsWith("/changePassword.xhtml")
                     || path.equals("/createNewVendor.xhtml")) {
                 return true;
             }
         } else if (businessEntity instanceof VendorEntity) {
             if (path.equals("/mainPage.xhtml")
+                    || path.startsWith("/changePassword.xhtml")
                     || path.equals("/manageMenu.xhtml")
                     || path.equals("/manageOrder.xhtml")
                     || path.equals("/manageCompletedOrder.xhtml")) {
