@@ -41,8 +41,10 @@ public class MenuEntity implements Serializable {
     }
 
     public MenuEntity(String name, Boolean selected) {
+        this();
         this.name = name;
         this.selected = selected;
+        
     }
 
     public Long getMenuId() {

@@ -38,13 +38,15 @@ import util.exception.AdminNotFoundException;
 @Singleton
 @LocalBean
 @Startup
-public class DataInitializationSessionBean {  
+public class DataInitializationSessionBean {
 
     @EJB
     private SaleTransactionLineItemEntityControllerLocal saleTransactionLineItemEntityControllerLocal;
 
     @EJB
     private OrderEntityControllerLocal orderEntityControllerLocal;
+    
+    @EJB
     private MenuEntityControllerLocal menuEntityControllerLocal;
 
     @EJB
@@ -55,7 +57,7 @@ public class DataInitializationSessionBean {
 
     @EJB
     private MenuItemEntityControllerLocal menuItemEntityControllerLocal;
-  
+    
 
     @EJB
     private VendorEntityControllerLocal vendorEntityControllerLocal;
@@ -65,7 +67,7 @@ public class DataInitializationSessionBean {
 
     @EJB
     private AdminEntityControllerLocal adminEntityControllerLocal;
-    
+
 
     @PersistenceContext(unitName = "QueueMeSystem-ejbPU")
     private EntityManager em;
@@ -84,14 +86,13 @@ public class DataInitializationSessionBean {
 
     private void initializeDate() {
         try {
+      
             // Initialize admin entities
             adminEntityControllerLocal.createAdmin(new AdminEntity("Yi Xuan", "Soong", "yxsoong", "password"));
             adminEntityControllerLocal.createAdmin(new AdminEntity("Zhu Zhi", "Kerk", "kzhuzhi", "password"));
             adminEntityControllerLocal.createAdmin(new AdminEntity("Sylvia", "Swee", "sylvia", "password"));
             adminEntityControllerLocal.createAdmin(new AdminEntity("Rui Jia", "Low", "lruijia", "password"));
-            
-            
-            
+
             // Initialize FoodCourt Entity
             Calendar calendarStart = Calendar.getInstance();
             Calendar calendarEnd = Calendar.getInstance();
@@ -101,10 +102,10 @@ public class DataInitializationSessionBean {
             calendarEnd.set(Calendar.HOUR_OF_DAY, 22);
             calendarEnd.set(Calendar.MINUTE, 0);
             calendarEnd.set(Calendar.SECOND, 0);
-          
+
             FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", new BigDecimal("4.00"), calendarStart, calendarEnd, "ABCFoodCourt", "password"));
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", new BigDecimal("5.00"), calendarStart, calendarEnd, "royalfoodcourt", "password"));
-            
+
             VendorEntity chinese = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Singapore Chinese Food", "Chinese", new BigDecimal("4.70"), "Best Chicken rice in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "chinese", "password"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal", new BigDecimal("2.50"), "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "malay", "password"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Uncle Charlie's Western", "Western", new BigDecimal("4.80"), "Taste of USA in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "western", "password"), foodCourtEntity);
@@ -112,9 +113,7 @@ public class DataInitializationSessionBean {
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Fruit Store", "Fruits", new BigDecimal("4.89"), "Eat me and be healthy", calendarEnd, calendarEnd, BigDecimal.ZERO, "fruit", "password"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Muthu Curry", "Indian", new BigDecimal("1.89"), "Cheapest prata in SG!", calendarEnd, calendarEnd, BigDecimal.ZERO, "indian", "password"), foodCourtEntity);
             
-            
             //chinese.getMenuEntity().getCategoryEntities().add(new CategoryEntity("Main"));
-            
 //            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roti Prata", "Indian Pan Cake", new BigDecimal("0.90"), "www.pratapic.com"));
 //            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Fish n Chips", "Authentic Fish n Chips", new BigDecimal("5.90"), "www.fishnchippic.com"));
 //            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Chop", "With pasta on the side", new BigDecimal("5.90"), "www.chickenchoppic.com"));
@@ -132,12 +131,12 @@ public class DataInitializationSessionBean {
 //            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Claypot Tofu", "Sizzling hot", new BigDecimal("7.90"), "www.cptofupic.com"));
 //            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Fried Rice", "Best in town", new BigDecimal("7.90"), "www.flyricepic.com"));
             MenuItemEntity beefhorfun = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Beef Hor Fun", "Best beef hor fun", new BigDecimal("7.90"), "beef_hor_fun.png"), chinese);
-        
+
             MenuEntity menuEntity = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 1", Boolean.TRUE), chinese);
             CategoryEntity categoryEntity = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity);
             categoryEntity.getMenuItemEntities().add(chickenRice);
             categoryEntity.getMenuItemEntities().add(duckRice);
-            
+
             OrderEntity orderEntity = orderEntityControllerLocal.createOrder(new OrderEntity(calendarStart));
             SaleTransactionLineItemEntity lineItem1 = saleTransactionLineItemEntityControllerLocal.createSaleTransactionLineItemEntity(new SaleTransactionLineItemEntity(1, 2, new BigDecimal("7.90"), new BigDecimal("16.80"), false, 0));
             SaleTransactionLineItemEntity lineItem2 = saleTransactionLineItemEntityControllerLocal.createSaleTransactionLineItemEntity(new SaleTransactionLineItemEntity(1, 2, new BigDecimal("5.00"), new BigDecimal("10"), false, 0));
@@ -148,7 +147,7 @@ public class DataInitializationSessionBean {
             lineItem1.setOrderEntity(orderEntity);
             lineItem2.setOrderEntity(orderEntity);
             orderEntity.setVendorEntity(chinese);
-    
+
             customerEntityControllerLocal.createCustomer(new CustomerEntity("customer", "first", "98765432", "abc street", "customer@gmail.com", "password"));
         } catch (Exception ex) {
             System.err.println("********** DataInitializationSessionBean.initializeData(): An error has occurred while loading initial test data: " + ex.getMessage());
