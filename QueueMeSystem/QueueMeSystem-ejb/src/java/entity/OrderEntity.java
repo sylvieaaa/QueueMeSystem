@@ -6,7 +6,7 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +30,7 @@ public class OrderEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar dateTime;
+    private Date dateTime;
     @ManyToOne
     @JoinColumn(nullable = true)
     private CustomerEntity customerEntity;
@@ -45,7 +45,7 @@ public class OrderEntity implements Serializable {
     public OrderEntity() {
     }
 
-    public OrderEntity(Calendar dateTime) {
+    public OrderEntity(Date dateTime) {
         this.dateTime = dateTime;
     }
 
@@ -57,11 +57,11 @@ public class OrderEntity implements Serializable {
         this.orderId = orderId;
     }
 
-    public Calendar getDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Calendar dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 

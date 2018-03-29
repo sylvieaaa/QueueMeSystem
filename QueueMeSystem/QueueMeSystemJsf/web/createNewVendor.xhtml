@@ -5,7 +5,6 @@
                 template="./template/defaultTemplate.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:pm="http://primefaces.org/mobile"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:define name="content">
@@ -13,62 +12,70 @@
         <br/>
         <br/>
 
-        <h:panelGroup style="display:block; text-align:center">
-            <h1><h:outputText style="color:blue" value="#{sessionScope['businessEntity'].name}"/></h1>
+        <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
+        <div class ="ui-g-12 ui-md-6 ui-lg-4">
 
-            <br />
-            <br />
-            <br />
-            <h:form style="align-content: space-between">
-                <pm:field>
-                    <p:outputLabel for="basic" value="Name: "/>&nbsp;&nbsp;
-                    <p:inputText id="basic" />
-                </pm:field>
-
-                <br />
-                <br />
-
-                <pm:field>
-                    <p:outputLabel for="cuisine" value="Cuisine: " />&nbsp;&nbsp;
-                    <p:selectOneMenu id="cuisine">
-                        <f:selectItem itemLabel="Select Cuisine" itemValue="" />
-                        <f:selectItem itemLabel="Chinese" itemValue="1" />
-                        <f:selectItem itemLabel="Malay" itemValue="2" />
-                        <f:selectItem itemLabel="Drinks" itemValue="3" />
-                    </p:selectOneMenu>
-                </pm:field>
-
-                <br />
-                <br />
-
-                <pm:field>
-                    <p:outputLabel for="information" value="Information: " />
-                    <p:inputTextarea id="information" />
-                </pm:field>
-
-                <br />
-                <br />
-
-                <pm:field>
-                    <p:outputLabel for="operatingHours" value="Operating Hours: " />&nbsp;&nbsp;
-
-                    <p:calendar id="operatingHours" pattern="HH:mm" timeOnly="true"  />
-                    &nbsp;&nbsp;<h:outputText style="font-size: 15" value="to"></h:outputText>&nbsp;&nbsp;   
-                    <p:calendar pattern="HH:mm" timeOnly="true"  />       
-                </pm:field>
+            <p:panel style="display: block; text-align:center; width: 550px">
+                <h1><h:outputText style="color:blue" value="#{sessionScope['businessEntity'].name}"/></h1>
 
                 <br />
                 <br />
                 <br />
-                
-                <h:panelGroup>
-                    <h:commandButton value="Add New Vendor" type="submit" actionListener="#{createNewVendorManagedBean.createNewProduct}" />&nbsp;
-                    <h:commandButton value="Clear" type="reset" />
-                </h:panelGroup>
-            </h:form>
-        </h:panelGroup>
 
+                <h:form>
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column><p:outputLabel for="name" value="Name: "/></p:column>
+                            <p:column><p:inputText id="name" value="#{createNewVendorManagedBean.newVendorEntity.vendorName}" required="true" requiredMessage="Vendor name required." /></p:column>
+                        </p:row>
 
+                        <p:row>
+                            <p:column><p:outputLabel for="cuisine" value="Cuisine: " /></p:column>
+                            <p:column>
+                                <p:selectOneMenu id="cuisine" value="#{createNewVendorManagedBean.newVendorEntity.cuisineType}" required="true" requiredMessage="Cuisine type required.">
+                                    <f:selectItem itemLabel="Chinese" itemValue="Chinese"/>
+                                    <f:selectItem itemLabel="Malay" itemValue="Malay"/>
+                                    <f:selectItem itemLabel="Drinks" itemValue="Drinks"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="information" value="Information: " /></p:column>
+                            <p:column><p:inputTextarea id="information" value="#{createNewVendorManagedBean.newVendorEntity.information}" required="true" requiredMessage="Information required."/>  </p:column>                  
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="operatingHours" value="Operating Hours: " /></p:column>
+                            <p:column>
+                                <p:calendar pattern="HH:mm:ss" timeOnly="true" value="#{createNewVendorManagedBean.newVendorEntity.startTime}" required="true" requiredMessage="Start time required." />
+                                &nbsp;&nbsp;<h:outputText style="font-size: 15px" value="to"></h:outputText>&nbsp;&nbsp;   
+                                <p:calendar id="operatingHours" pattern="HH:mm:ss" timeOnly="true" value="#{createNewVendorManagedBean.newVendorEntity.endTime}" required="true" requiredMessage="End time required." />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="username" value="Username:  "/></p:column>
+                            <p:column><p:inputText id="username" value="#{createNewVendorManagedBean.newVendorEntity.username}" required="true" requiredMessage="Username required." /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="password" value="Password: "/></p:column>
+                            <p:column><p:inputText id="password" value="#{createNewVendorManagedBean.newVendorEntity.password}" required="true" requiredMessage="Vendor name required." /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="2" style="text-align: center">
+                                <h:commandButton value="Add New Vendor" type="submit" actionListener="#{createNewVendorManagedBean.createNewVendor}" />&nbsp;
+                                <h:commandButton value="Clear" type="reset" />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+            </p:panel>
+
+        </div>
+        <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
     </ui:define>
 
 </ui:composition>

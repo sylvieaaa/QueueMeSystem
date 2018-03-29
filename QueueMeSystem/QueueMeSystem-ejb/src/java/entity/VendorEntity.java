@@ -8,9 +8,8 @@ package entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -30,11 +29,11 @@ public class VendorEntity extends BusinessEntity implements Serializable {
     private BigDecimal rating;
     private String information;
     @Temporal(javax.persistence.TemporalType.TIME)
-    private Calendar startTime;
+    private Date startTime;
     @Temporal(javax.persistence.TemporalType.TIME)
-    private Calendar endTime;
+    private Date endTime;
     private BigDecimal creditReceived;
-    
+
     @ManyToOne
     private FoodCourtEntity foodCourtEntity;
     @OneToOne(mappedBy = "vendorEntity")
@@ -45,16 +44,18 @@ public class VendorEntity extends BusinessEntity implements Serializable {
     private List<ReviewEntity> reviewEntities;
     @OneToMany(mappedBy = "vendorEntity")
     private List<MenuItemEntity> menuItemEntities;
-    
 
     public VendorEntity() {
         super();
         this.orderEntities = new ArrayList<>();
         this.reviewEntities = new ArrayList<>();
         menuItemEntities = new ArrayList<>();
+        this.rating = BigDecimal.ZERO;
+        this.creditReceived = BigDecimal.ZERO;
+
     }
 
-    public VendorEntity(String vendorName, String cuisineType, BigDecimal rating, String information, Calendar startTime, Calendar endTime, BigDecimal creditReceived, String username, String password) {
+    public VendorEntity(String vendorName, String cuisineType, BigDecimal rating, String information, Date startTime, Date endTime, BigDecimal creditReceived, String username, String password) {
         this();
         this.vendorName = vendorName;
         this.cuisineType = cuisineType;
@@ -99,19 +100,19 @@ public class VendorEntity extends BusinessEntity implements Serializable {
         this.information = information;
     }
 
-    public Calendar getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Calendar startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Calendar getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Calendar endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

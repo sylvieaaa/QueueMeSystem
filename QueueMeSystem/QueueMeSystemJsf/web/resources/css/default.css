@@ -13,6 +13,12 @@ body {
     src: url('#{resource["fonts/Kirvy-Bold.otf"]}');
 
 }
+
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    border-style: none !important
+}
+
 .ui-outputlabel.ui-widget {
     font-family:'Kirvy';
 }
