@@ -4,56 +4,68 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 template="./template/defaultTemplate.xhtml"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <ui:define name="content">
-
-        <br/>
-        <br/>
-
-        <h:panelGroup style="display:block; text-align:center">
-
-            <h1><h:outputText style="color:blue" value="#{sessionScope['businessEntity'].name}"/></h1>&nbsp;&nbsp;
-            <p:link outcome="foodCourtMainPage.xhtml" value="View Details"></p:link>
+    <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
+    <div class ="ui-g-12 ui-md-6 ui-lg-4">
+        <ui:define name="content">
 
             <br/>
             <br/>
-            <br/>
-
-            <font size="4"><p:button outcome="foodCourtMainPage.xhtml" value="Chinese" style="width:300; height:50">
-                </p:button>&nbsp;
 
 
-                <p:button outcome="foodCourtMainPage.xhtml" value="Malay" style="width:300; height:50">
-                </p:button>
+            <h:panelGroup style="display:block; text-align:center">
+
+                <h1><h:outputText style="color:blue" value="#{sessionScope['businessEntity'].name}"/></h1>&nbsp;&nbsp;
+                <p:link outcome="foodCourtMainPage.xhtml" value="View Details"></p:link>
+
+                <br/>
+                <br/>
+                <br/>
+
+                <p:carousel value="#{sessionScope['businessEntity'].vendorEntities}" var="vendors" numVisible="3" style="width: auto; margin: 10px 10px" circular="true">
+                    <!-- #TODO: Logos of food courts -->
+                    <p:panelGrid columns="1" style="margin-left: 100px">
+                        <p:graphicImage  value="/images/food/beef_hor_fun.png" width="70%"/>
+                    </p:panelGrid>
+                    <p:panelGrid columns="2" style="width:100%;text-align: justify; margin: 10px 2px; padding-left: 10px" columnClasses="label,value">
+                        <h:outputText style="font-weight: bold" value="Name: " />
+                        <h:outputText value="#{vendors.vendorName}" />
+
+                        <h:outputText style="font-weight: bold" value="Cuisine: " />
+                        <h:outputText value="#{vendors.cuisineType}" />
+
+                        <h:outputText style="font-weight: bold" value="Rating: " />
+                        <h:outputText value="#{vendors.rating}"/>
+
+                        <h:outputText style="font-weight: bold" value="Information: " />
+                        <h:outputText value="#{vendors.information}" />
+
+                        <h:outputText style="font-weight: bold" value="Start Hours: " />
+                        <h:outputText value="#{vendors.startTime}">
+                            <f:convertDateTime type="time" dateStyle="full"/>
+                        </h:outputText> 
+
+                        <h:outputText style="font-weight: bold" value="End Hours: " />
+                        <h:outputText value="#{vendors.endTime}">
+                            <f:convertDateTime type="time" dateStyle="full"/>
+                        </h:outputText>
+
+                        <h:outputText />
+                        <p:button outcome="createNewVendor.xhtml" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px" />
+                    </p:panelGrid>
+                </p:carousel>
 
                 <br />
                 <br />
 
-                <p:button outcome="foodCourtMainPage.xhtml" value="Western" style="width:300; height:50">
-                </p:button>&nbsp;
+                <p:button outcome="createNewVendor.xhtml" value="Add Vendor" icon="fa fa-plus-circle"></p:button>
 
-                <p:button outcome="foodCourtMainPage.xhtml" value="Drink" style="width:300; height:50">
-                </p:button>&nbsp;
-
-                <br />
-                <br />
-
-                <p:button outcome="foodCourtMainPage.xhtml" value="Fruit" style="width:300; height:50">
-                </p:button>&nbsp;
-
-                <p:button outcome="foodCourtMainPage.xhtml" value="Curry" style="width:300; height:50">
-                </p:button>&nbsp;
-
-                <br />
-                <br />
-
-                <p:button outcome="createNewFoodCourt.xhtml" value="Add Vendor" icon="fa fa-plus-circle"></p:button>
-            </font>
-
-        </h:panelGroup>
+            </h:panelGroup>
 
 
-    </ui:define>
-
+        </ui:define>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
 </ui:composition>

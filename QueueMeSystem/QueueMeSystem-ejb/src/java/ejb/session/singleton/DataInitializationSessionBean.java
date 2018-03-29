@@ -24,8 +24,6 @@ import entity.OrderEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.VendorEntity;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -35,7 +33,6 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.exception.AdminNotFoundException;
-
 
 @Singleton
 @LocalBean
@@ -47,7 +44,7 @@ public class DataInitializationSessionBean {
 
     @EJB
     private OrderEntityControllerLocal orderEntityControllerLocal;
-    
+
     @EJB
     private MenuEntityControllerLocal menuEntityControllerLocal;
 
@@ -59,7 +56,6 @@ public class DataInitializationSessionBean {
 
     @EJB
     private MenuItemEntityControllerLocal menuItemEntityControllerLocal;
-    
 
     @EJB
     private VendorEntityControllerLocal vendorEntityControllerLocal;
@@ -69,7 +65,6 @@ public class DataInitializationSessionBean {
 
     @EJB
     private AdminEntityControllerLocal adminEntityControllerLocal;
-
 
     @PersistenceContext(unitName = "QueueMeSystem-ejbPU")
     private EntityManager em;
@@ -88,7 +83,7 @@ public class DataInitializationSessionBean {
 
     private void initializeDate() {
         try {
-      
+
             // Initialize admin entities
             adminEntityControllerLocal.createAdmin(new AdminEntity("Yi Xuan", "Soong", "yxsoong", "password"));
             adminEntityControllerLocal.createAdmin(new AdminEntity("Zhu Zhi", "Kerk", "kzhuzhi", "password"));
@@ -96,24 +91,14 @@ public class DataInitializationSessionBean {
             adminEntityControllerLocal.createAdmin(new AdminEntity("Rui Jia", "Low", "lruijia", "password"));
 
             // Initialize FoodCourt Entity
-            Calendar calendarStart = Calendar.getInstance();
-            Calendar calendarEnd = Calendar.getInstance();
-            calendarStart.set(Calendar.HOUR_OF_DAY, 8);
-            calendarStart.set(Calendar.MINUTE, 0);
-            calendarStart.set(Calendar.SECOND, 0);
-            calendarEnd.set(Calendar.HOUR_OF_DAY, 22);
-            calendarEnd.set(Calendar.MINUTE, 0);
-            calendarEnd.set(Calendar.SECOND, 0);
-            
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-            Date date = new Date();
-            
-            
-            FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", new BigDecimal("4.00"), date, date, "ABCFoodCourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", new BigDecimal("5.00"), date, date, "royalfoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Grandfather's Food Court", "Best in Ang Mo Kio", "AMK Drive 666", "143245", new BigDecimal("5.00"), date, date, "amkfoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", new BigDecimal("5.00"), date, date, "changifoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", new BigDecimal("5.00"), date, date, "redhillfoodcourt", "password"));
+            Date calendarStart = new Date(0, 0, 0, 8, 0);
+            Date calendarEnd = new Date(0, 0, 0, 22, 0);
+   
+            FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", new BigDecimal("4.00"), calendarStart, calendarEnd, "ABCFoodCourt", "password"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", new BigDecimal("5.00"), calendarStart, calendarEnd, "royalfoodcourt", "password"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Grandfather's Food Court", "Best in Ang Mo Kio", "AMK Drive 666", "143245", new BigDecimal("5.00"), calendarStart, calendarEnd, "amkfoodcourt", "password"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", new BigDecimal("5.00"), calendarStart, calendarEnd, "changifoodcourt", "password"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", new BigDecimal("5.00"), calendarStart, calendarEnd, "redhillfoodcourt", "password"));
 
             VendorEntity chinese = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Singapore Chinese Food", "Chinese", new BigDecimal("4.70"), "Best Chicken rice in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "chinese", "password"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal", new BigDecimal("2.50"), "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "malay", "password"), foodCourtEntity);
@@ -121,7 +106,7 @@ public class DataInitializationSessionBean {
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Ah Seng Drink Stores", "Beverages", new BigDecimal("4.90"), "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "drink", "password"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Fruit Store", "Fruits", new BigDecimal("4.89"), "Eat me and be healthy", calendarEnd, calendarEnd, BigDecimal.ZERO, "fruit", "password"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Muthu Curry", "Indian", new BigDecimal("1.89"), "Cheapest prata in SG!", calendarEnd, calendarEnd, BigDecimal.ZERO, "indian", "password"), foodCourtEntity);
-            
+
             //chinese.getMenuEntity().getCategoryEntities().add(new CategoryEntity("Main"));
 //            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roti Prata", "Indian Pan Cake", new BigDecimal("0.90"), "www.pratapic.com"));
 //            menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Fish n Chips", "Authentic Fish n Chips", new BigDecimal("5.90"), "www.fishnchippic.com"));
