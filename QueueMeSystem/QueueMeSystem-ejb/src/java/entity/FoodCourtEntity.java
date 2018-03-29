@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -28,9 +29,9 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
     private String postalCode;
     private BigDecimal ratings;
     @Temporal(javax.persistence.TemporalType.TIME)
-    private Calendar startTime;
+    private Date startTime;
     @Temporal(javax.persistence.TemporalType.TIME)
-    private Calendar endTime;
+    private Date endTime;
     
     @OneToMany(mappedBy = "foodCourtEntity")
     private List<VendorEntity> vendorEntities;
@@ -38,9 +39,10 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
     public FoodCourtEntity() {
         super();
         this.vendorEntities = new ArrayList<>();
+        this.ratings = BigDecimal.ZERO;
     }
 
-    public FoodCourtEntity(String name, String description, String address, String postalCode, BigDecimal ratings, Calendar startTime, Calendar endTime, String username, String password) {
+    public FoodCourtEntity(String name, String description, String address, String postalCode, BigDecimal ratings, Date startTime, Date endTime, String username, String password) {
         this();
         this.name = name;
         this.description = description;
@@ -85,19 +87,19 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
         this.ratings = ratings;
     }
 
-    public Calendar getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Calendar startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Calendar getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Calendar endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

@@ -6,9 +6,11 @@
 package ejb.session.stateless;
 
 import entity.FoodCourtEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -38,5 +40,11 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
         } else {
             return null;
         }
+    }
+    
+    @Override
+    public List<FoodCourtEntity> retrieveAllFoodCourts(){
+        Query query = em.createQuery("SELECT f FROM FoodCourtEntity f ORDER BY f.name ASC");
+        return query.getResultList();
     }
 }

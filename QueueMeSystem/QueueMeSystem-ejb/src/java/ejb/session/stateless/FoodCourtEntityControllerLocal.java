@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.FoodCourtEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -18,5 +19,7 @@ public interface FoodCourtEntityControllerLocal {
     public FoodCourtEntity createFoodCourt(FoodCourtEntity foodCourtEntity);
 
     public FoodCourtEntity retrieveFoodCourtById(Long foodCourtId);
+
+    public List<FoodCourtEntity> retrieveAllFoodCourts();
     
 }
