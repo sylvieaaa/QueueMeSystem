@@ -92,6 +92,8 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
     public void deleteMenuItem(Long menuItemId) {
         try {
             MenuItemEntity menuItemEntity = retrieveMenuItemById(menuItemId);
+            VendorEntity vendorEntity = menuItemEntity.getVendorEntity();
+            vendorEntity.getMenuItemEntities().remove(menuItemEntity);
             em.remove(menuItemEntity);
         } catch (MenuItemNotFoundException ex) {
 

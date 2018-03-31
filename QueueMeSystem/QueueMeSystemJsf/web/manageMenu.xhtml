@@ -16,39 +16,45 @@
         </script>
 
         <h:form>
-            <h:panelGrid columns="2" style="margin-bottom:10px; border:none">
-                <p:outputLabel for="menuOneMenu" value="Select menu:"/>
-                <p:selectOneMenu id="menuOneMenu" value="#{manageMenuManagedBean.selectedMenuEntity}" converter="menuEntityConverter" style="width:125px">
-                    <f:selectItem itemLabel="[SELECT ONE]" itemValue="null" noSelectionOption="true"/>
-                    <f:selectItems value="#{manageMenuManagedBean.selectItems}" var="menu"/>
-                    <p:ajax listener="#{manageMenuManagedBean.onChange}" update="menuForm:menuCategories" />
-                </p:selectOneMenu>
-                <f:facet name="actions">
-                    <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" id="iconOnly" icon="ui-icon-plus">
-                    </p:commandButton>
-                </f:facet>
-            </h:panelGrid>
+
         </h:form>
         <h:form id="menuForm">
-
-
-
+            <p:growl id="menuFormGrowl" showDetail="true"/>
             <p:fieldset>
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-5">
-                            <p:panel id="menuItemPanel" header="All Items">
-                            <p:commandButton style="float: right" update="formEditMenuItems" oncomplete="PF('dialogEditMenuItems').show()" title="Edit" icon="ui-icon-plus" value="Create new item"/><br/><br/>
-                            <p:dataGrid id="menuItems" var="item" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="3" rows="3" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                        rowsPerPageTemplate="5,10,15" style="text-align: center;">
+                        <p:panel id="menuItemPanel" header="All Items">
+                            <f:facet name="actions">
+                                <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" icon="fa fa-plus" update="formEditMenuItems" oncomplete="PF('dialogCreateNewItem').show()" title="Create new item"/>
+                                <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" icon="fa fa-edit" update="formEditMenuItems" oncomplete="PF('dialogEditMenuItems').show()" title="Edit multiple items"/>
+                                <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" icon="fa fa-trash" update="formEditMenuItems" oncomplete="PF('dialogEditMenuItems').show()" title="Delete multiple items"/>
+                            </f:facet>
+                            <p:dataGrid id="menuItems" var="item" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="3" rows="6" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                        rowsPerPageTemplate="6,9" style="text-align: center;">
                                 <p:panel id="itemPanel" header="#{item.menuItemName}">
-                                    <h:panelGrid columns="1">
-                                        <p:graphicImage  value="/images/food/#{item.photoURL}" width="100%"/>
-                                    </h:panelGrid>
+                                    <p:panelGrid columns="1">
+                                        <p:row>
+                                            <p:column>
+                                                <p:graphicImage  value="/foodPhotos/#{item.photoURL}" width="100%"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:commandButton class="icon-only" icon="fa fa-edit" update="formEditMenuItems"  oncomplete="PF('dialogEditMenuItems').show()" title="Edit item"/>
+                                            <p:commandButton class="icon-only" icon="fa fa-trash" actionListener="#{manageMenuManagedBean.deleteItem}" update="menuForm:menuFormGrowl menuForm:menuItems" title="Delete item">
+                                                <f:attribute name="menuItemEntityToDelete" value="#{item}" />
+                                                <p:confirm header="Confirmation" message="Are you sure you want to delete #{item.menuItemName}?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+                                        </p:row>
+                                    </p:panelGrid>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
                                 </p:panel>
 
                                 <p:draggable for="itemPanel" revert="true" handle=".ui-panel-titlebar" stack=".ui-panel"/>
                             </p:dataGrid>
-                            </p:panel>
+                        </p:panel>
 
 
 
@@ -57,14 +63,26 @@
                     <div class="ui-g-12 ui-md-7">
 
                         <p:fieldset id="menuCategories">
+                            <h:panelGrid columns="2" style="margin-bottom:10px; border:none">
+                                <p:outputLabel for="menuOneMenu" value="Select menu:"/>
+                                <p:selectOneMenu id="menuOneMenu" value="#{manageMenuManagedBean.selectedMenuEntity}" converter="menuEntityConverter" style="width:125px">
+                                    <f:selectItem itemLabel="[SELECT ONE]" itemValue="null" noSelectionOption="true"/>
+                                    <f:selectItems value="#{manageMenuManagedBean.selectItems}" var="menu"/>
+                                    <p:ajax listener="#{manageMenuManagedBean.onChange}" update="menuForm:menuCategories" />
+                                </p:selectOneMenu>
+                                <f:facet name="actions">
+                                    <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" id="iconOnly" icon="ui-icon-plus">
+                                    </p:commandButton>
+                                </f:facet>
+                            </h:panelGrid>
                             <p:tabView rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.categoryEntities}" var="category">
 
                                 <p:tab id="categoryTab" title="#{category.name}">
 
                                     <p:fieldset id="catItems">
-                                        <p:dataList value="#{category.menuItemEntities}" var="menuItems" type="unordered" itemType="none">
+                                        <p:dataList value="#{category.menuItemEntities}" var="menuItems" type="unordered" itemType="none" styleClass="menuItemsDataList">
                                             <h:panelGrid columns="2" columnClasses="foodPhoto,detail" style="border: none" cellpadding="4">
-                                                <p:graphicImage style="border: none" value="/images/food/#{menuItems.photoURL}" width="220" height="124"/>
+                                                <p:graphicImage style="border: none" value="/foodPhotos/#{menuItems.photoURL}" width="220" height="124"/>
 
                                                 <p:outputPanel>
                                                     <h:outputLabel for="foodName" value="Name: "/>
@@ -94,28 +112,119 @@
         </h:form>
 
         <h:form id="formEditMenuItems">
-             
+
             <p:dialog id="dialogEditMenuItems" widgetVar="dialogEditMenuItems" header="Edit Items" closable="true" resizable="false">
                 <p:commandButton style="float: right" title="Create new item" icon="ui-icon-plus" value="Create new item"/>
                 <p:commandButton style="float: right" title="Delete items" icon="fa fa-trash" value="Delete items"/><br/><br/>
                 <p:dataGrid id="menuItems" var="item" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="3" rows="12" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                             style="text-align: center;">
+                            style="text-align: center;">
                     <p:panel id="itemPanel" header="#{item.menuItemName}">
                         <h:panelGrid columns="1">
-                            <p:graphicImage  value="/images/food/#{item.photoURL}" width="150px" height="78px"/>
+                            <p:graphicImage  value="/foodPhotos/#{item.photoURL}" width="150px" height="78px"/>
                         </h:panelGrid>
                     </p:panel>
 
                 </p:dataGrid>
             </p:dialog>
         </h:form>
-        
+
         <h:form id="formCreateNewItem">
-             
-            <p:dialog id="dialogCreateNewItem" widgetVar="dialogCreateNewItem" header="CreateNewItem" closable="true" resizable="true">
-                <p:panel>
-                    
-                </p:panel>
+
+            <p:dialog id="dialogCreateNewItem" widgetVar="dialogCreateNewItem" header="CreateNewItem" closable="true" resizable="true" height="330" width="530">
+                <!--<p:messages id="messagesCreateNewItem" redisplay="false"/>-->
+                <p:growl id="growl" showDetail="true"/>
+                <p:wizard flowListener="#{manageMenuManagedBean.onFlowProcess}" id="wizardItemMenu" widgetVar="wizardItemMenu">
+                    <p:tab id="itemDetails" title="Details">
+                        <p:messages />
+                        <p:panel header="Item Details">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="menuItemName" value="Item name: " />
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="menuItemName" value="#{manageMenuManagedBean.newMenuItemEntity.menuItemName}" required="true" requiredMessage="Item name is required" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:message for="menuItemName" />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="menuItemDescription" value="Description: " />
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputTextarea id="menuItemDescription" rows="4" cols="30" value="#{manageMenuManagedBean.newMenuItemEntity.description}" counter="display" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false" required="true" requiredMessage="Description is required" />
+                                        <br/>
+                                        <h:outputText id="display" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:message for="menuItemDescription" />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="menuItemPrice" value="Price: " />
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputNumber id="menuItemPrice" value="#{manageMenuManagedBean.newMenuItemEntity.price}" symbol="$" emptyValue="sign" required="true" requiredMessage="Price is required"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:message for="menuItemPrice" />
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                    </p:tab>
+
+                    <p:tab id="itemImage" title="Upload">
+                        <p:messages id="uploadMessage"/>
+                        <p:panel header="Upload Photo">
+                            <p:panelGrid>
+                                <p:row rendered="${manageMenuManagedBean.file eq null}">
+                                    <p:column>
+                                        <p:outputLabel for="menuPhotoUpload" value="Upload photo: " />
+                                    </p:column>
+                                    <p:column>
+                                        <p:fileUpload required="true" requiredMessage="Please upload photo before going to the next page." id="menuPhotoUpload" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="uploadMessage" skinSimple="true" fileUploadListener="#{manageMenuManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:message for="menuPhotoUpload" />
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="${manageMenuManagedBean.file ne null}">
+                                    <h2>File uploaded successfully</h2>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                    </p:tab>
+                    <p:tab id="itemConfirmation" title="Confirmation">
+                        <p:messages />
+                        <p:panel header="Confirmation">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column>Item name: </p:column>
+                                    <p:column>#{manageMenuManagedBean.newMenuItemEntity.menuItemName}</p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>Description: </p:column>
+                                    <p:column>#{manageMenuManagedBean.newMenuItemEntity.description}</p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>Image: </p:column>
+                                    <p:column><p:graphicImage  value="/foodPhotos/#{manageMenuManagedBean.newMenuItemEntity.photoURL}" width="150px" height="78px"/></p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="2">
+                                        <p:commandButton value="Create New Product" actionListener="#{manageMenuManagedBean.createNewMenuItem}" update="@form menuForm:menuItems" oncomplete="PF('wizardItemMenu').loadStep('itemDetails',false); PF('dialogCreateNewItem').show();"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                    </p:tab>
+                </p:wizard>
+
             </p:dialog>
         </h:form>
     </ui:define>

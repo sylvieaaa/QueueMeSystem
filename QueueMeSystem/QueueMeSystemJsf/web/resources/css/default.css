@@ -129,3 +129,7 @@ a:link:hover, a:visited:hover {
 .ui-button-text {
     font-family: 'Kirvy';
 }
+
+.menuItemsDataList{
+    border: none;
+}
