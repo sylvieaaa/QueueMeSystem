@@ -38,6 +38,11 @@ body {
     font-size:20px;
 }
 
+.foodcourt{
+    display: inline-block;
+    
+}
+
 .container{
 
     margin-top: 150px;
@@ -130,6 +135,16 @@ a:link:hover, a:visited:hover {
     font-family: 'Kirvy';
 }
 
-.menuItemsDataList{
-    border: none;
+.ui-carousel-item{
+    
+    border-color: #cccccc;
+}
+
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    border-style: none !important
+}
+
+.ui-widget-header .ui-inputfield, .ui-widget-content .ui-inputfield{
+    width:100%;
 }

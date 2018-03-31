@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="content">
+
+        <h2 style="text-align: center"> Welcome, <h:outputText style="color:blue;" value="#{sessionScope['businessEntity'].firstName}"/></h2>
+
+        <h:form id="form">
+            <p:carousel value="#{viewAllFoodCourtsManagedBean.foodCourts}" headerText="Food Courts" var="foodcourt" responsive="true" style="margin-top: 45px" >
+                 <div class="ui-g-12 ui-md-2"></div>
+                <div class="ui-g-12 ui-md-9">
+                <p:panelGrid style="width:100%;margin:10px 0px;"  styleClass="ui-panelgrid-blank"  >
+                      
+                    <p:row>
+                        <p:column colspan="2" rowspan="2">
+                            <p:graphicImage  value="/images/food/beef_hor_fun.png" style="width:100%; text-align: center"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        
+                        <p:column>
+                            <h:outputText style="text-align: center" value="Name " />
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{foodcourt.name}" />
+                        </p:column>
+                       
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Address " />
+                        </p:column>
+                        <p:column  >
+                            <h:outputText value="#{foodcourt.address}" />
+                        </p:column>
+                        <div class="ui-g-6 ui-md-3"></div>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Postal Code " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{foodcourt.postalCode}" />
+                        </p:column>
+                        
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Description" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{foodcourt.description}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Opening hours" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{foodcourt.startTime}">
+                                <f:convertDateTime type="time"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Closing hours" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{foodcourt.endTime}">
+                                <f:convertDateTime type="time"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="2" style="text-align: center" >
+                            <p:button value="update" outcome="updateFoodCourt.xhtml"/>
+                        </p:column>
+                    </p:row>
+
+
+
+
+                </p:panelGrid>
+               </div>
+             
+
+                <f:facet name="footer">
+                    Click on the food court for more details
+                </f:facet>
+            </p:carousel>
+        </h:form>
+
+        <p:button outcome="createNewFoodCourt.xhtml" value="Add Food Court" icon="fa fa-plus-circle"></p:button>
+
+
+
+    </ui:define>
+</ui:composition>

@@ -93,7 +93,12 @@ public class SecurityFilter implements Filter {
         } else if (businessEntity instanceof CustomerEntity) {
 
         } else if (businessEntity instanceof AdminEntity) {
-
+            if(path.equals("/adminMainPage.xhtml")
+                    || path.equals("/updateFoodCourt.xhtml")
+                    || path.equals("/createNewFoodCourt.xhtml")){
+                
+                return true;
+            }
         }
 
         return false;
@@ -106,6 +111,7 @@ public class SecurityFilter implements Filter {
     private Boolean excludeLoginCheck(String path) {
         if (path.equals("/index.xhtml")
                 || path.equals("/forgetPassword.xhtml")
+                || path.equals("/changePasswiord.xhtml")
                 || path.equals("/error404.xhtml")
                 || path.startsWith("/images")
                 || path.startsWith("/foodPhotos")
