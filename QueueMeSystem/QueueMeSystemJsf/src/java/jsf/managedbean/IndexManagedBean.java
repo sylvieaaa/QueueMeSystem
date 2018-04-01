@@ -61,6 +61,7 @@ public class IndexManagedBean {
             if (businessEntity instanceof AdminEntity) {
                 accountType = "Admin";
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (AdminEntity) businessEntity);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("adminMainPage.xhtml");
             } else if (businessEntity instanceof FoodCourtEntity) {
                 accountType = "FoodCourt";
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (FoodCourtEntity) businessEntity);
@@ -73,6 +74,7 @@ public class IndexManagedBean {
             }
 
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountType", accountType);
+            
             FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
 
         } catch (InvalidLoginCredentialException ex) {
