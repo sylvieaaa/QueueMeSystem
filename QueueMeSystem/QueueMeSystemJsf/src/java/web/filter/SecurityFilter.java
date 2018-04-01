@@ -86,8 +86,9 @@ public class SecurityFilter implements Filter {
             if (path.equals("/mainPage.xhtml")
                     || path.startsWith("/changePassword.xhtml")
                     || path.equals("/manageMenu.xhtml")
-                    || path.equals("/manageOrder.xhtml")
-                    || path.equals("/manageCompletedOrder.xhtml")) {
+                    || path.equals("/manageOrders.xhtml")
+                    || path.equals("/manageCompletedOrder.xhtml")
+                    || path.equals("/addOrder.xhtml")) {
                 return true;
             }
         } else if (businessEntity instanceof CustomerEntity) {
