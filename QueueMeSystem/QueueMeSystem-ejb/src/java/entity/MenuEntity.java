@@ -37,6 +37,7 @@ public class MenuEntity implements Serializable {
     
     public MenuEntity() {
         categoryEntities = new ArrayList<>();
+        selected = Boolean.FALSE;
         //categoryEntities.add(new CategoryEntity("Main"));
     }
 
