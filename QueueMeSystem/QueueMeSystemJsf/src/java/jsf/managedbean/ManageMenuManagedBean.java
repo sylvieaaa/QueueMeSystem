@@ -5,6 +5,7 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.CategoryEntityControllerLocal;
 import ejb.session.stateless.MenuEntityControllerLocal;
 import ejb.session.stateless.MenuItemEntityControllerLocal;
 import entity.BusinessEntity;
@@ -19,7 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -34,12 +37,17 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.DragDropEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import util.exception.CategoryNotFoundException;
+import util.exception.MenuItemNotFoundException;
+import util.exception.MenuNotFoundException;
 import util.exception.VendorNotFoundException;
 
 /**
@@ -49,6 +57,9 @@ import util.exception.VendorNotFoundException;
 @Named(value = "manageMenuManagedBean")
 @ViewScoped
 public class ManageMenuManagedBean implements Serializable {
+
+    @EJB
+    private CategoryEntityControllerLocal categoryEntityControllerLocal;
 
     @EJB
     private MenuItemEntityControllerLocal menuItemEntityControllerLocal;
@@ -66,17 +77,31 @@ public class ManageMenuManagedBean implements Serializable {
     MenuEntity selectedMenuEntity;
 
     MenuItemEntity newMenuItemEntity;
-
+    MenuItemEntity menuItemEntityToEdit;
     File file;
-    
-//    StreamedContent filePhoto;
 
+    Boolean deleteMultipleItems;
+    HashMap<MenuItemEntity, Boolean> menuItemEntitiesToDelete;
+
+    MenuEntity newMenuEntity;
+
+    CategoryEntity newCategoryEntity;
+    CategoryEntity selectedCategoryEntity;
+//    List<MenuItemEntity> menuItemEntitiesToDelete;
+
+//    StreamedContent filePhoto;
     public ManageMenuManagedBean() {
         //selectedMenuEntity = new MenuEntity();
         menuItemEntities = new ArrayList<>();
         menuItemEntitiesCopy = new ArrayList<>();
         selectItems = new ArrayList<>();
         newMenuItemEntity = new MenuItemEntity();
+        deleteMultipleItems = false;
+//        menuItemEntitiesToDelete = new ArrayList<>();
+        menuItemEntitiesToDelete = new HashMap<>();
+        menuItemEntityToEdit = null;
+        newMenuEntity = new MenuEntity();
+        newCategoryEntity = new CategoryEntity();
     }
 
     @PostConstruct
@@ -85,9 +110,12 @@ public class ManageMenuManagedBean implements Serializable {
         menuItemEntities = menuItemEntityControllerLocal.retrieveAllMenuItemEntityByVendor(vendorEntity);
         menuItemEntitiesCopy.addAll(menuItemEntities);
         menuEntities = menuEntityControllerLocal.retrieveMenusByVendor(vendorEntity);
-
         for (MenuEntity menuEntity : menuEntities) {
             selectItems.add(new SelectItem(menuEntity, menuEntity.getName(), menuEntity.getMenuId().toString()));
+        }
+
+        for (MenuItemEntity mie : menuItemEntities) {
+            menuItemEntitiesToDelete.put(mie, Boolean.TRUE);
         }
 
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("MenuEntityConverter.menuEntities", menuEntities);
@@ -98,49 +126,51 @@ public class ManageMenuManagedBean implements Serializable {
 //        }
     }
 
-//    public StreamedContent getFilePhoto() throws IOException {
-//        filePhoto = new DefaultStreamedContent(new FileInputStream(file));
-//        return filePhoto;
-//    }
-//
-//    public void setFilePhoto(StreamedContent filePhoto) {
-//        this.filePhoto = filePhoto;
-//        
-//    }
-    
-
-//    public StreamedContent getImage() throws IOException {
-//        FacesContext context = FacesContext.getCurrentInstance();
-//
-//        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-//            // So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
-//            return new DefaultStreamedContent();
-//        } else {
-//            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
-//            String photoUrl = context.getExternalContext().getRequestParameterMap().get("photoURL");
-//            String filePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator");
-//            return new DefaultStreamedContent(new FileInputStream(new File(filePath, photoUrl)));
-//        }
-//    }
-
     @PreDestroy
     public void preDestroy() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("MenuEntityConverter.menuEntities", null);
     }
 
     public void onChange() {
-        System.err.println("changed");
+        if (selectedMenuEntity != null && !selectedMenuEntity.getCategoryEntities().isEmpty()) {
+            selectedCategoryEntity = selectedMenuEntity.getCategoryEntities().get(0);
+        }
     }
 
     public void onDrop(DragDropEvent ddEvent) {
+        MenuItemEntity menuItemToBeAdded = (MenuItemEntity) ddEvent.getData();
         menuItemEntities.clear();
         menuItemEntities.addAll(menuItemEntitiesCopy);
-        System.err.println("drop");
-        menuEntities.get(0).getCategoryEntities().get(0).getMenuItemEntities().add((MenuItemEntity) ddEvent.getData());
+        selectedCategoryEntity.getMenuItemEntities().add(menuItemToBeAdded);
+        try {
+            categoryEntityControllerLocal.addMenuItem(selectedCategoryEntity, menuItemToBeAdded);
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item added", null));
+        } catch (CategoryNotFoundException | MenuItemNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+
+    public void removeItemFromCategory(ActionEvent event) {
+        MenuItemEntity menuItemToBeRemoved = (MenuItemEntity) event.getComponent().getAttributes().get("menuItem");
+        selectedCategoryEntity.getMenuItemEntities().remove(menuItemToBeRemoved);
+        System.err.println(menuItemToBeRemoved);
+        try {
+            categoryEntityControllerLocal.removeMenuItem(selectedCategoryEntity, menuItemToBeRemoved);
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item removed", null));
+        } catch (CategoryNotFoundException | MenuItemNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
     }
 
     public void handleFileUpload(FileUploadEvent event) {
         VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        String from = (String) event.getComponent().getAttributes().get("from");
         try {
             String fileName = "";
             String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator");
@@ -169,17 +199,19 @@ public class ManageMenuManagedBean implements Serializable {
                 fileOutputStream.flush();
             }
 
+            if (from.equals("edit")) {
+                menuItemEntityToEdit.setPhotoURL(file.getName());
+            } else if (from.equals("create")) {
+                newMenuItemEntity.setPhotoURL(file.getName());
+            }
+
             fileOutputStream.close();
             inputStream.close();
-            newMenuItemEntity.setPhotoURL(file.getName());
+
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
         }
-    }
-
-    public void createNewMenu() {
-
     }
 
     public void createNewMenuItem(ActionEvent event) {
@@ -199,30 +231,140 @@ public class ManageMenuManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
-    
+
     public void deleteItem(ActionEvent event) {
         MenuItemEntity menuItemEntityToDelete = (MenuItemEntity) event.getComponent().getAttributes().get("menuItemEntityToDelete");
         menuItemEntityControllerLocal.deleteMenuItem(menuItemEntityToDelete.getMenuItemId());
         menuItemEntities.remove(menuItemEntityToDelete);
         menuItemEntitiesCopy.remove(menuItemEntityToDelete);
+        for (CategoryEntity categoryEntity : menuEntities.get(0).getCategoryEntities()) {
+            List<MenuItemEntity> mie = categoryEntity.getMenuItemEntities();
+            mie.remove(menuItemEntityToDelete);
+        }
         String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + menuItemEntityToDelete.getPhotoURL();
         File deletePhoto = new File(newFilePath);
-        if(deletePhoto.exists()) {
+        if (deletePhoto.exists()) {
             deletePhoto.delete();
         }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Product deleted successfully", null));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item deleted successfully", null));
     }
 
     public String onFlowProcess(FlowEvent event) {
         if (event.getNewStep().equals("itemConfirmation")) {
             if (file == null) {
                 System.err.println("in file");
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload file before moving to the next page.", ""));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload photo before moving to the next page.", ""));
                 return "itemImage";
             }
         }
 
         return event.getNewStep();
+    }
+
+    public void toggleDeleteMultipleItems(ActionEvent event) {
+        deleteMultipleItems = !deleteMultipleItems;
+    }
+
+    public void updateItemsToDelete() {
+//        MenuItemEntity menuItemEntity = (MenuItemEntity) event.getComponent().getAttributes().get("menuItemToDelete");
+//        if(menuItemEntitiesToDelete.contains(menuItemEntity)) {
+//            menuItemEntitiesToDelete.remove(menuItemEntity);
+//        } else {
+//            menuItemEntitiesToDelete.add(menuItemEntity);
+//        }
+
+//        System.err.println("Added " + menuItemEntity.getMenuItemName() + " " + menuItemEntitiesToDelete.size());
+        System.err.println("in ");
+    }
+
+    public void saveMenuItemEdit(ActionEvent event) {
+        try {
+            menuItemEntityControllerLocal.updateMenuItem(menuItemEntityToEdit);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item: " + menuItemEntityToEdit.getMenuItemName() + " updated successfully", null));
+        } catch (MenuItemNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve the item details", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+
+    public void createNewMenu(ActionEvent event) {
+        try {
+            VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+            menuEntityControllerLocal.createMenu(newMenuEntity, vendorEntity);
+            menuEntities.add(newMenuEntity);
+            selectItems.add(new SelectItem(newMenuEntity, newMenuEntity.getName(), newMenuEntity.getMenuId().toString()));
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New menu: " + newMenuEntity.getName() + " is created.", null));
+            newMenuEntity = new MenuEntity();
+        } catch (VendorNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve your account details", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+
+    public void deleteMenu() {
+        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        int size = selectItems.size();
+        for (int i = 0; i < size; i++) {
+            if (selectItems.get(i).getValue().equals(selectedMenuEntity)) {
+                System.err.println("remove selected");
+                selectItems.remove(i);
+                break;
+            }
+        }
+        menuEntities.remove(selectedMenuEntity);
+        try {
+            menuEntityControllerLocal.removeMenuEntity(selectedMenuEntity, vendorEntity);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("MenuEntityConverter.menuEntities", menuEntities);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, selectedMenuEntity.getName() + " is deleted.", null));
+
+            selectedMenuEntity = null;
+            selectedCategoryEntity = null;
+        } catch (VendorNotFoundException | MenuNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve your account details", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+
+    public void createNewCategory(ActionEvent event) {
+        try {
+            categoryEntityControllerLocal.createCategory(newCategoryEntity, selectedMenuEntity);
+            selectedMenuEntity.getCategoryEntities().add(newCategoryEntity);
+            if(selectedMenuEntity.getCategoryEntities().size() == 1) {
+                selectedCategoryEntity = newCategoryEntity;
+            }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New category: " + newCategoryEntity.getName() + " is created.", null));
+
+            newCategoryEntity = new CategoryEntity();
+        } catch (MenuNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+
+    public void changeDefaultMenu() {
+        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        for (MenuEntity me : menuEntities) {
+            if (!me.equals(selectedMenuEntity)) {
+                me.setSelected(Boolean.FALSE);
+            }
+        }
+
+        menuEntityControllerLocal.selectDefaultMenu(selectedMenuEntity, vendorEntity);
+    }
+
+    public void onTabChange(TabChangeEvent event) {
+        String catTitle = event.getTab().getTitle();
+        for (CategoryEntity ce : selectedMenuEntity.getCategoryEntities()) {
+            if (ce.getName().equals(catTitle)) {
+                selectedCategoryEntity = ce;
+                return;
+            }
+        }
     }
 
     public List<MenuEntity> getMenuEntities() {
@@ -279,6 +421,48 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public Boolean getDeleteMultipleItems() {
+        return deleteMultipleItems;
+    }
+
+    public void setDeleteMultipleItems(Boolean deleteMultipleItems) {
+        this.deleteMultipleItems = deleteMultipleItems;
+    }
+
+    public HashMap<MenuItemEntity, Boolean> getMenuItemEntitiesToDelete() {
+        System.err.println("getting");
+        return menuItemEntitiesToDelete;
+    }
+
+    public void setMenuItemEntitiesToDelete(HashMap<MenuItemEntity, Boolean> menuItemEntitiesToDelete) {
+        System.err.println("setting");
+        this.menuItemEntitiesToDelete = menuItemEntitiesToDelete;
+    }
+
+    public MenuItemEntity getMenuItemEntityToEdit() {
+        return menuItemEntityToEdit;
+    }
+
+    public void setMenuItemEntityToEdit(MenuItemEntity menuItemEntityToEdit) {
+        this.menuItemEntityToEdit = menuItemEntityToEdit;
+    }
+
+    public MenuEntity getNewMenuEntity() {
+        return newMenuEntity;
+    }
+
+    public void setNewMenuEntity(MenuEntity newMenuEntity) {
+        this.newMenuEntity = newMenuEntity;
+    }
+
+    public CategoryEntity getNewCategoryEntity() {
+        return newCategoryEntity;
+    }
+
+    public void setNewCategoryEntity(CategoryEntity newCategoryEntity) {
+        this.newCategoryEntity = newCategoryEntity;
     }
 
 }
