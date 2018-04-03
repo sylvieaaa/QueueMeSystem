@@ -9,10 +9,13 @@ import entity.CategoryEntity;
 import entity.FoodCourtEntity;
 import entity.MenuEntity;
 import entity.VendorEntity;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.exception.FoodCourtNotFoundException;
 import util.exception.VendorNotFoundException;
 
 /**
@@ -30,16 +33,21 @@ public class VendorEntityController implements VendorEntityControllerLocal {
 
     @Override
     public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity) {
-        foodCourtEntity = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtEntity.getBusinessId());
-        vendorEntity.setFoodCourtEntity(foodCourtEntity);
-        em.persist(vendorEntity);
-        foodCourtEntity.getVendorEntities().add(vendorEntity);
-        em.flush();
-        em.refresh(vendorEntity);
-        
+
+        try {
+            foodCourtEntity = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtEntity.getBusinessId());
+            vendorEntity.setFoodCourtEntity(foodCourtEntity);
+            em.persist(vendorEntity);
+            foodCourtEntity.getVendorEntities().add(vendorEntity);
+            em.flush();
+            em.refresh(vendorEntity);
+        } catch (FoodCourtNotFoundException ex) {
+            Logger.getLogger(VendorEntityController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return vendorEntity;
     }
-    
+
     @Override
     public VendorEntity retrieveVendorById(Long vendorStaffId) throws VendorNotFoundException {
         VendorEntity vendorEntity = em.find(VendorEntity.class, vendorStaffId);
@@ -50,7 +58,7 @@ public class VendorEntityController implements VendorEntityControllerLocal {
             throw new VendorNotFoundException("Vendor Staff ID: " + vendorStaffId + " does not exist");
         }
     }
-    
+
     /*
     @Override
     public VendorStaffEntity createVendorStaff(VendorStaffEntity vendorStaffEntity) {
@@ -126,5 +134,5 @@ public class VendorEntityController implements VendorEntityControllerLocal {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
     }
-    */
+     */
 }

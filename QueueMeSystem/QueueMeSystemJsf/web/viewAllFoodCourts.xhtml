@@ -51,20 +51,6 @@
                     <h:outputText value = "#{foodCourt.postalCode}"/>
                 </p:column>
 
-<!--                <p:column headerText="Starting Hours" sortBy="#{foodCourt.startTime}" filterBy="#{foodCourt.startTime}"
-                          filterMatchMode="contains">
-                    <h:outputText value = "#{foodCourt.startTime}">   
-                        <f:convertDateTime type="time"/>
-                    </h:outputText>
-                </p:column>
-
-                <p:column headerText="Ending Hours" sortBy="#{foodCourt.endTime}" filterBy="#{foodCourt.endTime}"
-                          filterMatchMode="contains">
-                    <h:outputText value = "#{foodCourt.endTime}">   
-                        <f:convertDateTime type="time"/>
-                    </h:outputText>
-                </p:column>-->
-
 
                 <p:column style="width:10%" headerText="Action" >
                     <p:commandButton update="formViewFoodCourt" oncomplete="PF('dialogViewFoodCourt').show()" icon="ui-icon-document" title="View">
