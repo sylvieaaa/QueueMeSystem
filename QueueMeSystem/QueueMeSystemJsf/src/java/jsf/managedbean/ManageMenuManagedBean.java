@@ -43,6 +43,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.event.TabCloseEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import util.exception.CategoryNotFoundException;
@@ -141,6 +142,15 @@ public class ManageMenuManagedBean implements Serializable {
         MenuItemEntity menuItemToBeAdded = (MenuItemEntity) ddEvent.getData();
         menuItemEntities.clear();
         menuItemEntities.addAll(menuItemEntitiesCopy);
+        if (selectedCategoryEntity == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please create a category before adding items", null));
+            return;
+        }
+        
+        if(selectedCategoryEntity.getMenuItemEntities().contains(menuItemToBeAdded)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Item already added to category", null));
+            return;
+        }
         selectedCategoryEntity.getMenuItemEntities().add(menuItemToBeAdded);
         try {
             categoryEntityControllerLocal.addMenuItem(selectedCategoryEntity, menuItemToBeAdded);
@@ -306,20 +316,19 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void deleteMenu() {
         VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
-        int size = selectItems.size();
-        for (int i = 0; i < size; i++) {
-            if (selectItems.get(i).getValue().equals(selectedMenuEntity)) {
-                System.err.println("remove selected");
-                selectItems.remove(i);
-                break;
-            }
-        }
-        menuEntities.remove(selectedMenuEntity);
         try {
             menuEntityControllerLocal.removeMenuEntity(selectedMenuEntity, vendorEntity);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("MenuEntityConverter.menuEntities", menuEntities);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, selectedMenuEntity.getName() + " is deleted.", null));
-
+            int size = selectItems.size();
+            for (int i = 0; i < size; i++) {
+                if (selectItems.get(i).getValue().equals(selectedMenuEntity)) {
+                    System.err.println("remove selected");
+                    selectItems.remove(i);
+                    break;
+                }
+            }
+            menuEntities.remove(selectedMenuEntity);
             selectedMenuEntity = null;
             selectedCategoryEntity = null;
         } catch (VendorNotFoundException | MenuNotFoundException ex) {
@@ -333,7 +342,7 @@ public class ManageMenuManagedBean implements Serializable {
         try {
             categoryEntityControllerLocal.createCategory(newCategoryEntity, selectedMenuEntity);
             selectedMenuEntity.getCategoryEntities().add(newCategoryEntity);
-            if(selectedMenuEntity.getCategoryEntities().size() == 1) {
+            if (selectedMenuEntity.getCategoryEntities().size() == 1) {
                 selectedCategoryEntity = newCategoryEntity;
             }
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New category: " + newCategoryEntity.getName() + " is created.", null));
@@ -341,6 +350,24 @@ public class ManageMenuManagedBean implements Serializable {
             newCategoryEntity = new CategoryEntity();
         } catch (MenuNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", null));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+        }
+    }
+
+    public void deleteCategory() {
+        try {
+            menuEntityControllerLocal.removeCategoryFromMenu(selectedMenuEntity, selectedCategoryEntity);
+
+            selectedMenuEntity.getCategoryEntities().remove(selectedCategoryEntity);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Category: " + selectedCategoryEntity.getName() + " succesfully removed.", null));
+            if (!selectedMenuEntity.getCategoryEntities().isEmpty()) {
+                selectedCategoryEntity = selectedMenuEntity.getCategoryEntities().get(0);
+            } else {
+                selectedCategoryEntity = null;
+            }
+        } catch (CategoryNotFoundException | MenuNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu/category details", null));
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
@@ -463,6 +490,14 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void setNewCategoryEntity(CategoryEntity newCategoryEntity) {
         this.newCategoryEntity = newCategoryEntity;
+    }
+
+    public CategoryEntity getSelectedCategoryEntity() {
+        return selectedCategoryEntity;
+    }
+
+    public void setSelectedCategoryEntity(CategoryEntity selectedCategoryEntity) {
+        this.selectedCategoryEntity = selectedCategoryEntity;
     }
 
 }
