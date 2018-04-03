@@ -39,6 +39,7 @@ public class CategoryEntity implements Serializable {
     }
 
     public CategoryEntity(String name) {
+        this();
         this.name = name;
     }
     

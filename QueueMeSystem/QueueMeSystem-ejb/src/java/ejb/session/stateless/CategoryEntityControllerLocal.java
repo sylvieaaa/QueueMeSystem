@@ -25,5 +25,7 @@ public interface CategoryEntityControllerLocal {
     public CategoryEntity retrieveCategoryById(Long categoryId) throws CategoryNotFoundException;
 
     public void addMenuItem(CategoryEntity categoryEntity, MenuItemEntity menuItemEntity) throws CategoryNotFoundException, MenuItemNotFoundException;
+
+    public void removeMenuItem(CategoryEntity categoryEntity, MenuItemEntity menuItemEntity) throws CategoryNotFoundException, MenuItemNotFoundException;
     
 }

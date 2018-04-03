@@ -34,7 +34,7 @@ public class CategoryEntityController implements CategoryEntityControllerLocal {
 
     @Override
     public CategoryEntity createCategory(CategoryEntity categoryEntity, MenuEntity menuEntity) throws MenuNotFoundException {
-        menuEntity = menuEntityControllerLocal.retrieveMenyById(menuEntity.getMenuId());
+        menuEntity = menuEntityControllerLocal.retrieveMenuById(menuEntity.getMenuId());
         categoryEntity.setMenuEntity(menuEntity);
         em.persist(categoryEntity);
         menuEntity.getCategoryEntities().add(categoryEntity);
@@ -62,5 +62,14 @@ public class CategoryEntityController implements CategoryEntityControllerLocal {
         
         categoryEntity.getMenuItemEntities().add(menuItemEntity);
         menuItemEntity.getCategoryEntities().add(categoryEntity);
+    }
+    
+    @Override
+    public void removeMenuItem(CategoryEntity categoryEntity, MenuItemEntity menuItemEntity) throws CategoryNotFoundException, MenuItemNotFoundException{
+        categoryEntity = retrieveCategoryById(categoryEntity.getCategoryId());
+        menuItemEntity = menuItemEntityControllerLocal.retrieveMenuItemById(menuItemEntity.getMenuItemId());
+        
+        categoryEntity.getMenuItemEntities().remove(menuItemEntity);
+        menuItemEntity.getCategoryEntities().remove(categoryEntity);
     }
 }

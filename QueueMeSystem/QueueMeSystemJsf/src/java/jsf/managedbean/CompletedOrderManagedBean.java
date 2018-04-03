@@ -25,9 +25,9 @@ import org.primefaces.component.calendar.Calendar;
  *
  * @author KERK
  */
-@Named(value = "completedOrderManagedBean")
+@Named
 @ViewScoped
-public class completedOrderManagedBean implements Serializable {
+public class CompletedOrderManagedBean implements Serializable {
 
     @EJB(name = "OrderEntityControllerLocal")
     private OrderEntityControllerLocal orderEntityControllerLocal;
@@ -37,14 +37,13 @@ public class completedOrderManagedBean implements Serializable {
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
     private OrderEntity newOrderEntity;
     private OrderEntity selectedOrderEntityToView;
-    private OrderEntity selectedOrderEntityToUpdate;
-    private BigDecimal earnings;
+    //private BigDecimal earnings;
  
 
     /**
      * Creates a new instance of completedOrderManagedBean
      */
-    public completedOrderManagedBean() {
+    public CompletedOrderManagedBean() {
         orderEntities = new ArrayList<>();
         filteredOrderEntities = new ArrayList<>();
         saleTransactionLineItemEntities = new ArrayList<>();
@@ -57,8 +56,8 @@ public class completedOrderManagedBean implements Serializable {
     {
         orderEntities = orderEntityControllerLocal.retrieveAllOrders();
         filteredOrderEntities = orderEntities;
+        
     }
-    
     
     public List<OrderEntity> getOrderEntities() {
         return orderEntities;
@@ -92,13 +91,12 @@ public class completedOrderManagedBean implements Serializable {
         this.selectedOrderEntityToView = selectedOrderEntityToView;
     }
     
-    public List<SaleTransactionLineItemEntity> getSaleTransactionLineItemEntity() {
+    public List<SaleTransactionLineItemEntity> getSaleTransactionLineItemEntities() {
         return saleTransactionLineItemEntities;
     }
-
     
-    public BigDecimal getEarnings(Long orderId) {
-        return orderEntityControllerLocal.getEarnings(orderId);
+    public void setSaleTransactionLineItemEntities() {
+        this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
     }
- 
+   
 }

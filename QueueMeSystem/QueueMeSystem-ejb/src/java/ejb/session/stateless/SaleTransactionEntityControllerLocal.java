@@ -20,4 +20,6 @@ public interface SaleTransactionEntityControllerLocal {
 
     public List<SaleTransactionEntity> retrieveSaleTransaction(Long customerId);
     
+    public List<SaleTransactionEntity> retrieveAllSaleTransactions();
+    
 }

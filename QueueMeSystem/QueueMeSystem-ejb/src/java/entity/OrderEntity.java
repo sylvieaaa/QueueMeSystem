@@ -6,7 +6,9 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -30,39 +33,27 @@ public class OrderEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateTime;
+    private Calendar dateTime;
+    private BigDecimal totalEarnings;
+    private Boolean fulfilled;
     @ManyToOne
     @JoinColumn(nullable = true)
-    private CustomerEntity customerEntity;
-    
+    private CustomerEntity customerEntity;  
     @ManyToOne
     @JoinColumn(nullable = true)
-    private VendorEntity vendorEntity;
-    
+    private VendorEntity vendorEntity;    
     @OneToMany(mappedBy = "orderEntity")
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
 
     public OrderEntity() {
+        this.saleTransactionLineItemEntities = new ArrayList<>();
     }
 
-    public OrderEntity(Date dateTime) {
+    public OrderEntity(Calendar dateTime, BigDecimal totalEarnings, Boolean fulfilled) {
         this.dateTime = dateTime;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public Date getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
+        this.totalEarnings = totalEarnings;
+       // this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
+        this.fulfilled = false;
     }
 
     @Override
@@ -90,6 +81,38 @@ public class OrderEntity implements Serializable {
         return "entity.OrderEntity[ id=" + orderId + " ]";
     }
 
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Calendar getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Calendar dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public BigDecimal getTotalEarnings() {
+        return totalEarnings;
+    }
+
+    public void setTotalEarnings(BigDecimal totalEarnings) {
+        this.totalEarnings = totalEarnings;
+    }
+
+    public Boolean getFulfilled() {
+        return fulfilled;
+    }
+
+    public void setFulfilled(Boolean fulfilled) {
+        this.fulfilled = fulfilled;
+    }
+
     public CustomerEntity getCustomerEntity() {
         return customerEntity;
     }
@@ -105,13 +128,13 @@ public class OrderEntity implements Serializable {
     public void setVendorEntity(VendorEntity vendorEntity) {
         this.vendorEntity = vendorEntity;
     }
-
+    
     public List<SaleTransactionLineItemEntity> getSaleTransactionLineItemEntities() {
         return saleTransactionLineItemEntities;
     }
 
-    public void setSaleTransactionLineItemEntity(List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities) {
+    public void setSaleTransactionLineItemEntities(List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities) {
         this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
     }
-    
+
 }

@@ -24,7 +24,7 @@ public interface MenuItemEntityControllerLocal {
 
     public List<MenuItemEntity> retrieveAllMenuItemEntity() throws MenuItemNotFoundException;
 
-    public void updateMenuItem(MenuItemEntity menuItemEntity);
+    public void updateMenuItem(MenuItemEntity menuItemEntity) throws MenuItemNotFoundException ;
 
     public void deleteMenuItem(Long menuItemId);
 

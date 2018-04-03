@@ -67,7 +67,7 @@ public class MenuEntityController implements MenuEntityControllerLocal {
     }
 
     @Override
-    public MenuEntity retrieveMenyById(Long menuId) throws MenuNotFoundException {
+    public MenuEntity retrieveMenuById(Long menuId) throws MenuNotFoundException {
         MenuEntity menuEntity = em.find(MenuEntity.class, menuId);
         
         if(menuEntity != null) {
@@ -75,5 +75,34 @@ public class MenuEntityController implements MenuEntityControllerLocal {
         } else {
             throw new MenuNotFoundException("Menu ID: " + menuId + " does not exist.");
         }
+    }
+    
+    @Override
+    public void selectDefaultMenu(MenuEntity menuEntity, VendorEntity vendorEntity) {
+        List<MenuEntity> menuEntities = retrieveMenusByVendor(vendorEntity);
+        for(MenuEntity me: menuEntities) {
+            if(me.equals(menuEntity)) {
+                me.setSelected(Boolean.TRUE);
+            } else {
+                me.setSelected(Boolean.FALSE);
+            }
+        }
+    }
+    
+    @Override
+    public void removeMenuEntity(MenuEntity menuEntity, VendorEntity vendorEntity) throws MenuNotFoundException, VendorNotFoundException {
+        menuEntity = retrieveMenuById(menuEntity.getMenuId());
+        vendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorEntity.getBusinessId());
+        vendorEntity.getMenuEntities().remove(menuEntity);
+        
+        List<CategoryEntity> categoryEntities = menuEntity.getCategoryEntities();
+        
+        for(CategoryEntity categoryEntity: categoryEntities) {
+            for(MenuItemEntity menuItemEntity: categoryEntity.getMenuItemEntities()) {
+                menuItemEntity.getCategoryEntities().remove(categoryEntity);
+            }
+        }
+        
+        em.remove(menuEntity);
     }
 }

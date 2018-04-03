@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package entity;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,7 +15,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -41,16 +43,16 @@ public class SaleTransactionLineItemEntity implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = true)
     private MenuItemEntity menuItemEntity;
-    @ManyToOne
+    @ManyToOne 
     private OrderEntity orderEntity;
-    @ManyToOne
+    @ManyToOne 
     private SaleTransactionEntity saleTransactionEntity;
     
 
     public SaleTransactionLineItemEntity() {
     }
 
-    public SaleTransactionLineItemEntity(Integer serialNumber, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal, Boolean isTakeaway, Integer takeawayQty) {
+    public SaleTransactionLineItemEntity(Integer serialNumber, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal, Boolean isTakeaway, Integer takeawayQty, MenuItemEntity menuItemEntity) {
         this();
         this.serialNumber = serialNumber;
         this.quantity = quantity;
@@ -58,6 +60,7 @@ public class SaleTransactionLineItemEntity implements Serializable {
         this.subTotal = subTotal;
         this.isTakeaway = isTakeaway;
         this.takeawayQty = takeawayQty;
+        this.menuItemEntity = menuItemEntity;
     }
     
 

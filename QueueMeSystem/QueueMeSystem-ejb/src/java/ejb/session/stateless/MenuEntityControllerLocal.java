@@ -23,5 +23,9 @@ public interface MenuEntityControllerLocal {
 
     public List<MenuEntity> retrieveMenusByVendor(VendorEntity vendorEntity);
     
-    public MenuEntity retrieveMenyById(Long menuId) throws MenuNotFoundException;
+    public MenuEntity retrieveMenuById(Long menuId) throws MenuNotFoundException;
+
+    public void selectDefaultMenu(MenuEntity menuEntity, VendorEntity vendorEntity);
+
+    public void removeMenuEntity(MenuEntity menuEntity, VendorEntity vendorEntity) throws MenuNotFoundException, VendorNotFoundException;
 }
