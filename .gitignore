@@ -20,3 +20,14 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/QueueMeSystem/nbproject/private/
+/QueueMeSystem/QueueMeSystem-war/nbproject/private/
+/QueueMeSystem/QueueMeSystem-ejb/nbproject/private/
+/QueueMeSystem/QueueMeSystemJsf/nbproject/private/
+/QueueMeSystem/QueueMeSystem-ejb/build/
+/QueueMeSystem/QueueMeSystem-war/dist/
+/QueueMeSystem/QueueMeSystem-war/build/
+/QueueMeSystem/QueueMeSystemJsf/build/
+/QueueMeSystem/QueueMeSystem-ejb/dist/
+/QueueMeSystem/build/
+/QueueMeSystem/QueueMeSystemJsf/dist/

@@ -5,10 +5,12 @@
  */
 package ejb.session.stateless;
 
+import entity.CategoryEntity;
 import entity.MenuEntity;
 import entity.VendorEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.CategoryNotFoundException;
 import util.exception.MenuNotFoundException;
 import util.exception.VendorNotFoundException;
 
@@ -28,4 +30,6 @@ public interface MenuEntityControllerLocal {
     public void selectDefaultMenu(MenuEntity menuEntity, VendorEntity vendorEntity);
 
     public void removeMenuEntity(MenuEntity menuEntity, VendorEntity vendorEntity) throws MenuNotFoundException, VendorNotFoundException;
+
+    public void removeCategoryFromMenu(MenuEntity menuEntity, CategoryEntity categoryEntity) throws CategoryNotFoundException, MenuNotFoundException;
 }

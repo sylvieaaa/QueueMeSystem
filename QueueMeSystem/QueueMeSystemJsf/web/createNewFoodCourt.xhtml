@@ -10,10 +10,17 @@
 
     <ui:define name="content">
 
-        <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
+        <div class="ui-g-5"></div>
 
-        <div class ="ui-g-12 ui-md-6 ui-lg-4">
-            <h:form >
+        <div class ="ui-g-12 ui-md-6 ui-lg-3">
+            <h:form>
+                <p:button style="margin-left: 70px" value="Back To Homepage" outcome="adminMainPage.html"  icon="fa fa-reply" />
+            </h:form>
+        </div>
+      
+        <div class="ui-g-5"></div>
+        <div class ="ui-g-12 ui-lg-4">
+            <h:form>
                 <p:growl autoUpdate="true" />
                 <p:panelGrid>
 
@@ -91,27 +98,22 @@
                     </p:row>
 
                     <p:row>
+                        <p:column>
+                            
+                        </p:column>
+                    </p:row>
+                    <p:row>
                        
                         <p:column colspan="2" style="text-align: center">
                   
-                            <h:commandButton value="Create" type="submit" actionListener="#{createNewFoodCourtManagedBean.createNewFoodCourt}"/>
-                            &nbsp;&nbsp;&nbsp;
-                            <h:commandButton value="Clear" type="reset" />
+                            <p:commandButton value="Create" type="submit" actionListener="#{createNewFoodCourtManagedBean.createNewFoodCourt}"/>
+                            &nbsp;
+                            <p:commandButton value="Clear" type="reset" />
                               <div class="ui-g-12 ui-md-2"></div>
                         </p:column>
                     </p:row>
 
                 </p:panelGrid>
-                    <br/>
-                    <br/>
-                    <div class="ui-g-6 ui-md-3"></div>
-                
-                    <h:button value="Back To Homepage" outcome="adminMainPage.html" style="display: block; text-align: center">
-                    </h:button>
-             
-                    <div class="ui-g-6 ui-md-3"></div>
-               
-
             </h:form>
         </div>
         <div class="ui-g-12 ui-md-6 ui-lg-4"></div>

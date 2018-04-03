@@ -17,6 +17,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.CategoryNotFoundException;
 import util.exception.MenuNotFoundException;
 import util.exception.VendorNotFoundException;
 
@@ -26,6 +27,9 @@ import util.exception.VendorNotFoundException;
  */
 @Stateless
 public class MenuEntityController implements MenuEntityControllerLocal {
+
+    @EJB
+    private CategoryEntityControllerLocal categoryEntityControllerLocal;
 
     @EJB
     private VendorEntityControllerLocal vendorEntityControllerLocal;
@@ -52,9 +56,9 @@ public class MenuEntityController implements MenuEntityControllerLocal {
 
         try {
             List<MenuEntity> menuEntities = query.getResultList();
-            
-            for(MenuEntity menuEntity: menuEntities) {
-                for(CategoryEntity categoryEntity: menuEntity.getCategoryEntities()) {
+
+            for (MenuEntity menuEntity : menuEntities) {
+                for (CategoryEntity categoryEntity : menuEntity.getCategoryEntities()) {
                     categoryEntity.getMenuItemEntities().size();
                 }
             }
@@ -69,40 +73,54 @@ public class MenuEntityController implements MenuEntityControllerLocal {
     @Override
     public MenuEntity retrieveMenuById(Long menuId) throws MenuNotFoundException {
         MenuEntity menuEntity = em.find(MenuEntity.class, menuId);
-        
-        if(menuEntity != null) {
+
+        if (menuEntity != null) {
             return menuEntity;
         } else {
             throw new MenuNotFoundException("Menu ID: " + menuId + " does not exist.");
         }
     }
-    
+
     @Override
     public void selectDefaultMenu(MenuEntity menuEntity, VendorEntity vendorEntity) {
         List<MenuEntity> menuEntities = retrieveMenusByVendor(vendorEntity);
-        for(MenuEntity me: menuEntities) {
-            if(me.equals(menuEntity)) {
+        for (MenuEntity me : menuEntities) {
+            if (me.equals(menuEntity)) {
                 me.setSelected(Boolean.TRUE);
             } else {
                 me.setSelected(Boolean.FALSE);
             }
         }
     }
-    
+
     @Override
     public void removeMenuEntity(MenuEntity menuEntity, VendorEntity vendorEntity) throws MenuNotFoundException, VendorNotFoundException {
         menuEntity = retrieveMenuById(menuEntity.getMenuId());
         vendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorEntity.getBusinessId());
         vendorEntity.getMenuEntities().remove(menuEntity);
-        
+
         List<CategoryEntity> categoryEntities = menuEntity.getCategoryEntities();
-        
-        for(CategoryEntity categoryEntity: categoryEntities) {
-            for(MenuItemEntity menuItemEntity: categoryEntity.getMenuItemEntities()) {
+
+        for (CategoryEntity categoryEntity : categoryEntities) {
+            for (MenuItemEntity menuItemEntity : categoryEntity.getMenuItemEntities()) {
                 menuItemEntity.getCategoryEntities().remove(categoryEntity);
             }
+            categoryEntity.setMenuEntity(null);
         }
         
         em.remove(menuEntity);
+    }
+
+    @Override
+    public void removeCategoryFromMenu(MenuEntity menuEntity, CategoryEntity categoryEntity) throws CategoryNotFoundException, MenuNotFoundException {
+        menuEntity = retrieveMenuById(menuEntity.getMenuId());
+        categoryEntity = categoryEntityControllerLocal.retrieveCategoryById(categoryEntity.getCategoryId());
+        
+        for(MenuItemEntity menuItemEntity: categoryEntity.getMenuItemEntities()) {
+            menuEntity.getCategoryEntities().remove(categoryEntity);
+        }
+        
+        menuEntity.getCategoryEntities().remove(categoryEntity);
+        em.remove(categoryEntity);
     }
 }

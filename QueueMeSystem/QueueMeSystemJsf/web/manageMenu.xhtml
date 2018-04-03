@@ -55,10 +55,7 @@
                                             </p:commandButton>
                                         </p:row>
                                     </p:panelGrid>
-                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                                    </p:confirmDialog>
+
                                 </p:panel>
 
                                 <p:draggable for="itemPanel" revert="true" handle=".ui-panel-titlebar" stack=".ui-panel"/>
@@ -80,7 +77,7 @@
                                     <p:ajax listener="#{manageMenuManagedBean.onChange}" update="menuForm:menuCategories" />
                                 </p:selectOneMenu>
                                 <p:commandButton value="Create New Menu" oncomplete="PF('dialogCreateNewMenu').show()"/>
-                                <p:commandButton rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="Delete Menu" actionListener="#{manageMenuManagedBean.deleteMenu}"  update="@form">
+                                <p:commandButton rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" disabled="#{manageMenuManagedBean.selectedMenuEntity.selected eq true}" value="Delete Menu" actionListener="#{manageMenuManagedBean.deleteMenu}"  update="@form">
                                     <p:confirm header="Confirmation" message="Are you sure you want to delete #{manageMenuManagedBean.selectedMenuEntity.name}?" icon="ui-icon-alert" />
                                 </p:commandButton>
                                 <p:outputLabel for="menuOneMenu" value="default menu:" rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}"/>
@@ -89,18 +86,20 @@
                                 </p:selectBooleanCheckbox>
                                 <p:selectBooleanCheckbox rendered="#{manageMenuManagedBean.selectedMenuEntity ne null and manageMenuManagedBean.selectedMenuEntity.selected eq true}" value="#{manageMenuManagedBean.selectedMenuEntity.selected}" disabled="true"/>
                                 <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" onclick="PF('menuOneMenu').selectValue(null)"/>
+                                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
                                     <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                                 </p:confirmDialog>
                             </p:panelGrid>
                             <p:panel header="Categories" rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}">
                                 <f:facet name="actions">
-                                    <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" id="iconOnly" icon="ui-icon-plus" oncomplete="PF('dialogCreateNewCategory').show()"/>
+                                    <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" title="Create new category" icon="fa fa-plus" oncomplete="PF('dialogCreateNewCategory').show()"/>
+                                    <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" title="Delete current category" icon="fa fa-trash" actionListener="#{manageMenuManagedBean.deleteCategory}" update="@form">
+                                        <p:confirm header="Confirmation" message="Are you sure you want to delete #{manageMenuManagedBean.selectedCategoryEntity.name}?" icon="ui-icon-alert" />
+                                    </p:commandButton>
                                 </f:facet>
                                 <p:tabView rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.categoryEntities}" var="category">
                                     <p:ajax event="tabChange" listener="#{manageMenuManagedBean.onTabChange}"/>
-
-                                    <p:tab title="#{category.name}" >
+                                    <p:tab title="#{category.name}">
                                         <p:fieldset id="catItems">
                                             <p:dataList value="#{category.menuItemEntities}" var="menuItems" type="unordered" itemType="none" styleClass="menuItemsDataList">
                                                 <h:panelGrid columns="3" columnClasses="foodPhoto,detail" style="border: none" cellpadding="4">
@@ -129,6 +128,7 @@
                                     </p:tab>
 
                                 </p:tabView>
+
                             </p:panel>
 
                         </p:fieldset>
@@ -136,6 +136,10 @@
                     </div>
                 </div>
             </p:fieldset>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
         </h:form>
 
 
