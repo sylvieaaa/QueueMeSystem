@@ -105,7 +105,7 @@ public class MenuEntityController implements MenuEntityControllerLocal {
             for (MenuItemEntity menuItemEntity : categoryEntity.getMenuItemEntities()) {
                 menuItemEntity.getCategoryEntities().remove(categoryEntity);
             }
-            categoryEntity.setMenuEntity(null);
+            //categoryEntity.setMenuEntity(null);
         }
         
         em.remove(menuEntity);

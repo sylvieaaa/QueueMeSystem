@@ -361,10 +361,14 @@ public class ManageMenuManagedBean implements Serializable {
         try {
             menuEntityControllerLocal.removeCategoryFromMenu(selectedMenuEntity, selectedCategoryEntity);
 
+            int indexOfObject = selectedMenuEntity.getCategoryEntities().indexOf(selectedCategoryEntity);
             selectedMenuEntity.getCategoryEntities().remove(selectedCategoryEntity);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Category: " + selectedCategoryEntity.getName() + " succesfully removed.", null));
             if (!selectedMenuEntity.getCategoryEntities().isEmpty()) {
-                selectedCategoryEntity = selectedMenuEntity.getCategoryEntities().get(0);
+                if(selectedMenuEntity.getCategoryEntities().size() == 1 || selectedMenuEntity.getCategoryEntities().size() <= indexOfObject) {
+                    indexOfObject = 0;
+                } 
+                selectedCategoryEntity = selectedMenuEntity.getCategoryEntities().get(indexOfObject);
             } else {
                 selectedCategoryEntity = null;
             }

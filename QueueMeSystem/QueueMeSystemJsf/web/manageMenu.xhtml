@@ -91,12 +91,12 @@
                             <p:panel header="Categories" rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}">
                                 <f:facet name="actions">
                                     <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" title="Create new category" icon="fa fa-plus" oncomplete="PF('dialogCreateNewCategory').show()"/>
-                                    <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" title="Delete current category" icon="fa fa-trash" actionListener="#{manageMenuManagedBean.deleteCategory}" update="@form">
-                                        <p:confirm header="Confirmation" message="Are you sure you want to delete #{manageMenuManagedBean.selectedCategoryEntity.name}?" icon="ui-icon-alert" />
+                                    <p:commandButton id="confirmDelete" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" title="Delete current category" icon="fa fa-trash" actionListener="#{manageMenuManagedBean.deleteCategory}" update="@form">
+                                        <p:confirm  header="Confirmation" message="Are you sure you want to delete #{manageMenuManagedBean.selectedCategoryEntity.name}?" icon="ui-icon-alert" />
                                     </p:commandButton>
                                 </f:facet>
                                 <p:tabView rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.categoryEntities}" var="category">
-                                    <p:ajax event="tabChange" listener="#{manageMenuManagedBean.onTabChange}"/>
+                                    <p:ajax event="tabChange" listener="#{manageMenuManagedBean.onTabChange}" update="menuForm:confirmDelete"/>
                                     <p:tab title="#{category.name}">
                                         <p:fieldset id="catItems">
                                             <p:dataScroller value="#{category.menuItemEntities}" var="menuItems" chunkSize="3" mode="inline" scrollHeight="298" styleClass="menuItemsDataList">
