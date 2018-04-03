@@ -95,7 +95,11 @@ public class SecurityFilter implements Filter {
 
         } else if (businessEntity instanceof AdminEntity) {
             if(path.equals("/adminMainPage.xhtml")
+                    || path.equals("/viewAllFoodCourts.xhtml")
                     || path.equals("/updateFoodCourt.xhtml")
+                    || path.equals("/viewFoodCourtDetails.xhtml")
+                    || path.equals("/accessToVendors.xhtml")
+                    || path.equals("/foodCourtMainPage.xhtml")
                     || path.equals("/createNewFoodCourt.xhtml")){
                 
                 return true;
