@@ -9,8 +9,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,7 +35,7 @@ public class OrderEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar dateTime;
+    private Date dateTime;
     private BigDecimal totalEarnings;
     private Boolean fulfilled;
     @ManyToOne
@@ -42,14 +44,14 @@ public class OrderEntity implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = true)
     private VendorEntity vendorEntity;    
-    @OneToMany(mappedBy = "orderEntity")
+    @OneToMany(mappedBy = "orderEntity", fetch=FetchType.EAGER)
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
 
     public OrderEntity() {
         this.saleTransactionLineItemEntities = new ArrayList<>();
     }
 
-    public OrderEntity(Calendar dateTime, BigDecimal totalEarnings, Boolean fulfilled) {
+    public OrderEntity(Date dateTime, BigDecimal totalEarnings, Boolean fulfilled) {
         this.dateTime = dateTime;
         this.totalEarnings = totalEarnings;
        // this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
@@ -89,11 +91,11 @@ public class OrderEntity implements Serializable {
         this.orderId = orderId;
     }
 
-    public Calendar getDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Calendar dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 

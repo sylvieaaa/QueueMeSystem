@@ -128,19 +128,47 @@ public class DataInitializationSessionBean {
             categoryEntity.getMenuItemEntities().add(chickenRice);
             categoryEntity.getMenuItemEntities().add(duckRice);
             
-            
-//            List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = new ArrayList<>();
-//            Integer totalLineItem = 0;
-//            Integer totalQuantity = 1;
-//            Integer quantity = 1;
-//            BigDecimal totalAmount = new BigDecimal("0.00");
-//            ++totalLineItem;
-//            BigDecimal subTotal = chickenRice.getPrice().multiply(new BigDecimal(quantity));
-//            saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, quantity, chickenRice.getPrice(), subTotal, Boolean.FALSE, 0, chickenRice));
-//            SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance(), Boolean.FALSE));
+//            BigDecimal totalAmt1 = checkoutControllerLocal.addItem(chickenRice, 1);
+//            BigDecimal totalAmt2 = checkoutControllerLocal.addItem(duckRice, 1);
+//            SaleTransactionEntity newSaleTransactionEntity = checkoutControllerLocal.doCheckout();
 //            newSaleTransactionEntity.setCustomerEntity(customerEntity);
 //            customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
-//            System.err.println("KABOOOOMM KABOOOOW");
+            
+            
+            
+            List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = new ArrayList<>();
+            Integer totalLineItem = 0;
+            Integer totalQuantity = 1;
+            Integer quantity = 1;
+            BigDecimal totalAmount = new BigDecimal("0.00");
+            
+            ++totalLineItem;
+            BigDecimal subTotal = chickenRice.getPrice().multiply(new BigDecimal(quantity));
+            SaleTransactionLineItemEntity abc = new SaleTransactionLineItemEntity(totalLineItem, quantity, chickenRice.getPrice(), subTotal, Boolean.FALSE, 0, chickenRice);
+            saleTransactionLineItemEntities.add(abc);
+            SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance(), Boolean.FALSE));
+            newSaleTransactionEntity.getSaleTransactionLineItemEntities().add(abc);
+            abc.setSaleTransactionEntity(newSaleTransactionEntity);
+            System.err.println("IRON MAN");
+            for (SaleTransactionLineItemEntity xyz : newSaleTransactionEntity.getSaleTransactionLineItemEntities()) {
+                VendorEntity vendor = xyz.getMenuItemEntity().getVendorEntity();
+                OrderEntity oe = orderEntityControllerLocal.createOrder(new OrderEntity(calendarEnd, xyz.getSubTotal(), Boolean.FALSE));
+                oe.getSaleTransactionLineItemEntities().add(xyz);
+                xyz.setOrderEntity(oe);
+                oe.setVendorEntity(vendor);
+                vendor.getOrderEntities().add(oe);
+                oe.setCustomerEntity(customerEntity);
+                customerEntity.getOrderEntities().add(oe);
+                System.err.println("WOO LA LA LA LA");
+                
+            }
+//            OrderEntity order = new OrderEntity(calendarStart, totalAmount, Boolean.FALSE);
+//            order.getSaleTransactionLineItemEntities().add(abc);
+//            abc.setOrderEntity(order);
+            System.err.println("WAKANDA");
+            newSaleTransactionEntity.setCustomerEntity(customerEntity);
+            customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
+            System.err.println("KABOOOOMM KABOOOOW");
             
 //            BigDecimal amount = new BigDecimal("12.00");
 //            OrderEntity orderEntity = new OrderEntity(Calendar.getInstance(), amount, Boolean.FALSE);
