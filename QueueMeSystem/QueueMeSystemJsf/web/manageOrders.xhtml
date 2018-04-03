@@ -20,7 +20,7 @@
             <p:tabView>
                 <p:tab title="Orders (Pending)">
             
-            <p:dataTable id="dataTableAllPendingOrders" widgetVar="dataTableAllPendingOrders" value="#{pendingOrderManagedBean.orderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"    
+                    <p:dataTable id="dataTableAllPendingOrders" widgetVar="dataTableAllPendingOrders" value="#{pendingOrderManagedBean.orderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"    
                          rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
                 
                 <p:column headerText="Order ID" >
@@ -39,18 +39,17 @@
                     </h:outputText>
                 </p:column>
                 
-                <p:column headerText="Fulfilled">
-                    <p:selectBooleanCheckbox id="checkBox" value="#{pendingOrderManagedBean.value}" valueChangeListener="#{pendingOrderManagedBean.editFulfilled}">
-                        <f:attribute name="orderFulfilled" value="#{orderEntity}"/>
-                    </p:selectBooleanCheckbox>
-                </p:column>
-               
  
                 <p:column headerText="Details" >
                     <p:commandButton update="formViewOrder" oncomplete="PF('dialogViewOrder').show()" icon="ui-icon-document" title="View">
                         <f:setPropertyActionListener value="#{orderEntity}" target="#{pendingOrderManagedBean.selectedOrderEntityToView}" />
                     </p:commandButton>
-       
+                </p:column>
+
+                <p:column headerText="Status">
+         
+                    <p:commandButton class="icon-only" icon="fa fa-check"  actionListener="#{pendingOrderManagedBean.editFulfilled}"/>     
+                    <f:attribute name="orderFulfilled" value="#{selectedOrderEntityToView}"/>
                 </p:column>
                     
                 

@@ -35,7 +35,7 @@ public class PendingOrderManagedBean implements Serializable {
     private OrderEntityControllerLocal orderEntityControllerLocal;
     
     private List<OrderEntity> orderEntities;
-//    private List<OrderEntity> filteredOrderEntities;
+    private List<OrderEntity> filteredOrderEntities;
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
     private OrderEntity newOrderEntity;
     private OrderEntity selectedOrderEntityToView;
@@ -46,25 +46,24 @@ public class PendingOrderManagedBean implements Serializable {
      */
     public PendingOrderManagedBean() {
         orderEntities = new ArrayList<>();
-//        filteredOrderEntities = new ArrayList<>();
+        filteredOrderEntities = new ArrayList<>();
         saleTransactionLineItemEntities = new ArrayList<>();
-        value = true;
 
-        
-        //newOrderEntity = new OrderEntity();
+         newOrderEntity = new OrderEntity();
     }
     
     @PostConstruct
     public void postConstruct()
     {
         orderEntities = orderEntityControllerLocal.retrieveAllPendingOrders();
-//        filteredOrderEntities = orderEntities;
+        filteredOrderEntities = orderEntities;
         
     }
     
-    public void editFulfilled(ValueChangeEvent event) {
+    public void editFulfilled(ActionEvent event) {
         
-        OrderEntity newOrderEntity = (OrderEntity) event.getComponent().getAttributes().get("orderFulfilled");
+        newOrderEntity = (OrderEntity) event.getComponent().getAttributes().get("orderFulfilled");
+        System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         orderEntityControllerLocal.updateOrder(newOrderEntity);
         System.err.println("THIS IS SPARTAN!");
     }
@@ -77,19 +76,20 @@ public class PendingOrderManagedBean implements Serializable {
         this.orderEntities = orderEntities;
     }
 
-//    public List<OrderEntity> getFilteredOrderEntities() {
-//        return filteredOrderEntities;
-//    }
-//
-//    public void setFilteredProductEntities(List<OrderEntity> filteredOrderEntities) {
-//        this.filteredOrderEntities = filteredOrderEntities;
-//    }
+    public List<OrderEntity> getFilteredOrderEntities() {
+        return filteredOrderEntities;
+    }
+
+    public void setFilteredProductEntities(List<OrderEntity> filteredOrderEntities) {
+        this.filteredOrderEntities = filteredOrderEntities;
+    }
 
     public OrderEntity getNewOrderEntity() {
+        System.err.println("newOrderEntityId: " + newOrderEntity.getOrderId());
         return newOrderEntity;
     }
 
-    public void setNewProductEntity(OrderEntity newOrderEntity) {
+    public void setNewOrderEntity(OrderEntity newOrderEntity) {
         this.newOrderEntity = newOrderEntity;
     }
 
@@ -103,16 +103,6 @@ public class PendingOrderManagedBean implements Serializable {
     
     public List<SaleTransactionLineItemEntity> getSaleTransactionLineItemEntities() {
         return saleTransactionLineItemEntities;
-    }
-
-    public boolean getValue() {
-        System.err.println(value);
-        return value;
-    }
-
-    public void setValue(boolean value) {
-       System.err.println("THIS IS SET VALUE" + value); 
-        this.value = value;
     }
     
     public void setSaleTransactionLineItemEntities() {
