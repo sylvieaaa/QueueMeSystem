@@ -79,6 +79,7 @@ public class ManageMenuManagedBean implements Serializable {
 
     MenuItemEntity newMenuItemEntity;
     MenuItemEntity menuItemEntityToEdit;
+    MenuItemEntity menuItemEntityToView;
     File file;
 
     Boolean deleteMultipleItems;
@@ -101,6 +102,7 @@ public class ManageMenuManagedBean implements Serializable {
 //        menuItemEntitiesToDelete = new ArrayList<>();
         menuItemEntitiesToDelete = new HashMap<>();
         menuItemEntityToEdit = null;
+        menuItemEntityToView = null;
         newMenuEntity = new MenuEntity();
         newCategoryEntity = new CategoryEntity();
     }
@@ -498,6 +500,14 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void setSelectedCategoryEntity(CategoryEntity selectedCategoryEntity) {
         this.selectedCategoryEntity = selectedCategoryEntity;
+    }
+
+    public MenuItemEntity getMenuItemEntityToView() {
+        return menuItemEntityToView;
+    }
+
+    public void setMenuItemEntityToView(MenuItemEntity menuItemEntityToView) {
+        this.menuItemEntityToView = menuItemEntityToView;
     }
 
 }
