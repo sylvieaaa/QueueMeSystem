@@ -51,6 +51,21 @@ public class VendorEntityController implements VendorEntityControllerLocal {
         }
     }
     
+    @Override
+     public void updateVendor(VendorEntity vendorEntity) throws VendorNotFoundException {
+        em.merge(vendorEntity);
+    }
+    
+    @Override
+    public void deleteVendor(Long vendorId) throws VendorNotFoundException{
+        try {
+            VendorEntity vendorEntity = retrieveVendorById(vendorId);
+            em.remove(vendorEntity);
+        } catch (VendorNotFoundException ex) {
+
+        }
+    }
+    
     /*
     @Override
     public VendorStaffEntity createVendorStaff(VendorStaffEntity vendorStaffEntity) {

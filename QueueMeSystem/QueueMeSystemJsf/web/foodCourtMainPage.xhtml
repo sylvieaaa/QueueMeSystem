@@ -15,55 +15,137 @@
             <br/>
 
 
-            <h:panelGroup style="display:block; text-align:center">
+            <p:panel style="display:block; text-align:center">
 
                 <h1><h:outputText style="color:blue" value="#{sessionScope['businessEntity'].name}"/></h1>&nbsp;&nbsp;
-                <p:link outcome="foodCourtMainPage.xhtml" value="View Details"></p:link>
+                <p:commandButton id="viewFoodCourt" title="View Details" icon="ui-icon-search" value="View Details"/>
+                <p:overlayPanel for="viewFoodCourt" hideEffect="fade">
+                    <h:form>
+                        <p:panelGrid style="text-align: left; border: #000000">
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Name: " /></p:column>
+                                <p:column><h:outputText value="#{sessionScope['businessEntity'].name}" /></p:column>
+                            </p:row>
 
-                <br/>
-                <br/>
-                <br/>
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Description: " /></p:column>
+                                <p:column><h:outputText value="#{sessionScope['businessEntity'].description}" /></p:column>
+                            </p:row>
 
-                <p:carousel value="#{sessionScope['businessEntity'].vendorEntities}" var="vendors" numVisible="3" style="width: auto; margin: 10px 10px" circular="true">
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Address: " /></p:column>
+                                <p:column><h:outputText value="#{sessionScope['businessEntity'].address}" /></p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Postal Code: " /></p:column>
+                                <p:column><h:outputText value="#{sessionScope['businessEntity'].postalCode}" /></p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Ratings: " /></p:column>
+                                <p:column><p:rating value="#{sessionScope['businessEntity'].ratings}" readonly="true" /></p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Start Time: " /></p:column>
+                                <p:column>
+                                    <h:outputText value="#{sessionScope['businessEntity'].startTime}">
+                                        <f:convertDateTime type="time" dateStyle="full"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="End Time: " /></p:column>
+                                <p:column>
+                                    <h:outputText value="#{sessionScope['businessEntity'].endTime}">
+                                        <f:convertDateTime type="time" dateStyle="full"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column colspan="2" style="text-align: center">
+                                    <p:commandButton value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
+                                        <f:setPropertyActionListener value="#{vendors}" target="#{updateVendorManagedBean.vendorEntityToUpdate}" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </h:form>
+                </p:overlayPanel>
+
+                <p:carousel id="vendorCarousel" value="#{sessionScope['businessEntity'].vendorEntities}" var="vendors" numVisible="4" style="width: auto; margin: 10px 10px; text-align: center" circular="true">
                     <!-- #TODO: Logos of food courts -->
-                    <p:panelGrid columns="1" style="margin-left: 100px">
+                    <p:panelGrid columns="1" style="margin-left: 60px; margin-top: 2px">
                         <p:graphicImage  value="/images/food/beef_hor_fun.png" width="70%"/>
                     </p:panelGrid>
-                    <p:panelGrid columns="2" style="width:100%;text-align: justify; margin: 10px 2px; padding-left: 10px" columnClasses="label,value">
-                        <h:outputText style="font-weight: bold" value="Name: " />
-                        <h:outputText value="#{vendors.vendorName}" />
+                    <p:panelGrid style="margin-left: 40px;text-align: left">
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Name: " /></p:column>
+                            <p:column><h:outputText value="#{vendors.vendorName}" /></p:column>
+                        </p:row>
 
-                        <h:outputText style="font-weight: bold" value="Cuisine: " />
-                        <h:outputText value="#{vendors.cuisineType}" />
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Cuisine: " /></p:column>
+                            <p:column><h:outputText value="#{vendors.cuisineType}" /></p:column>
+                        </p:row>
 
-                        <h:outputText style="font-weight: bold" value="Rating: " />
-                        <h:outputText value="#{vendors.rating}"/>
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Rating: " /></p:column>
+                            <p:column><p:rating value="#{vendors.rating}" readonly="true"/></p:column>
+                        </p:row>
 
-                        <h:outputText style="font-weight: bold" value="Information: " />
-                        <h:outputText value="#{vendors.information}" />
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Information: " /></p:column>
+                            <p:column><h:outputText value="#{vendors.information}" /></p:column>
+                        </p:row>
 
-                        <h:outputText style="font-weight: bold" value="Start Hours: " />
-                        <h:outputText value="#{vendors.startTime}">
-                            <f:convertDateTime type="time" dateStyle="full"/>
-                        </h:outputText> 
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Start Hours: " /></p:column>
+                            <p:column>
+                                <h:outputText value="#{vendors.startTime}">
+                                    <f:convertDateTime type="time" dateStyle="full"/>
+                                </h:outputText> 
+                            </p:column>
+                        </p:row>
 
-                        <h:outputText style="font-weight: bold" value="End Hours: " />
-                        <h:outputText value="#{vendors.endTime}">
-                            <f:convertDateTime type="time" dateStyle="full"/>
-                        </h:outputText>
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="End Hours: " /></p:column>
+                            <p:column>
+                                <h:outputText value="#{vendors.endTime}">
+                                    <f:convertDateTime type="time" dateStyle="full"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:row>
 
-                        <h:outputText />
-                        <p:button outcome="createNewVendor.xhtml" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px" />
+                        <p:row>
+                            <p:column colspan="2" style="text-align: center">
+                                <p:commandButton oncomplete="PF('dialogEditVendors').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
+                                    <f:setPropertyActionListener value="#{vendors}" target="#{updateVendorManagedBean.vendorEntityToUpdate}" />
+                                </p:commandButton>
+                                <p:commandButton value="Delete Vendor" icon="fa fa-trash" actionListener="#{updateVendorManagedBean.postConstruct}" update="vendorCarousel" title="Delete Vendor">
+                                    <f:attribute name="vendorEntityToDelete" value="#{vendors}" />
+                                    <p:confirm header="Confirmation" message="Are you sure you want to delete #{vendors.vendorName}?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:row>
                     </p:panelGrid>
                 </p:carousel>
 
-                <br />
-                <br />
+                <p:dialog header="Vendor Info" widgetVar="dialogViewDetails" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="foodCourtDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty updateVendorManagedBean.vendorEntityToUpdate}" columnClasses="label,value">
 
+                            <h:outputText value="name: " />
+                            <h:outputText value="#{updateVendorManagedBean.vendorEntityToUpdate.vendorName}" />
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
                 <p:button outcome="createNewVendor.xhtml" value="Add Vendor" icon="fa fa-plus-circle"></p:button>
 
-            </h:panelGroup>
-
+            </p:panel>
 
         </ui:define>
     </div>
