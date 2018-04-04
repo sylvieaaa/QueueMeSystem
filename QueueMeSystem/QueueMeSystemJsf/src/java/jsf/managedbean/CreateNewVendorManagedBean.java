@@ -16,7 +16,7 @@ import util.enumeration.VendorTypeEnum;
 
 @Named(value = "createNewVendorManagedBean")
 @RequestScoped
-public class CreateNewVendorManagedBean implements Serializable{
+public class CreateNewVendorManagedBean implements Serializable {
 
     @EJB
     private VendorEntityControllerLocal vendorEntityControllerLocal;
@@ -35,18 +35,22 @@ public class CreateNewVendorManagedBean implements Serializable{
     }
 
     public void createNewVendor(ActionEvent event) {
-        FoodCourtEntity foodCourtEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
-        VendorEntity vendorEntity = vendorEntityControllerLocal.createVendorEntity(newVendorEntity, foodCourtEntity);
-        newVendorEntity = new VendorEntity();
+        try {
+            FoodCourtEntity foodCourtEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+            VendorEntity vendorEntity = vendorEntityControllerLocal.createVendorEntity(newVendorEntity, foodCourtEntity);
+            newVendorEntity = new VendorEntity();
 
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New vendor created successfully (Vendor ID: " + vendorEntity.getVendorName() + ")", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New vendor created successfully (Vendor ID: " + vendorEntity.getVendorName() + ")", null));
+        } catch (UnknownError err) {
+           FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error. Not Unique", null));
+        }
     }
 
     public void upload(FileUploadEvent event) {
         FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
-    
+
     public VendorEntity getNewVendorEntity() {
         return newVendorEntity;
     }

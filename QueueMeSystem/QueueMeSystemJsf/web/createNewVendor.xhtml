@@ -62,12 +62,17 @@
 
                         <p:row>
                             <p:column><p:outputLabel for="username" value="Username:  "/></p:column>
-                            <p:column><p:inputText id="username" value="#{createNewVendorManagedBean.newVendorEntity.username}" required="true" requiredMessage="Username required." /></p:column>
+                            <p:column>
+                                <p:inputText id="username" value="#{createNewVendorManagedBean.newVendorEntity.username}" required="true" requiredMessage="Username required.">
+                                </p:inputText>
+                            </p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="password" value="Password: "/></p:column>
-                            <p:column><p:inputText id="password" value="#{createNewVendorManagedBean.newVendorEntity.password}" required="true" requiredMessage="Password required." /></p:column>
+                            <p:column>
+                                <p:password id="password" value="#{createNewVendorManagedBean.newVendorEntity.password}" required="true" requiredMessage="Password required." />
+                            </p:column>
                         </p:row>
 
                         <p:row>
