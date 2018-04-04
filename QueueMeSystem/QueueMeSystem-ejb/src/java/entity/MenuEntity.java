@@ -29,14 +29,15 @@ public class MenuEntity implements Serializable {
     private Long menuId;
     private String name;
     private Boolean selected;
-    @OneToMany(mappedBy = "menuEntity", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "menuEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CategoryEntity> categoryEntities;
-    
+
     @OneToOne
     private VendorEntity vendorEntity;
-    
+
     public MenuEntity() {
         categoryEntities = new ArrayList<>();
+        selected = Boolean.FALSE;
         //categoryEntities.add(new CategoryEntity("Main"));
     }
 
@@ -44,7 +45,7 @@ public class MenuEntity implements Serializable {
         this();
         this.name = name;
         this.selected = selected;
-        
+
     }
 
     public Long getMenuId() {
@@ -54,7 +55,7 @@ public class MenuEntity implements Serializable {
     public void setMenuId(Long menuId) {
         this.menuId = menuId;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -111,5 +112,5 @@ public class MenuEntity implements Serializable {
     public void setSelected(Boolean selected) {
         this.selected = selected;
     }
-    
+
 }

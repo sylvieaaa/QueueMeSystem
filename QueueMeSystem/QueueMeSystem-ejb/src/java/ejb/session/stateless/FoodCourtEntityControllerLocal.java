@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.FoodCourtEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.FoodCourtNotFoundException;
 
 /**
  *
@@ -18,8 +19,10 @@ public interface FoodCourtEntityControllerLocal {
 
     public FoodCourtEntity createFoodCourt(FoodCourtEntity foodCourtEntity);
 
-    public FoodCourtEntity retrieveFoodCourtById(Long foodCourtId);
+    public FoodCourtEntity retrieveFoodCourtById(Long foodCourtId)throws FoodCourtNotFoundException;
 
     public List<FoodCourtEntity> retrieveAllFoodCourts();
+
+    public void updateFoodCourt(FoodCourtEntity foodCourt) throws FoodCourtNotFoundException;
     
 }

@@ -84,8 +84,13 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
     }
 
     @Override
-    public void updateMenuItem(MenuItemEntity menuItemEntity) {
-        em.merge(menuItemEntity);
+    public void updateMenuItem(MenuItemEntity menuItemEntityToUpdate) throws MenuItemNotFoundException {
+        MenuItemEntity menuItemEntity = retrieveMenuItemById(menuItemEntityToUpdate.getMenuItemId());
+        
+        menuItemEntity.setMenuItemName(menuItemEntityToUpdate.getMenuItemName());
+        menuItemEntity.setDescription(menuItemEntityToUpdate.getDescription());
+        menuItemEntity.setPrice(menuItemEntityToUpdate.getPrice());
+        menuItemEntity.setPhotoURL(menuItemEntityToUpdate.getPhotoURL());
     }
 
     @Override

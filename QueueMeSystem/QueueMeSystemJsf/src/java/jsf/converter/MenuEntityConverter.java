@@ -24,17 +24,14 @@ public class MenuEntityConverter implements Converter {
         if (value == null || value.trim().isEmpty() || value.equals("null")) {
             return null;
         }
-System.err.println("value " + value);
         try {
             List<MenuEntity> menuEntities = (List<MenuEntity>) context.getExternalContext().getSessionMap().get("MenuEntityConverter.menuEntities");
-System.err.println("value " + value);
             for (MenuEntity menuEntity : menuEntities) {
                 if (menuEntity.getMenuId().toString().equals(value)) {
                     System.err.println("returned");
                     return menuEntity;
                 }
             }
-            System.err.println("ouet");
         } catch (Exception ex) {
             throw new IllegalArgumentException("Please select a valid value");
         }
@@ -55,7 +52,9 @@ System.err.println("value " + value);
         if (value instanceof MenuEntity) {
             try {
                 MenuEntity menuEntity = (MenuEntity) value;
-                System.err.println("I'm here");
+                if (menuEntity.getMenuId() == null) {
+                    return "";
+                }
                 return menuEntity.getMenuId().toString();
             } catch (Exception e) {
                 throw new IllegalArgumentException("Invalid value");
@@ -65,4 +64,3 @@ System.err.println("value " + value);
         }
     }
 }
-

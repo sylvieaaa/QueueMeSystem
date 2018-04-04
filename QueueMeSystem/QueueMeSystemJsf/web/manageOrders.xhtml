@@ -28,7 +28,7 @@
                 </p:column>
                 
                 <p:column headerText="Date Time">
-                    <h:outputText value="#{orderEntity.dateTime.time}" style="text-align: center">
+                    <h:outputText value="#{orderEntity.dateTime.time}">
                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                     </h:outputText>
                 </p:column>
@@ -46,10 +46,10 @@
                     </p:commandButton>
                 </p:column>
 
-                <p:column headerText="Status">
-         
-                    <p:commandButton class="icon-only" icon="fa fa-check"  actionListener="#{pendingOrderManagedBean.editFulfilled}"/>     
-                    <f:attribute name="orderFulfilled" value="#{selectedOrderEntityToView}"/>
+                <p:column headerText="Fulfilment Status">     
+                    <p:commandButton class="icon-only" icon="fa fa-check" actionListener="#{pendingOrderManagedBean.editFulfilled}">     
+                    <f:attribute name="orderFulfilled" value="#{orderEntity}"/>
+                    </p:commandButton>
                 </p:column>
                     
                 
@@ -89,7 +89,7 @@
                
  
                 <p:column headerText="Details" >
-                    <p:commandButton update="formViewOrder" oncomplete="PF('dialogViewOrder').show()" icon="ui-icon-document" title="View">
+                    <p:commandButton update="formViewCompletedOrder" oncomplete="PF('dialogViewCompletedOrder').show()" icon="ui-icon-document" title="View">
                         <f:setPropertyActionListener value="#{orderEntity}" target="#{completedOrderManagedBean.selectedOrderEntityToView}" />
                     </p:commandButton>
        
@@ -154,6 +154,60 @@
                         </p:column>
                         <p:column>
                             <h:outputText value="#{pendingOrderManagedBean.selectedOrderEntityToView.saleTransactionLineItemEntities}" />
+                        </p:column>
+                    </p:row>
+                    
+    
+                </p:panelGrid>
+
+            </p:dialog>
+            
+        </h:form>
+        
+        <h:form id="formViewCompletedOrder">
+            
+            <p:dialog id="dialogViewOrder" widgetVar="dialogViewCompletedOrder" header="View Order" closable="true">
+               
+
+                <p:panelGrid>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Order ID: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.orderId}" />
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Date Time: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.dateTime.time}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Earnings: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.totalEarnings}" >
+                                <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Items: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.saleTransactionLineItemEntities}" />
                         </p:column>
                     </p:row>
                     

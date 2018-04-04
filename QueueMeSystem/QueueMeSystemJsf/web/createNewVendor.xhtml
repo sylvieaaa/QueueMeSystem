@@ -17,13 +17,20 @@
 
             <p:panel style="display: block; text-align:center; width: 550px">
                 <h1><h:outputText style="color:blue" value="#{sessionScope['businessEntity'].name}"/></h1>
-
-                <br />
-                <br />
-                <br />
+                <h3>Add New Vendor</h3>
 
                 <h:form>
+                    <p:growl id="growl" showDetail="true" />
+
                     <p:panelGrid>
+                        <p:row>
+                            <p:column><p:outputLabel for="logo" value="Logo: "/></p:column>
+                            <p:column>
+                                <p:fileUpload id="logo" fileUploadListener="#{createNewVendorManagedBean.upload}" mode="advanced" dragDropSupport="false"
+                                              update="growl" sizeLimit="100000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" required="true" requiredMessage="Vendor image required."/>
+                            </p:column>
+                        </p:row>
+
                         <p:row>
                             <p:column><p:outputLabel for="name" value="Name: "/></p:column>
                             <p:column><p:inputText id="name" value="#{createNewVendorManagedBean.newVendorEntity.vendorName}" required="true" requiredMessage="Vendor name required." /></p:column>
@@ -33,9 +40,8 @@
                             <p:column><p:outputLabel for="cuisine" value="Cuisine: " /></p:column>
                             <p:column>
                                 <p:selectOneMenu id="cuisine" value="#{createNewVendorManagedBean.newVendorEntity.cuisineType}" required="true" requiredMessage="Cuisine type required.">
-                                    <f:selectItem itemLabel="Chinese" itemValue="Chinese"/>
-                                    <f:selectItem itemLabel="Malay" itemValue="Malay"/>
-                                    <f:selectItem itemLabel="Drinks" itemValue="Drinks"/>
+                                    <f:selectItem itemLabel="Select Cuisine" itemValue="null" noSelectionOption="true"/>
+                                    <f:selectItems value="#{createNewVendorManagedBean.vendorTypes}" var="type" itemLabel="#{type}" itemValue="#{type}"/>
                                 </p:selectOneMenu>
                             </p:column>
                         </p:row>
@@ -56,18 +62,25 @@
 
                         <p:row>
                             <p:column><p:outputLabel for="username" value="Username:  "/></p:column>
-                            <p:column><p:inputText id="username" value="#{createNewVendorManagedBean.newVendorEntity.username}" required="true" requiredMessage="Username required." /></p:column>
+                            <p:column>
+                                <p:inputText id="username" value="#{createNewVendorManagedBean.newVendorEntity.username}" required="true" requiredMessage="Username required.">
+                                </p:inputText>
+                            </p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="password" value="Password: "/></p:column>
-                            <p:column><p:inputText id="password" value="#{createNewVendorManagedBean.newVendorEntity.password}" required="true" requiredMessage="Vendor name required." /></p:column>
+                            <p:column>
+                                <p:password id="password" value="#{createNewVendorManagedBean.newVendorEntity.password}" required="true" requiredMessage="Password required." />
+                            </p:column>
                         </p:row>
 
                         <p:row>
                             <p:column colspan="2" style="text-align: center">
-                                <h:commandButton value="Add New Vendor" type="submit" actionListener="#{createNewVendorManagedBean.createNewVendor}" />&nbsp;
-                                <h:commandButton value="Clear" type="reset" />
+                                <p:commandButton id="addVendor" value="Add New Vendor" type="submit" actionListener="#{createNewVendorManagedBean.createNewVendor}" update="growl"> 
+                                    <f:ajax execute="@form"/>
+                                </p:commandButton> &nbsp;
+                                <p:commandButton value="Clear" type="reset"/>
                             </p:column>
                         </p:row>
                     </p:panelGrid>

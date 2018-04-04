@@ -38,7 +38,6 @@ public class OrderEntityController implements OrderEntityControllerLocal {
     @Override
     public void updateOrder(OrderEntity orderEntity) {
 
-//        OrderEntity updateOrder = new OrderEntity();
         System.err.println("This is orderEntity id: " + orderEntity.getOrderId());
         OrderEntity updateOrder = em.find(OrderEntity.class, orderEntity.getOrderId());
         updateOrder.setFulfilled(Boolean.TRUE);

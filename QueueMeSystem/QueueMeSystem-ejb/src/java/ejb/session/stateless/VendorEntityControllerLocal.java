@@ -21,4 +21,8 @@ public interface VendorEntityControllerLocal {
 
     public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity);
 
+    public void updateVendor(VendorEntity vendorEntity) throws VendorNotFoundException;
+
+    public void deleteVendor(Long vendorId) throws VendorNotFoundException;
+
 }

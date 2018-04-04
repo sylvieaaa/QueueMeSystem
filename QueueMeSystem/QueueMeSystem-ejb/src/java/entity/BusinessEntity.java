@@ -27,6 +27,7 @@ public abstract class BusinessEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long businessId;
+    @Column(unique = true)
     private String username;
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String password;

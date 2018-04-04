@@ -11,6 +11,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.DeleteFoodCourtException;
+import util.exception.FoodCourtNotFoundException;
 
 /**
  *
@@ -32,13 +34,13 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
     }
     
     @Override
-    public FoodCourtEntity retrieveFoodCourtById(Long foodCourtId) {
+    public FoodCourtEntity retrieveFoodCourtById(Long foodCourtId) throws FoodCourtNotFoundException {
         FoodCourtEntity foodCourtEntity = em.find(FoodCourtEntity.class, foodCourtId);
         
         if(foodCourtEntity != null) {
             return foodCourtEntity;
         } else {
-            return null;
+            throw new FoodCourtNotFoundException("Food Court Id " + foodCourtId + " does not exist");
         }
     }
     
@@ -46,5 +48,32 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
     public List<FoodCourtEntity> retrieveAllFoodCourts(){
         Query query = em.createQuery("SELECT f FROM FoodCourtEntity f ORDER BY f.name ASC");
         return query.getResultList();
+    }
+    
+    @Override
+    public void updateFoodCourt(FoodCourtEntity foodCourt) throws FoodCourtNotFoundException{
+        if (foodCourt.getBusinessId() != null)
+        {
+            FoodCourtEntity foodCourtToUpdate = retrieveFoodCourtById(foodCourt.getBusinessId());
+     
+                foodCourtToUpdate.setName(foodCourt.getName());
+                foodCourtToUpdate.setAddress(foodCourt.getAddress());
+                foodCourtToUpdate.setDescription(foodCourt.getDescription());
+                foodCourtToUpdate.setRatings(foodCourt.getRatings());
+                foodCourtToUpdate.setPostalCode(foodCourt.getPostalCode());
+                foodCourtToUpdate.setStartTime(foodCourt.getStartTime());
+                foodCourtToUpdate.setEndTime(foodCourt.getEndTime());
+           
+        }
+        else{
+            throw new FoodCourtNotFoundException("Id not provided for FoodCourt to be updated");
+        }
+    }
+    
+    public void deleteFoodCourt(Long foodCourtId) throws FoodCourtNotFoundException, DeleteFoodCourtException{
+        FoodCourtEntity foodCourtToDelete = retrieveFoodCourtById(foodCourtId);
+        
+        em.merge(foodCourtToDelete);
+       
     }
 }

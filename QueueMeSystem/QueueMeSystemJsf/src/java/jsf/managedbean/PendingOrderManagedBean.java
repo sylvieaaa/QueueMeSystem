@@ -48,8 +48,7 @@ public class PendingOrderManagedBean implements Serializable {
         orderEntities = new ArrayList<>();
         filteredOrderEntities = new ArrayList<>();
         saleTransactionLineItemEntities = new ArrayList<>();
-
-         newOrderEntity = new OrderEntity();
+        newOrderEntity = new OrderEntity();
     }
     
     @PostConstruct
@@ -63,7 +62,6 @@ public class PendingOrderManagedBean implements Serializable {
     public void editFulfilled(ActionEvent event) {
         
         newOrderEntity = (OrderEntity) event.getComponent().getAttributes().get("orderFulfilled");
-        System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         orderEntityControllerLocal.updateOrder(newOrderEntity);
         System.err.println("THIS IS SPARTAN!");
     }
@@ -85,7 +83,6 @@ public class PendingOrderManagedBean implements Serializable {
     }
 
     public OrderEntity getNewOrderEntity() {
-        System.err.println("newOrderEntityId: " + newOrderEntity.getOrderId());
         return newOrderEntity;
     }
 
