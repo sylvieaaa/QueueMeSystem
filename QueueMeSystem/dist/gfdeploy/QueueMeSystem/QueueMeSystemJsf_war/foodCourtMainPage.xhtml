@@ -1,0 +1,248 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
+    <div class ="ui-g-12 ui-md-6 ui-lg-4">
+        <ui:define name="content">
+
+            <br/>
+            <br/>
+
+
+            <p:panel style="display:block; text-align:center">
+
+                <h1><h:outputText style="color:blue" value="#{sessionScope['businessEntity'].name}"/></h1>&nbsp;&nbsp;
+                <p:commandButton id="viewFoodCourt" title="View Details" icon="ui-icon-search" value="View Details"/>
+                <p:overlayPanel for="viewFoodCourt" hideEffect="fade">
+                    <h:form id="foodCourtDetails">
+                        <p:panelGrid style="text-align: left; border: #000000">
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Name: " /></p:column>
+                                <p:column><h:outputText value="#{sessionScope['businessEntity'].name}" /></p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Description: " /></p:column>
+                                <p:column><h:outputText value="#{sessionScope['businessEntity'].description}" /></p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Address: " /></p:column>
+                                <p:column><h:outputText value="#{sessionScope['businessEntity'].address}" /></p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Postal Code: " /></p:column>
+                                <p:column><h:outputText value="#{sessionScope['businessEntity'].postalCode}" /></p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Ratings: " /></p:column>
+                                <p:column><p:rating value="#{sessionScope['businessEntity'].ratings}" readonly="true" /></p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="Start Time: " /></p:column>
+                                <p:column>
+                                    <h:outputText value="#{sessionScope['businessEntity'].startTime}">
+                                        <f:convertDateTime type="time" dateStyle="full"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column><h:outputText style="font-weight: bold" value="End Time: " /></p:column>
+                                <p:column>
+                                    <h:outputText value="#{sessionScope['businessEntity'].endTime}">
+                                        <f:convertDateTime type="time" dateStyle="full"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column colspan="2" style="text-align: center">
+                                    <p:commandButton update="updateFoodCourtForm" oncomplete="PF('dialogUpdateFoodCourt').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
+                                        <f:setPropertyActionListener value="#{sessionScope['businessEntity']}" target="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate}" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </h:form>
+                </p:overlayPanel>
+
+                <p:carousel id="vendorCarousel" value="#{sessionScope['businessEntity'].vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
+                    <!-- #TODO: Logos of food courts -->
+                    <p:panelGrid columns="1" style="margin-left: 60px; margin-top: 2px">
+                        <p:graphicImage  value="/foodPhotos/vendorLogos/#{vendors.photoURL}" width="70%"/>
+                    </p:panelGrid>
+                    <p:panelGrid style="margin-left: 40px;text-align: left">
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Name: " /></p:column>
+                            <p:column><h:outputText value="#{vendors.vendorName}" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Cuisine: " /></p:column>
+                            <p:column><h:outputText value="#{vendors.cuisineType}" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Rating: " /></p:column>
+                            <p:column><p:rating value="#{vendors.rating}" readonly="true"/></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Description: " /></p:column>
+                            <p:column><h:outputText value="#{vendors.information}" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="Start Hours: " /></p:column>
+                            <p:column>
+                                <h:outputText value="#{vendors.startTime}">
+                                    <f:convertDateTime type="time" dateStyle="full"/>
+                                </h:outputText> 
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><h:outputText style="font-weight: bold" value="End Hours: " /></p:column>
+                            <p:column>
+                                <h:outputText value="#{vendors.endTime}">
+                                    <f:convertDateTime type="time" dateStyle="full"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="2" style="text-align: center">
+                                <p:commandButton update="updateVendorForm" oncomplete="PF('dialogUpdateVendor').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
+                                    <f:setPropertyActionListener value="#{vendors}" target="#{updateVendorManagedBean.vendorEntityToUpdate}" />
+                                </p:commandButton>
+                                <p:commandButton value="Delete Vendor" icon="fa fa-trash" actionListener="#{updateVendorManagedBean.postConstruct}" update="vendorCarousel" title="Delete Vendor">
+                                    <f:attribute name="vendorEntityToDelete" value="#{vendors}" />
+                                    <p:confirm header="Confirmation" message="Are you sure you want to delete #{vendors.vendorName}?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:carousel>
+
+                <p:button outcome="createNewVendor.xhtml" value="Add Vendor" icon="fa fa-plus-circle"></p:button>
+
+            </p:panel>
+
+
+            <h:form id="updateVendorForm">
+                <p:dialog id="dialogUpdateVendor" widgetVar="dialogUpdateVendor" header="Update Vendor" closable="true">
+                    <p:messages id="messagesUpdateVendor" redisplay="false" />
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column><p:outputLabel for="name" value="Name: "/></p:column>
+                            <p:column><p:inputText id="name" value="#{updateVendorManagedBean.vendorEntityToUpdate.vendorName}" required="true" requiredMessage="Vendor name required." /></p:column>
+                            <p:column><p:message for="name" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="cuisine" value="Cuisine: " /></p:column>
+                            <p:column>
+                                <p:selectOneMenu id="cuisine" value="#{updateVendorManagedBean.vendorEntityToUpdate.cuisineType}" required="true" requiredMessage="Cuisine type required.">
+                                    <f:selectItem itemLabel="Select Cuisine" itemValue="null" noSelectionOption="true"/>
+                                    <f:selectItems value="#{createNewVendorManagedBean.vendorTypes}" var="type" itemLabel="#{type}" itemValue="#{type}"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column><p:message for="cuisine" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="rating" value="Rating: " /></p:column>
+                            <p:column><p:rating id="rating" value="#{updateVendorManagedBean.vendorEntityToUpdate.rating}" /></p:column>
+                            <p:column><p:message for="rating" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="information" value="Information: " /></p:column>
+                            <p:column><p:inputTextarea id="information" value="#{updateVendorManagedBean.vendorEntityToUpdate.information}" required="true" requiredMessage="Information required."/>  </p:column>                  
+                            <p:column><p:message for="information" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="operatingHours" value="Operating Hours: " /></p:column>
+                            <p:column>
+                                <p:calendar pattern="HH:mm:ss" timeOnly="true" value="#{updateVendorManagedBean.vendorEntityToUpdate.startTime}" required="true" requiredMessage="Start time required." />
+                                &nbsp;&nbsp;<h:outputText style="font-size: 15px" value="to"></h:outputText>&nbsp;&nbsp;   
+                                <p:calendar id="operatingHours" pattern="HH:mm:ss" timeOnly="true" value="#{updateVendorManagedBean.vendorEntityToUpdate.endTime}" required="true" requiredMessage="End time required." />
+                            </p:column>
+                            <p:column><p:message for="operatingHours" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3" style="text-align: center" >
+                                <p:commandButton value="Update Vendor" update="@form vendorCarousel" actionListener="#{updateVendorManagedBean.updateVendor}" oncomplete="PF('dialogUpdateVendor').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="updateFoodCourtForm">
+                <p:dialog id="dialogUpdateFoodCourt" widgetVar="dialogUpdateFoodCourt" header="Update Food Court" closable="true">
+                    <p:messages id="messagesUpdateFoodCourt" redisplay="false" />
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column><p:outputLabel for="name" value="Name: " /></p:column>
+                            <p:column><p:inputText id="name" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.name}" required="true" requiredMessage="Name is required" /></p:column>
+                            <p:column><p:message for="name" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="address" value="Address: " /></p:column>
+                            <p:column><p:inputText id="address" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.address}" required="true" requiredMessage="Address is required" /></p:column>
+                            <p:column><p:message for="address" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="postal" value="Postal Code: " /></p:column>
+                            <p:column><p:inputText id="postal" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.postalCode}" required="true" requiredMessage="Postal is required" /></p:column>
+                            <p:column><p:message for="postal" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="description" value="Description: " /></p:column>
+                            <p:column><p:inputText id="description" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.description}" required="true" requiredMessage="Description is required" /></p:column>
+                            <p:column><p:message for="description" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="startTime" value="Start Time: " /></p:column>
+                            <p:column><p:calendar id="startTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.startTime}" pattern="HH:mm:ss" timeOnly="true" required="true" requiredMessage="Start Time required" /></p:column>
+                            <p:column><p:message for="startTime" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column><p:outputLabel for="endTime" value="End Time: " /></p:column>
+                            <p:column><p:calendar id="endTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.endTime}" pattern="HH:mm:ss" timeOnly="true" required="true" requiredMessage="End Time required" /></p:column>
+                            <p:column><p:message for="endTime" /></p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3" style="text-align: center" >
+                                <p:commandButton value="Update Food Court" update="@all" actionListener="#{viewAllFoodCourtsManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+                </p:dialog>
+            </h:form>
+
+        </ui:define>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
+</ui:composition>
