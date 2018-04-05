@@ -76,10 +76,10 @@
                     </h:form>
                 </p:overlayPanel>
 
-                <p:carousel id="vendorCarousel" value="#{sessionScope['businessEntity'].vendorEntities}" var="vendors" numVisible="4" style="width: auto; margin: 10px 10px; text-align: center" circular="true">
+                <p:carousel id="vendorCarousel" value="#{sessionScope['businessEntity'].vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
                     <!-- #TODO: Logos of food courts -->
                     <p:panelGrid columns="1" style="margin-left: 60px; margin-top: 2px">
-                        <p:graphicImage  value="/images/food/beef_hor_fun.png" width="70%"/>
+                        <p:graphicImage  value="/foodPhotos/vendorLogos/#{vendors.photoURL}" width="70%"/>
                     </p:panelGrid>
                     <p:panelGrid style="margin-left: 40px;text-align: left">
                         <p:row>
@@ -98,7 +98,7 @@
                         </p:row>
 
                         <p:row>
-                            <p:column><h:outputText style="font-weight: bold" value="Information: " /></p:column>
+                            <p:column><h:outputText style="font-weight: bold" value="Description: " /></p:column>
                             <p:column><h:outputText value="#{vendors.information}" /></p:column>
                         </p:row>
 
@@ -222,19 +222,19 @@
 
                         <p:row>
                             <p:column><p:outputLabel for="startTime" value="Start Time: " /></p:column>
-                            <p:column><p:calendar id="startTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.startTime}" pattern="HH:mm:ss" timeOnly="true" requiredMessage="Start Time required" /></p:column>
+                            <p:column><p:calendar id="startTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.startTime}" pattern="HH:mm:ss" timeOnly="true" required="true" requiredMessage="Start Time required" /></p:column>
                             <p:column><p:message for="startTime" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="endTime" value="End Time: " /></p:column>
-                            <p:column><p:calendar id="endTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.endTime}" pattern="HH:mm:ss" timeOnly="true" requiredMessage="End Time required" /></p:column>
+                            <p:column><p:calendar id="endTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.endTime}" pattern="HH:mm:ss" timeOnly="true" required="true" requiredMessage="End Time required" /></p:column>
                             <p:column><p:message for="endTime" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column colspan="3" style="text-align: center" >
-                                <p:commandButton value="Update Food Court" update="@form foodCourtDetails" actionListener="#{viewAllFoodCourtsManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
+                                <p:commandButton value="Update Food Court" update="@all" actionListener="#{viewAllFoodCourtsManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
                             </p:column>
                         </p:row>
 
