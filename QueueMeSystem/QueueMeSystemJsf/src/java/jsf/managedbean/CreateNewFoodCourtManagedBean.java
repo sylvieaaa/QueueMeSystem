@@ -7,11 +7,14 @@ package jsf.managedbean;
 
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
 import entity.FoodCourtEntity;
+import java.io.IOException;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -25,10 +28,11 @@ public class CreateNewFoodCourtManagedBean {
     private FoodCourtEntityControllerLocal foodCourtEntityControllerLocal;
 
     private FoodCourtEntity newFoodCourt;
+
     /**
      * Creates a new instance of CreateNewFoodCourtManagedBean
      */
-    
+
     public CreateNewFoodCourtManagedBean() {
         newFoodCourt = new FoodCourtEntity();
     }
@@ -40,13 +44,18 @@ public class CreateNewFoodCourtManagedBean {
     public void setNewFoodCourt(FoodCourtEntity newFoodCourt) {
         this.newFoodCourt = newFoodCourt;
     }
-    
-        public void createNewFoodCourt()
-    {
-       
+
+    public void createNewFoodCourt() throws IOException {
+
         FoodCourtEntity fc = foodCourtEntityControllerLocal.createFoodCourt(newFoodCourt);
         newFoodCourt = new FoodCourtEntity();
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Food Court created successfully (Postal Code: " + fc.getPostalCode() + ")", null));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Food Court created successfully (Id: " + fc.getBusinessId()+ ")", null));
+        
     }
-    
+
+    public void reload() throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+    }
+
 }

@@ -16,10 +16,13 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.servlet.http.HttpServletRequest;
+import util.exception.DeleteFoodCourtException;
 import util.exception.FoodCourtNotFoundException;
 
 /**
@@ -38,6 +41,7 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
     private FoodCourtEntity foodCourt;
     private FoodCourtEntity foodCourtToView;
     private FoodCourtEntity foodCourtToUpdate;
+    private FoodCourtEntity foodCourtToDisable;
 
     /**
      * Creates a new instance of ViewAllFoodCourtsManagedBean
@@ -55,42 +59,31 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
 
     }
 
-
     public void updateFoodCourt(ActionEvent event) {
         try {
             foodCourtEntityControllerLocal.updateFoodCourt(foodCourtToUpdate);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Food Court updated successfully", null));
         } catch (FoodCourtNotFoundException ex) {
-
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating Food Court: " + ex.getMessage(), null));
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + e.getMessage(), null));
         }
     }
 
-//    public void deleteProduct(ActionEvent event)
-//    {
-//        try
-//        {
-//            FoodCourtEntity foodCourtToDelete = (FoodCourtEntity)event.getComponent().getAttributes().get("productEntityToDelete");
-//            foodCourtEntityControllerLocal.deleteProduct(foodCourtToDelete.getBusinessId());
-//            
-//            foodCourts.remove(foodCourtToDelete);
-//            filteredFoodCourts.remove(foodCourtToDelete);
-//
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Product deleted successfully", null));
-//        }
-//        catch(ProductNotFoundException | DeleteProductException ex)
-//        {
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while deleting product: " + ex.getMessage(), null));
-//        }
-//        catch(Exception ex)
-//        {
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
-//        }
-//    }
-//
-//    
+    public void disableFoodCourt(ActionEvent event) {
+
+        try {
+            foodCourtEntityControllerLocal.disableFoodCourt(foodCourtToDisable.getBusinessId());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Food Court disabled successfully", null));
+           // reload();
+        } catch (FoodCourtNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while disabling Food Court: " + ex.getMessage(), null));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + e.getMessage(), null));
+        }
+
+    }
+
     public List<FoodCourtEntity> getFoodCourts() {
         return foodCourts;
     }
@@ -131,13 +124,23 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
         this.foodCourtToUpdate = foodCourtToUpdate;
     }
 
-        
-    public void viewFoodCourtDetails(ActionEvent event) throws IOException
-    {
-        Long foodCourtIdToView = (Long)event.getComponent().getAttributes().get("foodCourtId");
+    public FoodCourtEntity getFoodCourtToDisable() {
+        return foodCourtToDisable;
+    }
+
+    public void setFoodCourtToDisable(FoodCourtEntity foodCourtToDisable) {
+        this.foodCourtToDisable = foodCourtToDisable;
+    }
+
+    public void viewFoodCourtDetails(ActionEvent event) throws IOException {
+        Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToView", foodCourtIdToView);
         FacesContext.getCurrentInstance().getExternalContext().redirect("viewFoodCourtDetails.xhtml");
     }
 
+    public void reload() throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+    }
 
 }

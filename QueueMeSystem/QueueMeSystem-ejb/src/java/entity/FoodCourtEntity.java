@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -32,14 +33,16 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
     private Date startTime;
     @Temporal(javax.persistence.TemporalType.TIME)
     private Date endTime;
+    private Boolean enable;
     
-    @OneToMany(mappedBy = "foodCourtEntity")
+    @OneToMany(mappedBy = "foodCourtEntity", cascade = CascadeType.REMOVE)
     private List<VendorEntity> vendorEntities;
 
     public FoodCourtEntity() {
         super();
         this.vendorEntities = new ArrayList<>();
         this.ratings = BigDecimal.ZERO;
+        this.enable= true;
     }
 
     public FoodCourtEntity(String name, String description, String address, String postalCode, BigDecimal ratings, Date startTime, Date endTime, String username, String password) {
@@ -142,6 +145,14 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
 
     public void setVendorEntities(List<VendorEntity> vendorEntities) {
         this.vendorEntities = vendorEntities;
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
     }
 
 }
