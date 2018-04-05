@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -34,14 +33,15 @@ public class VendorEntity extends BusinessEntity implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIME)
     private Date endTime;
     private BigDecimal creditReceived;
+    private String photoURL;
 
     @ManyToOne
     private FoodCourtEntity foodCourtEntity;
-    @OneToOne(mappedBy = "vendorEntity", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "vendorEntity")
     private List<MenuEntity> menuEntities;
-    @OneToMany(mappedBy = "vendorEntity", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "vendorEntity")
     private List<OrderEntity> orderEntities;
-    @OneToMany(mappedBy = "vendorEntity", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "vendorEntity")
     private List<ReviewEntity> reviewEntities;
     @OneToMany(mappedBy = "vendorEntity")
     private List<MenuItemEntity> menuItemEntities;
@@ -53,10 +53,9 @@ public class VendorEntity extends BusinessEntity implements Serializable {
         menuItemEntities = new ArrayList<>();
         this.rating = BigDecimal.ZERO;
         this.creditReceived = BigDecimal.ZERO;
-
     }
 
-    public VendorEntity(String vendorName, String cuisineType, BigDecimal rating, String information, Date startTime, Date endTime, BigDecimal creditReceived, String username, String password) {
+    public VendorEntity(String vendorName, String cuisineType, BigDecimal rating, String information, Date startTime, Date endTime, BigDecimal creditReceived, String username, String password, String photo) {
         this();
         this.vendorName = vendorName;
         this.cuisineType = cuisineType;
@@ -65,6 +64,7 @@ public class VendorEntity extends BusinessEntity implements Serializable {
         this.startTime = startTime;
         this.endTime = endTime;
         this.creditReceived = creditReceived;
+        this.photoURL = photo;
         super.setUsername(username);
         super.setPassword(password);
     }
@@ -190,4 +190,11 @@ public class VendorEntity extends BusinessEntity implements Serializable {
         this.reviewEntities = reviewEntities;
     }
 
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
 }

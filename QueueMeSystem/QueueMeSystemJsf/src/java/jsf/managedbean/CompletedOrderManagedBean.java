@@ -8,47 +8,53 @@ package jsf.managedbean;
 import ejb.session.stateless.OrderEntityControllerLocal;
 import entity.OrderEntity;
 import entity.SaleTransactionLineItemEntity;
+import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import org.primefaces.component.calendar.Calendar;
 
 /**
  *
  * @author KERK
  */
-@Named(value = "completedOrderManagedBean")
+@Named
 @ViewScoped
 public class CompletedOrderManagedBean implements Serializable {
 
     @EJB(name = "OrderEntityControllerLocal")
     private OrderEntityControllerLocal orderEntityControllerLocal;
     
-    
-    
     private List<OrderEntity> orderEntities;
     private List<OrderEntity> filteredOrderEntities;
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
     private OrderEntity newOrderEntity;
     private OrderEntity selectedOrderEntityToView;
+    //private BigDecimal earnings;
+ 
 
-    
+    /**
+     * Creates a new instance of completedOrderManagedBean
+     */
     public CompletedOrderManagedBean() {
         orderEntities = new ArrayList<>();
         filteredOrderEntities = new ArrayList<>();
         saleTransactionLineItemEntities = new ArrayList<>();
-
         
         newOrderEntity = new OrderEntity();
     }
     
-@PostConstruct
+    @PostConstruct
     public void postConstruct()
     {
-        orderEntities = orderEntityControllerLocal.retrieveAllCompletedOrders();
+        orderEntities = orderEntityControllerLocal.retrieveAllOrders();
         filteredOrderEntities = orderEntities;
         
     }
@@ -92,5 +98,5 @@ public class CompletedOrderManagedBean implements Serializable {
     public void setSaleTransactionLineItemEntities() {
         this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
     }
+   
 }
-

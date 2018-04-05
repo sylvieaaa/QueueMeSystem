@@ -3,19 +3,24 @@ package jsf.managedbean;
 import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.view.ViewScoped;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.event.FlowEvent;
 import util.enumeration.VendorTypeEnum;
+import util.exception.DuplicateEmailUserException;
 
 @Named(value = "createNewVendorManagedBean")
-@RequestScoped
+@ViewScoped
 public class CreateNewVendorManagedBean implements Serializable {
 
     @EJB
@@ -25,7 +30,7 @@ public class CreateNewVendorManagedBean implements Serializable {
 
     private VendorTypeEnum[] vendorTypes = VendorTypeEnum.values();
 
-    private UploadedFile file;
+    private File file;
 
     /**
      * Creates a new instance of CreateNewVendorManagedBean
@@ -41,14 +46,65 @@ public class CreateNewVendorManagedBean implements Serializable {
             newVendorEntity = new VendorEntity();
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New vendor created successfully (Vendor ID: " + vendorEntity.getVendorName() + ")", null));
-        } catch (UnknownError err) {
-           FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error. Not Unique", null));
+            file = null;
+        } catch (DuplicateEmailUserException err) {
+            System.err.println("IZZNOTUNIQUE");
+            System.err.println(err.toString());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error. Email is not Unique", null));
         }
     }
 
     public void upload(FileUploadEvent event) {
-        FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        FoodCourtEntity vendorEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        try {
+            String fileName = "";
+            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + "vendorLogos";
+
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
+
+            file = new File(newFilePath);
+            file = File.createTempFile("F0" + vendorEntity.getBusinessId(), ".png", file);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            int a;
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            InputStream inputStream = event.getFile().getInputstream();
+
+            while (true) {
+                a = inputStream.read(buffer);
+
+                if (a < 0) {
+                    break;
+                }
+
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+
+            newVendorEntity.setPhotoURL(file.getName());
+
+            fileOutputStream.close();
+            inputStream.close();
+            System.err.println(file);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
+        }
+    }
+
+    public String onFlowProcess(FlowEvent event) {
+        if (event.getNewStep().equals("addVendorForm")) {
+            if (file == null) {
+                System.err.println("in file");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload logo before moving to the next page.", ""));
+                return "vendorLogo";
+            }
+        }
+
+        return event.getNewStep();
     }
 
     public VendorEntity getNewVendorEntity() {

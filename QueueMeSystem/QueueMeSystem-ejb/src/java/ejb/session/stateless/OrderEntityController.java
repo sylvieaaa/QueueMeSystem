@@ -37,38 +37,16 @@ public class OrderEntityController implements OrderEntityControllerLocal {
     
     @Override
     public void updateOrder(OrderEntity orderEntity) {
-
-        System.err.println("This is orderEntity id: " + orderEntity.getOrderId());
-        OrderEntity updateOrder = em.find(OrderEntity.class, orderEntity.getOrderId());
-        updateOrder.setFulfilled(Boolean.TRUE);
-        em.merge(updateOrder);
-
+        em.merge(orderEntity);
     }
     
-    @Override
+     @Override
     public List<OrderEntity> retrieveAllOrders()
     {
         Query query = em.createQuery("SELECT p FROM OrderEntity p ORDER BY p.orderId ASC");
- 
-        return query.getResultList();
-    }
-    
-     @Override
-    public List<OrderEntity> retrieveAllPendingOrders()
-    {
-        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.fulfilled = 0");
         
         return query.getResultList();
     }
-    
-     @Override
-    public List<OrderEntity> retrieveAllCompletedOrders()
-    {
-        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.fulfilled = 1");
-        
-        return query.getResultList();
-    }
-    
     
     @Override
     public OrderEntity retrieveOrderByOrderId(Long orderId) throws OrderNotFoundException {

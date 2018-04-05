@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
 import javax.ejb.Local;
+import util.exception.DuplicateEmailUserException;
 import util.exception.VendorNotFoundException;
 
 /**
@@ -19,7 +20,7 @@ public interface VendorEntityControllerLocal {
 
     public VendorEntity retrieveVendorById(Long vendorStaffId) throws VendorNotFoundException;
 
-    public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity);
+    public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity) throws DuplicateEmailUserException;
 
     public void updateVendor(VendorEntity vendorEntity) throws VendorNotFoundException;
 
