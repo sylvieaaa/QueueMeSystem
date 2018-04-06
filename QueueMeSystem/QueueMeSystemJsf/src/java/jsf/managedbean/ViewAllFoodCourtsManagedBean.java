@@ -6,8 +6,12 @@
 package jsf.managedbean;
 
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
+import entity.AdminEntity;
 import entity.FoodCourtEntity;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +26,10 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.FlowEvent;
 import util.exception.DeleteFoodCourtException;
+import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
 
 /**
@@ -42,6 +49,8 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
     private FoodCourtEntity foodCourtToView;
     private FoodCourtEntity foodCourtToUpdate;
     private FoodCourtEntity foodCourtToDisable;
+    private FoodCourtEntity newFoodCourt;
+    private File file;
 
     /**
      * Creates a new instance of ViewAllFoodCourtsManagedBean
@@ -50,6 +59,7 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
         foodCourts = new ArrayList<>();
         filteredFoodCourts = new ArrayList<>();
         foodCourt = new FoodCourtEntity();
+        newFoodCourt = new FoodCourtEntity();
     }
 
     @PostConstruct
@@ -57,6 +67,69 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
         setFoodCourts(foodCourtEntityControllerLocal.retrieveAllFoodCourts());
         filteredFoodCourts = this.foodCourts;
 
+    }
+
+    public void createNewFoodCourt() throws IOException {
+        try {
+            newFoodCourt = foodCourtEntityControllerLocal.createFoodCourt(newFoodCourt);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New Food Court created successfully (Id: " + newFoodCourt.getBusinessId() + ")", null));
+            foodCourts.add(newFoodCourt);
+            newFoodCourt = new FoodCourtEntity();
+        } catch (DuplicateEmailUserException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error. Email is not Unique", null));
+        }
+    }
+
+    public String onFlowProcess(FlowEvent event) {
+        if (event.getNewStep().equals("foodcourtDetails")) {
+            if (file == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload logo before moving to the next page.", ""));
+                return "foodcourtPhoto";
+            }
+        }
+
+        return event.getNewStep();
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        AdminEntity fc = (AdminEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        try {
+            String fileName = "";
+            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodCourtLogos";
+
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
+
+            file = new File(newFilePath);
+            file = File.createTempFile("V0" + fc.getBusinessId(), ".png", file);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            int a;
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            InputStream inputStream = event.getFile().getInputstream();
+
+            while (true) {
+                a = inputStream.read(buffer);
+
+                if (a < 0) {
+                    break;
+                }
+
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+
+            newFoodCourt.setFileURL(file.getName());
+            System.out.println(file);
+            fileOutputStream.close();
+            inputStream.close();
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
+        }
     }
 
     public void updateFoodCourt(ActionEvent event) {
@@ -76,7 +149,7 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
             foodCourtEntityControllerLocal.disableFoodCourt(foodCourtToDisable.getBusinessId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Food Court disabled successfully", null));
             foodCourts.remove(foodCourtToDisable);
-            
+
         } catch (FoodCourtNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while disabling Food Court: " + ex.getMessage(), null));
         } catch (Exception e) {
@@ -131,6 +204,22 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
 
     public void setFoodCourtToDisable(FoodCourtEntity foodCourtToDisable) {
         this.foodCourtToDisable = foodCourtToDisable;
+    }
+
+    public FoodCourtEntity getNewFoodCourt() {
+        return newFoodCourt;
+    }
+
+    public void setNewFoodCourt(FoodCourtEntity newFoodCourt) {
+        this.newFoodCourt = newFoodCourt;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 
     public void viewFoodCourtDetails(ActionEvent event) throws IOException {
