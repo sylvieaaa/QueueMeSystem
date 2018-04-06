@@ -6,9 +6,11 @@
 package ejb.session.stateless;
 
 import entity.ReviewEntity;
+import entity.VendorEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *

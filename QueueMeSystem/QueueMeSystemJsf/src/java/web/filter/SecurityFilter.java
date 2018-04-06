@@ -93,7 +93,8 @@ public class SecurityFilter implements Filter {
                     || path.equals("/manageMenu.xhtml")
                     || path.equals("/manageOrders.xhtml")
                     || path.equals("/manageCompletedOrder.xhtml")
-                    || path.equals("/addOrder.xhtml")) {
+                    || path.equals("/addOrder.xhtml")
+                    || path.equals("/review.xhtml")) {
                 return true;
             }
         } else if (businessEntity instanceof CustomerEntity) {

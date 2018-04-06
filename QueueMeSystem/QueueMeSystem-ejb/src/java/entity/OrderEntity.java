@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,7 +44,7 @@ public class OrderEntity implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = true)
     private VendorEntity vendorEntity;    
-    @OneToMany(mappedBy = "orderEntity")
+    @OneToMany(mappedBy = "orderEntity", fetch=FetchType.EAGER)
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
 
     public OrderEntity() {
@@ -136,6 +137,19 @@ public class OrderEntity implements Serializable {
 
     public void setSaleTransactionLineItemEntities(List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities) {
         this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
+    }
+    
+    public String listItemName() {
+        
+        // loop thru lineItems in selectedOrderEntity
+        // if size == 1, just add to string
+        // else >1, add to string and add a comma
+        String lineItemMenuName = "";
+        for (SaleTransactionLineItemEntity xyz: saleTransactionLineItemEntities) {
+            lineItemMenuName = xyz.getMenuItemEntity().getMenuItemName();
+            lineItemMenuName = lineItemMenuName + ", " + "Quantity = " + xyz.getQuantity();
+        }
+        return lineItemMenuName;
     }
 
 }
