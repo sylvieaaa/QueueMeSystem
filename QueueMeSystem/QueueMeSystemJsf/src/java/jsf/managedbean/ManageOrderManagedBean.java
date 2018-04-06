@@ -39,7 +39,6 @@ public class ManageOrderManagedBean implements Serializable {
     private List<OrderEntity> pendingOrderEntities;
     private List<OrderEntity> completedOrderEntities;
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
-    private String lineItemMenuName;
     private OrderEntity newOrderEntity;
     private OrderEntity selectedOrderEntityToView;
 
