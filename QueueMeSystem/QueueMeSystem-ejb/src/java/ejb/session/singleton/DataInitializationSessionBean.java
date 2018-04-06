@@ -156,8 +156,8 @@ public class DataInitializationSessionBean {
             newSaleTransactionEntity.getSaleTransactionLineItemEntities().add(abc);
             abc.setSaleTransactionEntity(newSaleTransactionEntity);
             System.err.println("IRON MAN");
+            
             for (SaleTransactionLineItemEntity xyz : newSaleTransactionEntity.getSaleTransactionLineItemEntities()) {
-  
                 VendorEntity vendor = xyz.getMenuItemEntity().getVendorEntity();
                 OrderEntity oe = orderEntityControllerLocal.createOrder(new OrderEntity(calendarEnd, xyz.getSubTotal(), Boolean.FALSE));
                 oe.getSaleTransactionLineItemEntities().add(xyz);
@@ -169,17 +169,12 @@ public class DataInitializationSessionBean {
                 System.err.println("WOO LA LA LA LA");
                 
             }
-//            OrderEntity order = new OrderEntity(calendarStart, totalAmount, Boolean.FALSE);
-//            System.err.println("1");
-//            order.getSaleTransactionLineItemEntities().add(abc);
-//            System.err.println("2");
-//            abc.setOrderEntity(order);
             System.err.println("WAKANDA");
             newSaleTransactionEntity.setCustomerEntity(customerEntity);
             customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
             System.err.println("KABOOOOMM KABOOOOW");
             
-            ReviewEntity review  = reviewEntityControllerLocal.createReview(new ReviewEntity("Chicken can fly, food is shit", 1));
+            ReviewEntity review  = reviewEntityControllerLocal.createReview(new ReviewEntity("thissnkandksiasd ihfiafhiahis adjsiadafhifhn kbkfbssjda   hsiahi h aisdhaiodao ihao ihaoi sahoi ahshidhihiwiwdhwidhidhiiishiiihq    p oihoidhoah oihis dha", 1));
             ReviewEntity review2 = reviewEntityControllerLocal.createReview(new ReviewEntity("Rendang is very crispy, bagus", 5));
             System.err.println("SPIDERMAN");
             review.setCustomerEntity(customerEntity);
