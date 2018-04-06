@@ -5,12 +5,17 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.MenuEntityControllerLocal;
 import ejb.session.stateless.MenuItemEntityController;
+import ejb.session.stateless.MenuItemEntityControllerLocal;
 import ejb.session.stateless.SaleTransactionEntityControllerLocal;
+import entity.CategoryEntity;
 import entity.CustomerEntity;
+import entity.MenuEntity;
 import entity.MenuItemEntity;
 import entity.SaleTransactionEntity;
 import entity.SaleTransactionLineItemEntity;
+import entity.VendorEntity;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -21,12 +26,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import util.exception.CreateNewSaleTransactionException;
 import util.exception.MenuItemNotFoundException;
+import util.exception.MenuNotFoundException;
 
 /**
  *
@@ -37,7 +46,7 @@ import util.exception.MenuItemNotFoundException;
 public class CheckOutManagedBean implements Serializable {
 
     @EJB
-    private MenuItemEntityController menuItemEntityControllerLocal;
+    private MenuItemEntityControllerLocal menuItemEntityControllerLocal;
 
     @EJB
     private SaleTransactionEntityControllerLocal saleTransactionEntityControllerLocal;
@@ -47,24 +56,22 @@ public class CheckOutManagedBean implements Serializable {
     private Integer totalQuantity;
     private BigDecimal totalAmount;
 
-    private String skuCode;
     private Integer quantity;
-    
+
     public CheckOutManagedBean() {
         initialiseState();
     }
-    
+
     private void initialiseState() {
         saleTransactionLineItemEntities = new ArrayList<>();
         totalLineItem = 0;
         totalQuantity = 0;
         totalAmount = new BigDecimal("0.00");
-        //skuCode = "";
         quantity = 0;
     }
-    
-     public void addItem(MenuItemEntity menuItemEntity){
-        //MenuItemEntity menuItemEntity;
+
+    public void addItem(MenuItemEntity menuItemEntity) {
+        //MenuItemEntity menuItemEntity; 
         try {
             //menuItemEntity = menuItemEntityControllerLocal.retrieveMenuItemById(skuCode);
             BigDecimal subTotal = menuItemEntity.getPrice().multiply(new BigDecimal(quantity));
@@ -73,7 +80,7 @@ public class CheckOutManagedBean implements Serializable {
             saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, quantity, menuItemEntity.getPrice(), subTotal, Boolean.FALSE, 0, menuItemEntity));
             totalQuantity += quantity;
             totalAmount = totalAmount.add(subTotal);
-
+           
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, menuItemEntity.getMenuItemName() + " added successfully!: " + quantity + " unit @ " + NumberFormat.getCurrencyInstance().format(subTotal), null));
             //skuCode = "";
             quantity = 0;
@@ -81,9 +88,12 @@ public class CheckOutManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
-     
-     public void doCheckout() throws CreateNewSaleTransactionException {
-        if(saleTransactionLineItemEntities.isEmpty()) {
+    
+    public void updateQuantity(SaleTransactionLineItemEntity saleTransactionLineItemEntity) {
+    }
+
+    public void doCheckout() throws CreateNewSaleTransactionException {
+        if (saleTransactionLineItemEntities.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No item in cart.", null));
             return;
         }
@@ -91,14 +101,12 @@ public class CheckOutManagedBean implements Serializable {
         SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance(), Boolean.FALSE));
         initialiseState();
 
-        
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Checkout completed successfully (Sales Transaction ID: " + newSaleTransactionEntity.getSaleTransactionId() + ")", null));
     }
-    
+
 //    public void processCheckout(ActionEvent actionEvent) throws IOException{
 //        FacesContext.getCurrentInstance().getExternalContext().redirect("processCheckout.xhtml");
 //    }
-
     public void clearShoppingCart() {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Shopping cart cleared", null));
         initialiseState();
@@ -144,14 +152,6 @@ public class CheckOutManagedBean implements Serializable {
         this.totalAmount = totalAmount;
     }
 
-    public String getSkuCode() {
-        return skuCode;
-    }
-
-    public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode;
-    }
-
     public Integer getQuantity() {
         return quantity;
     }
@@ -159,5 +159,5 @@ public class CheckOutManagedBean implements Serializable {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
-    
+
 }

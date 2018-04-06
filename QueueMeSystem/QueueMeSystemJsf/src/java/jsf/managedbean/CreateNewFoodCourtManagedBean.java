@@ -7,7 +7,10 @@ package jsf.managedbean;
 
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
 import entity.FoodCourtEntity;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -15,6 +18,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.FlowEvent;
 
 /**
  *
@@ -28,6 +33,9 @@ public class CreateNewFoodCourtManagedBean {
     private FoodCourtEntityControllerLocal foodCourtEntityControllerLocal;
 
     private FoodCourtEntity newFoodCourt;
+    
+    
+    private File file;
 
     /**
      * Creates a new instance of CreateNewFoodCourtManagedBean
@@ -53,9 +61,70 @@ public class CreateNewFoodCourtManagedBean {
         
     }
 
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
     public void reload() throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+    }
+    
+     public String onFlowProcess(FlowEvent event) {
+        if (event.getNewStep().equals("addVendorForm")) {
+            if (file == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload logo before moving to the next page.", ""));
+                return "vendorLogo";
+            }
+        }
+
+        return event.getNewStep();
+    }
+     
+     public void handleFileUpload(FileUploadEvent event) {
+        FoodCourtEntity fc = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        String from = (String) event.getComponent().getAttributes().get("from");
+        try {
+            String fileName = "";
+            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodcourtPhotos";
+
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
+            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
+
+            file = new File(newFilePath);
+            file = File.createTempFile("V0" + fc.getBusinessId(), ".png", file);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            int a;
+            int BUFFER_SIZE = 8192;
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            InputStream inputStream = event.getFile().getInputstream();
+
+            while (true) {
+                a = inputStream.read(buffer);
+
+                if (a < 0) {
+                    break;
+                }
+
+                fileOutputStream.write(buffer, 0, a);
+                fileOutputStream.flush();
+            }
+
+            newFoodCourt.setFileURL(file.getName());
+
+            fileOutputStream.close();
+            inputStream.close();
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
+        }
     }
 
 }
