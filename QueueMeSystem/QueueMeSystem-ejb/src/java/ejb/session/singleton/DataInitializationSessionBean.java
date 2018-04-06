@@ -104,11 +104,11 @@ public class DataInitializationSessionBean {
             Date calendarStart = new Date(0, 0, 0, 8, 0);
             Date calendarEnd = new Date(0, 0, 0, 22, 0);
    
-            FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", new BigDecimal("4.00"), calendarStart, calendarEnd, "ABCFoodCourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", new BigDecimal("5.00"), calendarStart, calendarEnd, "royalfoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Grandfather's Food Court", "Best in Ang Mo Kio", "AMK Drive 666", "143245", new BigDecimal("5.00"), calendarStart, calendarEnd, "amkfoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", new BigDecimal("5.00"), calendarStart, calendarEnd, "changifoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", new BigDecimal("5.00"), calendarStart, calendarEnd, "redhillfoodcourt", "password"));
+            FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", new BigDecimal("4.00"), calendarStart, calendarEnd, "ABCFoodCourt", "password", "fc1.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", new BigDecimal("5.00"), calendarStart, calendarEnd, "royalfoodcourt", "password", "fc1.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Grandfather's Food Court", "Best in Ang Mo Kio", "AMK Drive 666", "143245", new BigDecimal("5.00"), calendarStart, calendarEnd, "amkfoodcourt", "password", "fc1.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", new BigDecimal("5.00"), calendarStart, calendarEnd, "changifoodcourt", "password", "fc1.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", new BigDecimal("5.00"), calendarStart, calendarEnd, "redhillfoodcourt", "password", "fc1.png"));
 
             VendorEntity chinese = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Singapore Chinese Food", "Chinese", new BigDecimal("4.70"), "Best Chicken rice in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "chinese", "password", "chicken_rice.png"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal", new BigDecimal("2.50"), "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "malay", "password", "chicken_rice.png"), foodCourtEntity);

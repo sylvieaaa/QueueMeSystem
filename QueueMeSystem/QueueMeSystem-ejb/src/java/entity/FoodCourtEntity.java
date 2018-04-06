@@ -34,6 +34,7 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIME)
     private Date endTime;
     private Boolean enable;
+    private String fileURL;
     
     @OneToMany(mappedBy = "foodCourtEntity", cascade = CascadeType.REMOVE)
     private List<VendorEntity> vendorEntities;
@@ -42,10 +43,10 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
         super();
         this.vendorEntities = new ArrayList<>();
         this.ratings = BigDecimal.ZERO;
-        this.enable= true;
+        this.enable = true;
     }
 
-    public FoodCourtEntity(String name, String description, String address, String postalCode, BigDecimal ratings, Date startTime, Date endTime, String username, String password) {
+    public FoodCourtEntity(String name, String description, String address, String postalCode, BigDecimal ratings, Date startTime, Date endTime, String username, String password, String photo) {
         this();
         this.name = name;
         this.description = description;
@@ -54,6 +55,7 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
         this.ratings = ratings;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.fileURL = photo;
         super.setUsername(username);
         super.setPassword(password);
     }
@@ -153,6 +155,14 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
 
     public void setEnable(Boolean enable) {
         this.enable = enable;
+    }
+
+    public String getFileURL() {
+        return fileURL;
+    }
+
+    public void setFileURL(String fileURL) {
+        this.fileURL = fileURL;
     }
 
 }
