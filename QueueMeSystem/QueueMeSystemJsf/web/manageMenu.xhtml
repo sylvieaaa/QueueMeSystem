@@ -42,7 +42,7 @@
                                     <p:panelGrid columns="1">
                                         <p:row>
                                             <p:column>
-                                                <p:graphicImage  value="/foodPhotos/#{menuItem.photoURL}" width="100%"/>
+                                                <p:graphicImage  value="http://localhost:8080/queueme-uploads/foodPhotos/#{menuItem.photoURL}" width="100%"/>
                                             </p:column>
                                         </p:row>
                                         <p:row>
@@ -101,7 +101,7 @@
                                         <p:fieldset id="catItems">
                                             <p:dataScroller value="#{category.menuItemEntities}" var="menuItems" chunkSize="3" mode="inline" scrollHeight="298" styleClass="menuItemsDataList">
                                                 <h:panelGrid columns="3" columnClasses="foodPhoto,detail" style="border: none" cellpadding="4">
-                                                    <p:graphicImage style="border: none" value="/foodPhotos/#{menuItems.photoURL}" width="220" height="124"/>
+                                                    <p:graphicImage style="border: none" value="http://localhost:8080/queueme-uploads/foodPhotos/#{menuItems.photoURL}" width="220" height="124"/>
 
                                                     <p:outputPanel>
                                                         <h:outputLabel for="foodName" value="Name: "/>
@@ -210,7 +210,7 @@
                             <p:outputLabel for="menuItemImage" value="Item image: " />
                         </p:column>
                         <p:column>
-                            <p:graphicImage id="menuItemImage"  value="/foodPhotos/#{manageMenuManagedBean.menuItemEntityToEdit.photoURL}" width="150px" height="78px"/>
+                            <p:graphicImage id="menuItemImage"  value="http://localhost:8080/queueme-uploads/foodPhotos/#{manageMenuManagedBean.menuItemEntityToEdit.photoURL}" width="150px" height="78px"/>
                         </p:column>
                         <p:column>
                             <p:commandButton value="Change Image" oncomplete="PF('dialogUploadPhoto').show();"/>
@@ -348,7 +348,7 @@
                                 </p:row>
                                 <p:row>
                                     <p:column>Image: </p:column>
-                                    <p:column><p:graphicImage  value="/foodPhotos/#{manageMenuManagedBean.newMenuItemEntity.photoURL}" width="150px" height="78px"/></p:column>
+                                    <p:column><p:graphicImage  value="http://localhost:8080/queueme-uploads/foodPhotos/#{manageMenuManagedBean.newMenuItemEntity.photoURL}" width="150px" height="78px"/></p:column>
                                 </p:row>
                                 <p:row>
                                     <p:column colspan="2">

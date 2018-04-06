@@ -5,16 +5,17 @@
  */
 package ejb.session.stateless;
 
-import entity.CategoryEntity;
 import entity.FoodCourtEntity;
-import entity.MenuEntity;
 import entity.VendorEntity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
 import util.exception.VendorNotFoundException;
 
@@ -32,17 +33,26 @@ public class VendorEntityController implements VendorEntityControllerLocal {
     private EntityManager em;
 
     @Override
-    public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity) {
+    public VendorEntity createVendorEntity(VendorEntity vendorEntity, FoodCourtEntity foodCourtEntity) throws DuplicateEmailUserException {
+        Query query = em.createQuery("SELECT e FROM VendorEntity e WHERE e.username=:inUsername");
+        query.setParameter("inUsername", vendorEntity.getUsername());
 
         try {
-            foodCourtEntity = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtEntity.getBusinessId());
-            vendorEntity.setFoodCourtEntity(foodCourtEntity);
-            em.persist(vendorEntity);
-            foodCourtEntity.getVendorEntities().add(vendorEntity);
-            em.flush();
-            em.refresh(vendorEntity);
-        } catch (FoodCourtNotFoundException ex) {
-            Logger.getLogger(VendorEntityController.class.getName()).log(Level.SEVERE, null, ex);
+            VendorEntity check = (VendorEntity) query.getSingleResult();
+
+            throw new DuplicateEmailUserException("Email is not unique");
+        } catch (NoResultException exc) {
+            try {
+                foodCourtEntity = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtEntity.getBusinessId());
+                vendorEntity.setFoodCourtEntity(foodCourtEntity);
+                em.persist(vendorEntity);
+                foodCourtEntity.getVendorEntities().add(vendorEntity);
+                em.flush();
+                em.refresh(vendorEntity);
+            } catch (FoodCourtNotFoundException ex) {
+                Logger.getLogger(VendorEntityController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
 
         return vendorEntity;

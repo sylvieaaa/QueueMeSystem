@@ -83,17 +83,24 @@
                          
                          rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
                 
-                <p:column headerText="Order ID" >
+                <f:facet name="header">
+                    <p:outputPanel style="text-align: right;">
+                        <h:outputText value="Search all fields:" />
+                        <p:inputText id="globalFilter" onkeyup="PF('dataTableAllProducts').filter()" style="width:300px" placeholder="Enter keyword"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+                <p:column headerText="Order ID" sortBy="#{orderEntity.orderId}" filterBy="#{orderEntity.orderId}" filterMatchMode="contains">
                     <h:outputText value="#{orderEntity.orderId}" />
                 </p:column>
                 
-                <p:column headerText="Date Time">
+                <p:column headerText="Date Time" sortBy="#{orderEntity.dateTime}" filterBy="#{orderEntity.dateTime}" filterMatchMode="contains">
                     <h:outputText value="#{orderEntity.dateTime.time}" style="text-align: center">
                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                     </h:outputText>
                 </p:column>
                 
-                <p:column headerText="Earnings" >
+                <p:column headerText="Earnings" sortBy="#{orderEntity.totalEarnings}" filterBy="#{orderEntity.totalEarnings}" filterMatchMode="contains">
                     <h:outputText value="#{orderEntity.totalEarnings}" style="text-align: center">
                      <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
                     </h:outputText>
@@ -114,6 +121,13 @@
                 <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
             </p:confirmDialog>
+            
+        </p:tab>
+            
+                <!--        2nd TAB!!!!!!!             --> 
+                
+                <p:tab title="Orders (Pending)">
+            
            
             
         </p:tab>
@@ -216,7 +230,7 @@
                     
                     <p:row>
                         <p:column>
-                            <h:outputLabel value="Items: " />
+                            <h:outputLabel value="Order Items: " />
                         </p:column>
                         <p:column>
                             <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.listItemName()}" />

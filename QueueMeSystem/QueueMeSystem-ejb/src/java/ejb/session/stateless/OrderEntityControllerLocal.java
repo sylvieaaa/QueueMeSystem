@@ -25,10 +25,6 @@ public interface OrderEntityControllerLocal {
     
     public List<OrderEntity> retrieveAllOrders();
     
-    public List<OrderEntity> retrieveAllPendingOrders();
-    
-    public List<OrderEntity> retrieveAllCompletedOrders();
-    
     public OrderEntity retrieveOrderByOrderId(Long orderId) throws OrderNotFoundException;
     
     public List<SaleTransactionLineItemEntity> retrieveSaleTransactionLineItemEntities(Long orderId);
