@@ -28,7 +28,6 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
     private String description;
     private String address;
     private String postalCode;
-    private BigDecimal ratings;
     @Temporal(javax.persistence.TemporalType.TIME)
     private Date startTime;
     @Temporal(javax.persistence.TemporalType.TIME)
@@ -42,17 +41,15 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
     public FoodCourtEntity() {
         super();
         this.vendorEntities = new ArrayList<>();
-        this.ratings = BigDecimal.ZERO;
         this.enable = true;
     }
 
-    public FoodCourtEntity(String name, String description, String address, String postalCode, BigDecimal ratings, Date startTime, Date endTime, String username, String password, String photo) {
+    public FoodCourtEntity(String name, String description, String address, String postalCode, Date startTime, Date endTime, String username, String password, String photo) {
         this();
         this.name = name;
         this.description = description;
         this.address = address;
         this.postalCode = postalCode;
-        this.ratings = ratings;
         this.startTime = startTime;
         this.endTime = endTime;
         this.fileURL = photo;
@@ -82,14 +79,6 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public BigDecimal getRatings() {
-        return ratings;
-    }
-
-    public void setRatings(BigDecimal ratings) {
-        this.ratings = ratings;
     }
 
     public Date getStartTime() {

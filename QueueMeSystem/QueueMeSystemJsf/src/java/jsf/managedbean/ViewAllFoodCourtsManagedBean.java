@@ -75,7 +75,8 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
         try {
             foodCourtEntityControllerLocal.disableFoodCourt(foodCourtToDisable.getBusinessId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Food Court disabled successfully", null));
-           // reload();
+            foodCourts.remove(foodCourtToDisable);
+            
         } catch (FoodCourtNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while disabling Food Court: " + ex.getMessage(), null));
         } catch (Exception e) {

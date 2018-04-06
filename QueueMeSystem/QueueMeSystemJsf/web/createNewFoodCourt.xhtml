@@ -25,27 +25,27 @@
 
                 <p:wizard flowListener="#{createNewFoodCourtManagedBean.onFlowProcess}">
                     <p:tab id="foodcourtPhoto" title="Food Court Photo">
-                   
-                     <p:messages id="uploadMessage"/>
-                            <p:panel header="Upload Vendor Logo">
-                                <p:panelGrid>
-                                    <p:row>
-                                        <p:column>
-                                            <p:outputLabel for="vendorLogoUpload" value="Upload Logo: "/>
-                                        </p:column>
-                                        <p:column>
-                                            <p:fileUpload required="true" id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="uploadMessage" skinSimple="true" fileUploadListener="#{createNewVendorManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
-                                            </p:fileUpload>
-                                        </p:column>
-                                        <p:column>
-                                            <p:message for="vendorLogoUpload" />
-                                        </p:column>
-                                    </p:row>
-                                </p:panelGrid>
-                            </p:panel>
-                   
+
+                      <p:messages id="uploadMessage"/>
+                        <p:panel header="Upload Vendor Logo">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="vendorLogoUpload" value="Upload Logo: "/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:fileUpload required="true" id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="uploadMessage" skinSimple="true" fileUploadListener="#{createNewFoodCourtManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                        </p:fileUpload>
+                                    </p:column>
+                                    <p:column>
+                                        <p:message for="vendorLogoUpload" />
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+
                     </p:tab>
-                    
+
                     <p:tab id="foodcourtDetails" title="Details">
                         <p:panelGrid>
 
@@ -131,7 +131,7 @@
 
                                 <p:column colspan="2" style="text-align: center">
 
-                                    <p:commandButton value="Create" type="submit" actionListener="#{createNewFoodCourtManagedBean.createNewFoodCourt}"/>
+                                    <p:commandButton update="@form" value="Create" type="submit" actionListener="#{createNewFoodCourtManagedBean.createNewFoodCourt}"/>
                                     &nbsp;
                                     <p:commandButton value="Clear" type="reset" />
                                     <div class="ui-g-12 ui-md-2"></div>

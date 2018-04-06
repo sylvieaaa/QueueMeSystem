@@ -6,17 +6,19 @@
 package jsf.managedbean;
 
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
+import entity.AdminEntity;
 import entity.FoodCourtEntity;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
@@ -26,8 +28,8 @@ import org.primefaces.event.FlowEvent;
  * @author SYLVIA
  */
 @Named(value = "createNewFoodCourtManagedBean")
-@RequestScoped
-public class CreateNewFoodCourtManagedBean {
+@ViewScoped
+public class CreateNewFoodCourtManagedBean implements Serializable{
 
     @EJB(name = "FoodCourtEntityControllerLocal")
     private FoodCourtEntityControllerLocal foodCourtEntityControllerLocal;
@@ -75,10 +77,10 @@ public class CreateNewFoodCourtManagedBean {
     }
     
      public String onFlowProcess(FlowEvent event) {
-        if (event.getNewStep().equals("addVendorForm")) {
+        if (event.getNewStep().equals("foodcourtDetails")) {
             if (file == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload logo before moving to the next page.", ""));
-                return "vendorLogo";
+                return "foodcourtPhoto";
             }
         }
 
@@ -86,11 +88,10 @@ public class CreateNewFoodCourtManagedBean {
     }
      
      public void handleFileUpload(FileUploadEvent event) {
-        FoodCourtEntity fc = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
-        String from = (String) event.getComponent().getAttributes().get("from");
+         AdminEntity fc = (AdminEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         try {
             String fileName = "";
-            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodcourtPhotos";
+            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodCourtLogos";
 
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
@@ -117,7 +118,7 @@ public class CreateNewFoodCourtManagedBean {
             }
 
             newFoodCourt.setFileURL(file.getName());
-
+                       System.out.println(file);
             fileOutputStream.close();
             inputStream.close();
 

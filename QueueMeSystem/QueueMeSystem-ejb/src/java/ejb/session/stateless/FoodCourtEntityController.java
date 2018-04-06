@@ -63,7 +63,6 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
             foodCourtToUpdate.setName(foodCourt.getName());
             foodCourtToUpdate.setAddress(foodCourt.getAddress());
             foodCourtToUpdate.setDescription(foodCourt.getDescription());
-            foodCourtToUpdate.setRatings(foodCourt.getRatings());
             foodCourtToUpdate.setPostalCode(foodCourt.getPostalCode());
             foodCourtToUpdate.setStartTime(foodCourt.getStartTime());
             foodCourtToUpdate.setEndTime(foodCourt.getEndTime());

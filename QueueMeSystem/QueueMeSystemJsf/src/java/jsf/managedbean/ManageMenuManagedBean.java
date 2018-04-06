@@ -185,8 +185,8 @@ public class ManageMenuManagedBean implements Serializable {
         String from = (String) event.getComponent().getAttributes().get("from");
         try {
             String fileName = "";
-            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodPhotos";
-
+            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodPhotos";
+            System.out.println(newFilePath);
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
 

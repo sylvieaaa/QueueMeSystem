@@ -12,109 +12,245 @@
 
         <p:button outcome="createNewFoodCourt.xhtml" value="Add Food Court" icon="fa fa-plus-circle"></p:button>
         &nbsp;   
-        <p:button outcome="viewAllFoodCourts.xhtml" value="View All Food Courts" icon="fa fa-th-list"></p:button>
+<!--        <p:button outcome="viewAllFoodCourts.xhtml" value="View All Food Courts" icon="fa fa-th-list"></p:button>-->
 
+         <br/><br/>
+         
+        <h:form id="formAllFoodCourts">
+            <p:messages id="messages" redisplay="false" closable="true" />
 
+            <p:dataTable id="allFoodCourts" widgetVar="allFoodCourts" value="#{viewAllFoodCourtsManagedBean.foodCourts}" var="foodCourt" rowKey="#{foodCourt.name}" rowIndexVar="row"
+                         filteredValue="#{viewAllFoodCourtsManagedBean.filteredFoodCourts}" rows="10" paginator="true" 
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
-        <h:form id="form">
-            <p:carousel value="#{viewAllFoodCourtsManagedBean.foodCourts}" headerText="Food Courts" var="foodcourt" responsive="true" style="margin-top: 20px" >
-                <div class="ui-g-12 ui-md-2"></div>
-                <div class="ui-g-12 ui-md-9">
-                    <p:panelGrid style="width:100%;margin:10px 0px;"  styleClass="ui-panelgrid-blank"   >
+                <f:facet name="header">
+                    <p:outputPanel style="text-align: right;">
+                        <h:outputText value="Search all fields: "/>
+                        <p:inputText id="globalFilter" onkeyup="PF('allFoodCourts').filter()" style="width: 300px"
+                                     placeholder="Enter keyword"/>
 
-                        <p:row>
-                            <p:column colspan="2" >
-                                <p:graphicImage  value="/images/food/beef_hor_fun.png" style="width:100%; text-align: center"/>
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-
-                            <p:column rowspan="2">
-                                <h:outputText style="text-align: center" value="Name " />
-                            </p:column>
-                            <p:column rowspan="2" >
-                                <h:outputText value="#{foodcourt.name}" />
-                            </p:column>
-
-                        </p:row>
-                        <p:row></p:row>
-
-
-                        <p:row>
-                            <p:column>
-                                <h:outputText value="Address " />
-                            </p:column>
-                            <p:column  >
-                                <h:outputText value="#{foodcourt.address}" />
-                            </p:column>
-                            <div class="ui-g-6 ui-md-3"></div>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <h:outputText value="Postal Code " />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{foodcourt.postalCode}" />
-                            </p:column>
-
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <h:outputText value="Description" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{foodcourt.description}" />
-                            </p:column>
-                        </p:row>
-
-
-
-                        <p:row>
-                            <p:column>
-                                <h:outputText value="Opening hours" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{foodcourt.startTime}">
-                                    <f:convertDateTime type="time"/>
-                                </h:outputText>
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <h:outputText value="Closing hours" />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{foodcourt.endTime}">
-                                    <f:convertDateTime type="time"/>
-                                </h:outputText>
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column colspan="2" style="text-align: center" >
-                                <p:commandButton value="update" actionListener="#{viewAllFoodCourtsManagedBean.viewFoodCourtDetails}" icon="fa fa-fw fa-edit">
-                                    <f:attribute name="foodCourtId" value="#{foodcourt.businessId}" />
-                                </p:commandButton>
-                       
-                            </p:column>
-                        </p:row>
-
-
-
-
-                    </p:panelGrid>
-                </div>
-
-
-                <f:facet name="footer">
-                    Click on the food court for more details
+                    </p:outputPanel>
                 </f:facet>
-            </p:carousel>
+
+                <p:column style="width:30%" headerText="Name" sortBy="#{foodCourt.name}" filterBy="#{foodCourt.name}"
+                          filterMatchMode="contains">
+                    <h:outputText value = "#{foodCourt.name}"/>
+                </p:column>
+
+                <p:column style="width: 20%" headerText="Address" sortBy="#{foodCourt.address}" filterBy="#{foodCourt.address}"
+                          filterMatchMode="contains">
+                    <h:outputText value = "#{foodCourt.address}"/>
+                </p:column>
+
+                <p:column style="width:10%" headerText="Postal" sortBy="#{foodCourt.postalCode}" filterBy="#{foodCourt.postalCode}"
+                          filterMatchMode="contains">
+                    <h:outputText value = "#{foodCourt.postalCode}"/>
+                </p:column>
+
+                <p:column style="width:10%" headerText="Start Time" sortBy="#{foodCourt.startTime}" filterBy="#{foodCourt.startTime}"
+                          filterMatchMode="contains">
+                    <h:outputText value = "#{dateConvertManagedBean.dateConvert(foodCourt.startTime)}"/>
+
+                </p:column>
+
+                <p:column style="width:10%" headerText="End Time" sortBy="#{foodCourt.endTime}" filterBy="#{foodCourt.startTime}"
+                          filterMatchMode="contains">
+                    <h:outputText value = "#{dateConvertManagedBean.dateConvert(foodCourt.endTime)}"/>
+
+                </p:column>
+
+                <p:column style="width:12%" headerText="Action" >
+                    <p:commandButton update="formViewFoodCourt" oncomplete="PF('dialogViewFoodCourt').show()" icon="ui-icon-document" title="View">
+                        <f:setPropertyActionListener value="#{foodCourt}" target="#{viewAllFoodCourtsManagedBean.foodCourtToView}" />
+                    </p:commandButton>
+                    <p:commandButton update="formUpdateFoodCourt" oncomplete="PF('dialogUpdateFoodCourt').show()" icon="ui-icon-pencil" title="Update">
+                        <f:setPropertyActionListener value="#{foodCourt}" target="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate}" />
+                    </p:commandButton>
+                    <p:commandButton update="formDisableFoodCourt" oncomplete="PF('dialogDisableFoodCourt').show()" icon="ui-icon-trash" title="Disable">
+                        <f:setPropertyActionListener value="#{foodCourt}" target="#{viewAllFoodCourtsManagedBean.foodCourtToDisable}" />
+                    </p:commandButton>
+
+
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+
         </h:form>
+
+        <h:form id="formViewFoodCourt">
+            <p:dialog id="dialogViewFoodCourt" widgetVar="dialogViewFoodCourt" header="View Food Court" closable="true">
+                <p:panelGrid>
+                    <p:row>
+                        <p:graphicImage style="width:20%; text-align: center" value="http://localhost:8080/queueme-uploads/foodCourtLogos/#{viewAllFoodCourtsManagedBean.foodCourtToView.fileURL}"/>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Name: "/>
+                        </p:column>
+                        <p:column >
+                            <h:outputText value="#{viewAllFoodCourtsManagedBean.foodCourtToView.name}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Address: " />
+                        </p:column>
+                        <p:column  >
+                            <h:outputText value="#{viewAllFoodCourtsManagedBean.foodCourtToView.address}" />
+                        </p:column>
+
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Postal Code: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{viewAllFoodCourtsManagedBean.foodCourtToView.postalCode}" />
+                        </p:column>
+
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Description: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{viewAllFoodCourtsManagedBean.foodCourtToView.description}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Opening hours: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{viewAllFoodCourtsManagedBean.foodCourtToView.startTime}">
+                                <f:convertDateTime type="time"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <h:outputText value="Closing hours: " />
+                        </p:column>
+                        <p:column>
+                            <h:outputText value="#{viewAllFoodCourtsManagedBean.foodCourtToView.endTime}">
+                                <f:convertDateTime type="time"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:row>
+
+
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="formUpdateFoodCourt">
+            <p:dialog id="dialogUpdateFoodCourt" widgetVar="dialogUpdateFoodCourt" header="Update Food Court" closable="true">
+                <p:messages id="messagesUpdateFoodCourt" redisplay="false" />
+                <p:panelGrid>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="name" value="Name: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="name" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.name}" required="true" requiredMessage="Name is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="name" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="address" value="Address: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="address" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.address}" required="true" requiredMessage="Address is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="address" />
+                        </p:column>
+                    </p:row>
+
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="postal" value="Postal: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="postal" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.postalCode}" required="true" requiredMessage="Postal is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="postal" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="description" value="Description: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="description" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.description}" required="true" requiredMessage="Description is required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="description" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="startTime" value="Opening Hours: " />
+                        </p:column>
+                        <p:column>
+                            <p:calendar id="startTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.startTime}" pattern="HH:mm:ss" timeOnly="true" requiredMessage="Start Time required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="startTime" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="endTime" value="Closing Hours: " />
+                        </p:column>
+                        <p:column>
+                            <p:calendar id="endTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.endTime}" pattern="HH:mm:ss" timeOnly="true" requiredMessage="End Time required" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="endTime" />
+                        </p:column>
+                    </p:row>
+
+
+
+                    <p:row>
+                        <p:column colspan="3" style="text-align: center" >
+                            <p:commandButton value="Update Food Court" update="@form formAllFoodCourts:allFoodCourts" actionListener="#{viewAllFoodCourtsManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
+                        </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="formDisableFoodCourt">
+            <p:dialog id="dialogDisableFoodCourt" widgetVar="dialogDisableFoodCourt" header="Disable Food Court" closable="true">
+                <p:messages id="messagesDisableFoodCourt" redisplay="false" />
+                <h4 style="text-align: center"> Confirm disable <h:outputText style="color: blue;" value="#{viewAllFoodCourtsManagedBean.foodCourtToDisable.name} ?"/></h4>
+                <p:commandButton value="Disable" update="@form formAllFoodCourts:allFoodCourts" actionListener="#{viewAllFoodCourtsManagedBean.disableFoodCourt}" oncomplete="PF('dialogDisableFoodCourt').show();" />
+            </p:dialog>
+        </h:form>
+        
 
 
     </ui:define>
