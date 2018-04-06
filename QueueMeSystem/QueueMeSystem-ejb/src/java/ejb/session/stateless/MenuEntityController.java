@@ -40,6 +40,9 @@ public class MenuEntityController implements MenuEntityControllerLocal {
     @Override
     public MenuEntity createMenu(MenuEntity menuEntity, VendorEntity vendorEntity) throws VendorNotFoundException {
         vendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorEntity.getBusinessId());
+        if(vendorEntity.getMenuEntities().isEmpty()) {
+            menuEntity.setSelected(Boolean.TRUE);
+        }
         menuEntity.setVendorEntity(vendorEntity);
         em.persist(menuEntity);
         vendorEntity.getMenuEntities().add(menuEntity);
@@ -117,10 +120,27 @@ public class MenuEntityController implements MenuEntityControllerLocal {
         categoryEntity = categoryEntityControllerLocal.retrieveCategoryById(categoryEntity.getCategoryId());
         
         for(MenuItemEntity menuItemEntity: categoryEntity.getMenuItemEntities()) {
-            menuEntity.getCategoryEntities().remove(categoryEntity);
+            menuItemEntity.getCategoryEntities().remove(categoryEntity);
         }
         
         menuEntity.getCategoryEntities().remove(categoryEntity);
         em.remove(categoryEntity);
+    }
+    
+    @Override
+    public MenuEntity retrieveDisplayMenu(VendorEntity vendorEntity) throws MenuNotFoundException {
+        Query query = em.createQuery("SELECT m FROM MenuEntity m WHERE m.selected=true AND m.vendorEntity=:inVendorEntity");
+        query.setParameter("inVendorEntity", vendorEntity);
+        
+        try {
+            MenuEntity menuEntity = (MenuEntity) query.getSingleResult();
+            for(CategoryEntity categoryEntity: menuEntity.getCategoryEntities()) {
+                categoryEntity.getMenuItemEntities().size();
+            }
+            
+            return menuEntity;
+        } catch (NonUniqueResultException | NoResultException ex) {
+            throw new MenuNotFoundException("No menu has been selected for display");
+        }
     }
 }

@@ -32,4 +32,6 @@ public interface MenuEntityControllerLocal {
     public void removeMenuEntity(MenuEntity menuEntity, VendorEntity vendorEntity) throws MenuNotFoundException, VendorNotFoundException;
 
     public void removeCategoryFromMenu(MenuEntity menuEntity, CategoryEntity categoryEntity) throws CategoryNotFoundException, MenuNotFoundException;
+
+    public MenuEntity retrieveDisplayMenu(VendorEntity vendorEntity) throws MenuNotFoundException;
 }

@@ -7,11 +7,13 @@ package jsf.managedbean;
 
 import ejb.session.stateless.ReviewEntityControllerLocal;
 import entity.ReviewEntity;
+import entity.VendorEntity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 
@@ -27,7 +29,7 @@ public class ManageReviewManagedBean implements Serializable {
     private ReviewEntityControllerLocal reviewEntityControllerLocal;
     private List<ReviewEntity> reviewEntities;
     private ReviewEntity review;
-    private int avgReviewScore;
+    private Integer avgReviewScore;
 
     /**
      * Creates a new instance of ManageReviewManagedBean
@@ -35,12 +37,14 @@ public class ManageReviewManagedBean implements Serializable {
     public ManageReviewManagedBean() {
         review = new ReviewEntity();
         reviewEntities = new ArrayList<>();
-        avgReviewScore = new Integer(4);
     }
     
     @PostConstruct
     public void postConstruct()
     {
+        reviewEntities = reviewEntityControllerLocal.retrieveAllReviews();
+        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        avgReviewScore = reviewEntityControllerLocal.averageReviewScore(vendorEntity);
    
     }
 

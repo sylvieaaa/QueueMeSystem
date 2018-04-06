@@ -95,7 +95,7 @@
                                         <p:confirm  header="Confirmation" message="Are you sure you want to delete #{manageMenuManagedBean.selectedCategoryEntity.name}?" icon="ui-icon-alert" />
                                     </p:commandButton>
                                 </f:facet>
-                                <p:tabView rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.categoryEntities}" var="category">
+                                <p:tabView activeIndex="#{manageMenuManagedBean.activeTab}" rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.categoryEntities}" var="category">
                                     <p:ajax event="tabChange" listener="#{manageMenuManagedBean.onTabChange}" update="menuForm:confirmDelete"/>
                                     <p:tab title="#{category.name}">
                                         <p:fieldset id="catItems">
@@ -169,7 +169,7 @@
                             <p:outputLabel for="menuItemImage" value="Item image: " />
                         </p:column>
                         <p:column>
-                            <p:graphicImage id="menuItemImage"  value="/foodPhotos/#{manageMenuManagedBean.menuItemEntityToView.photoURL}" width="250px" height="125px"/>
+                            <p:graphicImage id="menuItemImage"  value="http://localhost:8080/queueme-uploads/foodPhotos/#{manageMenuManagedBean.menuItemEntityToView.photoURL}" width="250px" height="125px"/>
                         </p:column>
                     </p:row>
                     <p:row>

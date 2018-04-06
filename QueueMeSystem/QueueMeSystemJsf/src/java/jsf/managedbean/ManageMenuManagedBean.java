@@ -90,7 +90,7 @@ public class ManageMenuManagedBean implements Serializable {
     CategoryEntity newCategoryEntity;
     CategoryEntity selectedCategoryEntity;
 //    List<MenuItemEntity> menuItemEntitiesToDelete;
-
+    Integer activeTab;
 //    StreamedContent filePhoto;
     public ManageMenuManagedBean() {
         //selectedMenuEntity = new MenuEntity();
@@ -105,6 +105,7 @@ public class ManageMenuManagedBean implements Serializable {
         menuItemEntityToView = null;
         newMenuEntity = new MenuEntity();
         newCategoryEntity = new CategoryEntity();
+        activeTab = 0;
     }
 
     @PostConstruct
@@ -343,10 +344,12 @@ public class ManageMenuManagedBean implements Serializable {
     public void createNewCategory(ActionEvent event) {
         try {
             categoryEntityControllerLocal.createCategory(newCategoryEntity, selectedMenuEntity);
-            selectedMenuEntity.getCategoryEntities().add(newCategoryEntity);
-            if (selectedMenuEntity.getCategoryEntities().size() == 1) {
+            
+            if (selectedMenuEntity.getCategoryEntities().isEmpty()) {
+                System.err.println("empty");
                 selectedCategoryEntity = newCategoryEntity;
             }
+            selectedMenuEntity.getCategoryEntities().add(newCategoryEntity);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New category: " + newCategoryEntity.getName() + " is created.", null));
 
             newCategoryEntity = new CategoryEntity();
@@ -391,6 +394,7 @@ public class ManageMenuManagedBean implements Serializable {
     }
 
     public void onTabChange(TabChangeEvent event) {
+        System.err.println("called");
         String catTitle = event.getTab().getTitle();
         for (CategoryEntity ce : selectedMenuEntity.getCategoryEntities()) {
             if (ce.getName().equals(catTitle)) {
@@ -512,6 +516,15 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void setMenuItemEntityToView(MenuItemEntity menuItemEntityToView) {
         this.menuItemEntityToView = menuItemEntityToView;
+    }
+
+    public Integer getActiveTab() {
+        System.err.println(activeTab);
+        return activeTab;
+    }
+
+    public void setActiveTab(Integer activeTab) {
+        this.activeTab = activeTab;
     }
 
 }
