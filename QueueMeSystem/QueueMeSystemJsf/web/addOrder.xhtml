@@ -8,9 +8,87 @@
 
 
     <ui:define name="content">
-        
-          <h2 style="text-align: center">To do</h2>
-        
+
+        <p:growl globalOnly="true"/>
+        <p:layout>
+
+            <p:layoutUnit position="north" size="50">
+                <p:breadCrumb>
+                    <p:menuitem url="mainPage.xhtml" value="Home"/>
+                    <p:menuitem url="#" value="Add Order"/>
+                </p:breadCrumb>
+
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" >
+                <h:form id="menuForm">
+                    <p:panel header="#{addOrderManagedBean.displayMenuEntity.name}">
+                        <p:accordionPanel id="accordPanelMenu" value="#{addOrderManagedBean.displayCategoryEntities}" var="category">
+                            <p:tab title="#{category.name}">
+                                <p:dataGrid value="#{category.menuItemEntities}" var="menuItem" columns="3" layout="grid" rows="6">
+                                    <p:panelGrid columns="1" style="width: 100%">
+                                        <p:row>
+                                            <p:column>
+                                                <p:graphicImage value="http://localhost:8080/queueme-uploads/foodPhotos/#{menuItem.photoURL}" width="70%"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputText value="#{menuItem.menuItemName}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputText value="#{menuItem.price}">
+                                                    <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                                                </h:outputText>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:commandButton class="icon-only" icon="fa fa-plus" title="Add item" actionListener="#{addOrderManagedBean.addMenuItem}" update="formShoppingCart:dataTableCart">
+                                                <f:attribute name="menuItemEntityToAdd" value="#{menuItem}" />
+                                            </p:commandButton>
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:dataGrid>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </p:panel>
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="east" size="500" collapsible="true">
+                <h:form id="formShoppingCart">
+                    <p:dataTable id="dataTableCart" editable="true" reflow="true" editMode="cell" value="#{checkOutManagedBean.saleTransactionLineItemEntities}" var="lineItem">
+                        <f:facet name="header">
+                            Shopping cart
+                        </f:facet>
+
+                        <p:column headerText="S/N" style="border:none">
+                            <h:outputText value="#{lineItem.serialNumber}"/>
+                        </p:column>
+                        <p:column headerText="Item Name" style="border:none">
+                            <h:outputText value="#{lineItem.menuItemEntity.menuItemName}"/>
+                        </p:column>
+                        <p:column headerText="Quantity" style="border:none">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{lineItem.quantity}" /></f:facet>
+                                <f:facet name="input"><p:spinner value="#{lineItem.quantity}" min="0"/></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Subtotal" style="border:none">
+                            <h:outputText value="#{lineItem.subTotal}">
+                                <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="border:none">
+                            <p:commandButton icon="fa fa-times" id="icon-only" title="Remove Item"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:layoutUnit>
+        </p:layout>
+
     </ui:define>
-    
-    </ui:composition>
+
+</ui:composition>
