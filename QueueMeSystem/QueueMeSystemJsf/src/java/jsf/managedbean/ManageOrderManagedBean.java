@@ -16,11 +16,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.component.calendar.Calendar;
 
 /**
@@ -29,24 +31,24 @@ import org.primefaces.component.calendar.Calendar;
  */
 @Named
 @ViewScoped
-public class PendingOrderManagedBean implements Serializable {
+public class ManageOrderManagedBean implements Serializable {
 
     @EJB(name = "OrderEntityControllerLocal")
     private OrderEntityControllerLocal orderEntityControllerLocal;
     
-    private List<OrderEntity> orderEntities;
-    private List<OrderEntity> filteredOrderEntities;
+    private List<OrderEntity> pendingOrderEntities;
+    private List<OrderEntity> completedOrderEntities;
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
+    private String lineItemMenuName;
     private OrderEntity newOrderEntity;
     private OrderEntity selectedOrderEntityToView;
-    private boolean value;
 
     /**
      * Creates a new instance of completedOrderManagedBean
      */
-    public PendingOrderManagedBean() {
-        orderEntities = new ArrayList<>();
-        filteredOrderEntities = new ArrayList<>();
+    public ManageOrderManagedBean() {
+        pendingOrderEntities = new ArrayList<>();
+        completedOrderEntities = new ArrayList<>();
         saleTransactionLineItemEntities = new ArrayList<>();
         newOrderEntity = new OrderEntity();
     }
@@ -54,8 +56,8 @@ public class PendingOrderManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct()
     {
-        orderEntities = orderEntityControllerLocal.retrieveAllPendingOrders();
-        filteredOrderEntities = orderEntities;
+        pendingOrderEntities = orderEntityControllerLocal.retrieveAllPendingOrders();
+        completedOrderEntities = orderEntityControllerLocal.retrieveAllCompletedOrders();
         
     }
     
@@ -63,23 +65,24 @@ public class PendingOrderManagedBean implements Serializable {
         
         newOrderEntity = (OrderEntity) event.getComponent().getAttributes().get("orderFulfilled");
         orderEntityControllerLocal.updateOrder(newOrderEntity);
-        System.err.println("THIS IS SPARTAN!");
+        pendingOrderEntities.remove(newOrderEntity);
+        completedOrderEntities.add(newOrderEntity);
     }
 
-    public List<OrderEntity> getOrderEntities() {
-        return orderEntities;
+    public List<OrderEntity> getCompletedOrderEntities() {
+        return completedOrderEntities;
+    }
+
+    public void setCompletedOrderEntities(List<OrderEntity> completedOrderEntities) {
+        this.completedOrderEntities = completedOrderEntities;
+    }
+
+    public List<OrderEntity> getPendingOrderEntities() {
+        return pendingOrderEntities;
     }
 
     public void setProductEntities(List<OrderEntity> orderEntities) {
-        this.orderEntities = orderEntities;
-    }
-
-    public List<OrderEntity> getFilteredOrderEntities() {
-        return filteredOrderEntities;
-    }
-
-    public void setFilteredProductEntities(List<OrderEntity> filteredOrderEntities) {
-        this.filteredOrderEntities = filteredOrderEntities;
+        this.pendingOrderEntities = orderEntities;
     }
 
     public OrderEntity getNewOrderEntity() {
@@ -105,5 +108,5 @@ public class PendingOrderManagedBean implements Serializable {
     public void setSaleTransactionLineItemEntities() {
         this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
     }
-
+ 
 }

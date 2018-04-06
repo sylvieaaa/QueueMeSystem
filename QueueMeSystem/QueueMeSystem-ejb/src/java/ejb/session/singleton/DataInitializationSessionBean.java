@@ -137,8 +137,8 @@ public class DataInitializationSessionBean {
             
             
             List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = new ArrayList<>();
-            Integer totalLineItem = 0;
-            Integer totalQuantity = 1;
+            Integer totalLineItem = 2;  // used to be 1
+            Integer totalQuantity = 2;  // used to be 1
             Integer quantity = 1;
             BigDecimal totalAmount = new BigDecimal("0.00");
             
@@ -151,6 +151,7 @@ public class DataInitializationSessionBean {
             abc.setSaleTransactionEntity(newSaleTransactionEntity);
             System.err.println("IRON MAN");
             for (SaleTransactionLineItemEntity xyz : newSaleTransactionEntity.getSaleTransactionLineItemEntities()) {
+  
                 VendorEntity vendor = xyz.getMenuItemEntity().getVendorEntity();
                 OrderEntity oe = orderEntityControllerLocal.createOrder(new OrderEntity(calendarEnd, xyz.getSubTotal(), Boolean.FALSE));
                 oe.getSaleTransactionLineItemEntities().add(xyz);
@@ -162,9 +163,9 @@ public class DataInitializationSessionBean {
                 System.err.println("WOO LA LA LA LA");
                 
             }
-//            OrderEntity order = new OrderEntity(calendarStart, totalAmount, Boolean.FALSE);
-//            order.getSaleTransactionLineItemEntities().add(abc);
-//            abc.setOrderEntity(order);
+            OrderEntity order = new OrderEntity(calendarStart, totalAmount, Boolean.FALSE);
+            order.getSaleTransactionLineItemEntities().add(abc);
+            abc.setOrderEntity(order);
             System.err.println("WAKANDA");
             newSaleTransactionEntity.setCustomerEntity(customerEntity);
             customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);

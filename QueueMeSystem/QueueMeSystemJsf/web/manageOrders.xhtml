@@ -9,10 +9,22 @@
 
     <ui:define name="content">
         
+        <p:breadCrumb>
+            <p:menuitem value="Home" url="mainPage.xhtml" />
+            <p:menuitem value="Manage Orders" url="manageOrders.xhtml"/>
+        </p:breadCrumb>
+
+        
+        <style>
+            .ui-datatable-data {
+                text-align: center;
+            }
+        </style>
+        
         <h2 style="text-align: center">Order List</h2>
         <br/>
         
-
+       
         <h:form id="formAllOrders">
             
             <p:messages id="messages" redisplay="false" closable="true"/>
@@ -20,7 +32,7 @@
             <p:tabView>
                 <p:tab title="Orders (Pending)">
             
-                    <p:dataTable id="dataTableAllPendingOrders" widgetVar="dataTableAllPendingOrders" value="#{pendingOrderManagedBean.orderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"    
+                    <p:dataTable id="dataTableAllPendingOrders" widgetVar="dataTableAllPendingOrders" value="#{manageOrderManagedBean.pendingOrderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"    
                          rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
                 
                 <p:column headerText="Order ID" >
@@ -41,13 +53,13 @@
                 
  
                 <p:column headerText="Details" >
-                    <p:commandButton update="formViewOrder" oncomplete="PF('dialogViewOrder').show()" icon="ui-icon-document" title="View">
-                        <f:setPropertyActionListener value="#{orderEntity}" target="#{pendingOrderManagedBean.selectedOrderEntityToView}" />
+                    <p:commandButton update="formViewPendingOrder" oncomplete="PF('dialogViewPendingOrder').show()" icon="ui-icon-document" title="View">
+                        <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
                     </p:commandButton>
                 </p:column>
 
                 <p:column headerText="Fulfilment Status">     
-                    <p:commandButton class="icon-only" icon="fa fa-check" actionListener="#{pendingOrderManagedBean.editFulfilled}">     
+                    <p:commandButton class="icon-only" icon="fa fa-check" actionListener="#{manageOrderManagedBean.editFulfilled}" update="@form">     
                     <f:attribute name="orderFulfilled" value="#{orderEntity}"/>
                     </p:commandButton>
                 </p:column>
@@ -63,11 +75,11 @@
         </p:tab>
                 
                  
-                <!--        2nd TAB!!!!!!!             --> 
+                <!-- 2nd Tab --> 
                 
                 <p:tab title="Orders (Completed)">
             
-                    <p:dataTable id="dataTableAllCompletedOrders" widgetVar="dataTableAllCompletedOrders" value="#{completedOrderManagedBean.orderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"
+                    <p:dataTable id="dataTableAllCompletedOrders" widgetVar="dataTableAllCompletedOrders" value="#{manageOrderManagedBean.completedOrderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"
                          
                          rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
                 
@@ -90,7 +102,7 @@
  
                 <p:column headerText="Details" >
                     <p:commandButton update="formViewCompletedOrder" oncomplete="PF('dialogViewCompletedOrder').show()" icon="ui-icon-document" title="View">
-                        <f:setPropertyActionListener value="#{orderEntity}" target="#{completedOrderManagedBean.selectedOrderEntityToView}" />
+                        <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
                     </p:commandButton>
        
                 </p:column>
@@ -110,9 +122,9 @@
                 </p:tabView>
                     </h:form>
 
-        <h:form id="formViewOrder">
+        <h:form id="formViewPendingOrder">
             
-            <p:dialog id="dialogViewOrder" widgetVar="dialogViewOrder" header="View Order" closable="true">
+            <p:dialog id="dialogViewPendingOrder" widgetVar="dialogViewPendingOrder" header="View Order" closable="true">
                
 
                 <p:panelGrid>
@@ -122,7 +134,7 @@
                             <h:outputLabel value="Order ID: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{pendingOrderManagedBean.selectedOrderEntityToView.orderId}" />
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.orderId}" />
                         </p:column>
                     </p:row>
                     
@@ -131,7 +143,7 @@
                             <h:outputLabel value="Date Time: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{pendingOrderManagedBean.selectedOrderEntityToView.dateTime.time}" >
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.dateTime.time}" >
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
                             </h:outputText>
                         </p:column>
@@ -142,7 +154,7 @@
                             <h:outputLabel value="Earnings: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{pendingOrderManagedBean.selectedOrderEntityToView.totalEarnings}" >
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.totalEarnings}" >
                                 <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
                             </h:outputText>
                         </p:column>
@@ -153,7 +165,7 @@
                             <h:outputLabel value="Items: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{pendingOrderManagedBean.selectedOrderEntityToView.saleTransactionLineItemEntities}" />
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.listItemName()}" />
                         </p:column>
                     </p:row>
                     
@@ -166,7 +178,7 @@
         
         <h:form id="formViewCompletedOrder">
             
-            <p:dialog id="dialogViewOrder" widgetVar="dialogViewCompletedOrder" header="View Order" closable="true">
+            <p:dialog id="dialogViewCompletedOrder" widgetVar="dialogViewCompletedOrder" header="View Order" closable="true">
                
 
                 <p:panelGrid>
@@ -176,7 +188,7 @@
                             <h:outputLabel value="Order ID: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.orderId}" />
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.orderId}" />
                         </p:column>
                     </p:row>
                     
@@ -185,7 +197,7 @@
                             <h:outputLabel value="Date Time: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.dateTime.time}" >
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.dateTime.time}" >
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
                             </h:outputText>
                         </p:column>
@@ -196,7 +208,7 @@
                             <h:outputLabel value="Earnings: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.totalEarnings}" >
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.totalEarnings}" >
                                 <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
                             </h:outputText>
                         </p:column>
@@ -207,7 +219,7 @@
                             <h:outputLabel value="Items: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{completedOrderManagedBean.selectedOrderEntityToView.saleTransactionLineItemEntities}" />
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.listItemName()}" />
                         </p:column>
                     </p:row>
                     

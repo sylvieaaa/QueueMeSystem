@@ -102,6 +102,10 @@ public class OrderEntityController implements OrderEntityControllerLocal {
         
         return earnings;        
     }
+    
+    public void removeOrderEntity(OrderEntity orderEntity) {
+        
+    }
    
     
 
