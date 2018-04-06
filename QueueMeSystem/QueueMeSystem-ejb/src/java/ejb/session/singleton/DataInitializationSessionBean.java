@@ -104,11 +104,11 @@ public class DataInitializationSessionBean {
             Date calendarStart = new Date(0, 0, 0, 8, 0);
             Date calendarEnd = new Date(0, 0, 0, 22, 0);
    
-            FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", new BigDecimal("4.00"), calendarStart, calendarEnd, "ABCFoodCourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", new BigDecimal("5.00"), calendarStart, calendarEnd, "royalfoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Grandfather's Food Court", "Best in Ang Mo Kio", "AMK Drive 666", "143245", new BigDecimal("5.00"), calendarStart, calendarEnd, "amkfoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", new BigDecimal("5.00"), calendarStart, calendarEnd, "changifoodcourt", "password"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", new BigDecimal("5.00"), calendarStart, calendarEnd, "redhillfoodcourt", "password"));
+            FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", new BigDecimal("4.00"), calendarStart, calendarEnd, "ABCFoodCourt", "password", "fc1.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", new BigDecimal("5.00"), calendarStart, calendarEnd, "royalfoodcourt", "password", "fc1.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Grandfather's Food Court", "Best in Ang Mo Kio", "AMK Drive 666", "143245", new BigDecimal("5.00"), calendarStart, calendarEnd, "amkfoodcourt", "password", "fc1.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", new BigDecimal("5.00"), calendarStart, calendarEnd, "changifoodcourt", "password", "fc1.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", new BigDecimal("5.00"), calendarStart, calendarEnd, "redhillfoodcourt", "password", "fc1.png"));
 
             VendorEntity chinese = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Singapore Chinese Food", "Chinese", new BigDecimal("4.70"), "Best Chicken rice in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "chinese", "password", "chicken_rice.png"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal", new BigDecimal("2.50"), "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "malay", "password", "chicken_rice.png"), foodCourtEntity);
@@ -135,41 +135,42 @@ public class DataInitializationSessionBean {
 //            customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
             
             
-//            
-//            List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = new ArrayList<>();
-//            Integer totalLineItem = 0;
-//            Integer totalQuantity = 1;
-//            Integer quantity = 1;
-//            BigDecimal totalAmount = new BigDecimal("0.00");
-//            
-//            ++totalLineItem;
-//            BigDecimal subTotal = chickenRice.getPrice().multiply(new BigDecimal(quantity));
-//            SaleTransactionLineItemEntity abc = new SaleTransactionLineItemEntity(totalLineItem, quantity, chickenRice.getPrice(), subTotal, Boolean.FALSE, 0, chickenRice);
-//            saleTransactionLineItemEntities.add(abc);
-//            SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance(), Boolean.FALSE));
-//            newSaleTransactionEntity.getSaleTransactionLineItemEntities().add(abc);
-//            abc.setSaleTransactionEntity(newSaleTransactionEntity);
-//            System.err.println("IRON MAN");
-//            for (SaleTransactionLineItemEntity xyz : newSaleTransactionEntity.getSaleTransactionLineItemEntities()) {
-//                VendorEntity vendor = xyz.getMenuItemEntity().getVendorEntity();
-//                OrderEntity oe = orderEntityControllerLocal.createOrder(new OrderEntity(calendarEnd, xyz.getSubTotal(), Boolean.FALSE));
-//                oe.getSaleTransactionLineItemEntities().add(xyz);
-//                xyz.setOrderEntity(oe);
-//                oe.setVendorEntity(vendor);
-//                vendor.getOrderEntities().add(oe);
-//                oe.setCustomerEntity(customerEntity);
-//                customerEntity.getOrderEntities().add(oe);
-//                System.err.println("WOO LA LA LA LA");
-//                
-//            }
-////            OrderEntity order = new OrderEntity(calendarStart, totalAmount, Boolean.FALSE);
-////            order.getSaleTransactionLineItemEntities().add(abc);
-////            abc.setOrderEntity(order);
-//            System.err.println("WAKANDA");
-//            newSaleTransactionEntity.setCustomerEntity(customerEntity);
-//            customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
-//            System.err.println("KABOOOOMM KABOOOOW");
-//            
+            
+            List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = new ArrayList<>();
+            Integer totalLineItem = 2;  // used to be 1
+            Integer totalQuantity = 2;  // used to be 1
+            Integer quantity = 1;
+            BigDecimal totalAmount = new BigDecimal("0.00");
+            
+            ++totalLineItem;
+            BigDecimal subTotal = chickenRice.getPrice().multiply(new BigDecimal(quantity));
+            SaleTransactionLineItemEntity abc = new SaleTransactionLineItemEntity(totalLineItem, quantity, chickenRice.getPrice(), subTotal, Boolean.FALSE, 0, chickenRice);
+            saleTransactionLineItemEntities.add(abc);
+            SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance(), Boolean.FALSE));
+            newSaleTransactionEntity.getSaleTransactionLineItemEntities().add(abc);
+            abc.setSaleTransactionEntity(newSaleTransactionEntity);
+            System.err.println("IRON MAN");
+            for (SaleTransactionLineItemEntity xyz : newSaleTransactionEntity.getSaleTransactionLineItemEntities()) {
+  
+                VendorEntity vendor = xyz.getMenuItemEntity().getVendorEntity();
+                OrderEntity oe = orderEntityControllerLocal.createOrder(new OrderEntity(calendarEnd, xyz.getSubTotal(), Boolean.FALSE));
+                oe.getSaleTransactionLineItemEntities().add(xyz);
+                xyz.setOrderEntity(oe);
+                oe.setVendorEntity(vendor);
+                vendor.getOrderEntities().add(oe);
+                oe.setCustomerEntity(customerEntity);
+                customerEntity.getOrderEntities().add(oe);
+                System.err.println("WOO LA LA LA LA");
+                
+            }
+            OrderEntity order = new OrderEntity(calendarStart, totalAmount, Boolean.FALSE);
+            order.getSaleTransactionLineItemEntities().add(abc);
+            abc.setOrderEntity(order);
+            System.err.println("WAKANDA");
+            newSaleTransactionEntity.setCustomerEntity(customerEntity);
+            customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
+            System.err.println("KABOOOOMM KABOOOOW");
+            
 //            BigDecimal amount = new BigDecimal("12.00");
 //            OrderEntity orderEntity = new OrderEntity(Calendar.getInstance(), amount, Boolean.FALSE);
 //            orderEntity.setVendorEntity(chinese);
