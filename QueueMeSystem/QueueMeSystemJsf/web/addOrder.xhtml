@@ -8,11 +8,16 @@
 
 
     <ui:define name="content">
+        <style>
+            .ui-datatable-data {
+                text-align: center;
+            }
+        </style>
 
-        <p:growl globalOnly="true"/>
+        <p:growl id="globalGrowl" globalOnly="true"/>
         <p:layout>
 
-            <p:layoutUnit position="north" size="50">
+            <p:layoutUnit position="north" size="45">
                 <p:breadCrumb>
                     <p:menuitem url="mainPage.xhtml" value="Home"/>
                     <p:menuitem url="#" value="Add Order"/>
@@ -45,8 +50,8 @@
                                             </p:column>
                                         </p:row>
                                         <p:row>
-                                            <p:commandButton class="icon-only" icon="fa fa-plus" title="Add item" actionListener="#{addOrderManagedBean.addMenuItem}" update="formShoppingCart:dataTableCart">
-                                                <f:attribute name="menuItemEntityToAdd" value="#{menuItem}" />
+                                            <p:commandButton class="icon-only" icon="fa fa-plus" title="Add item" update="dialogAddMenuItem" oncomplete="PF('dialogAddMenuItem').show()">
+                                                <f:setPropertyActionListener target="#{addOrderManagedBean.menuItemEntityToAdd}" value="${menuItem}" />
                                             </p:commandButton>
                                         </p:row>
                                     </p:panelGrid>
@@ -57,9 +62,9 @@
                 </h:form>
             </p:layoutUnit>
 
-            <p:layoutUnit position="east" size="500" collapsible="true">
+            <p:layoutUnit position="east" size="600" collapsible="true">
                 <h:form id="formShoppingCart">
-                    <p:dataTable id="dataTableCart" editable="true" reflow="true" editMode="cell" value="#{checkOutManagedBean.saleTransactionLineItemEntities}" var="lineItem">
+                    <p:dataTable id="dataTableCart" scrollable="true" scrollHeight="250" editable="true" reflow="true" editMode="cell" value="#{checkOutManagedBean.saleTransactionLineItemEntities}" var="lineItem">
                         <f:facet name="header">
                             Shopping cart
                         </f:facet>
@@ -73,7 +78,12 @@
                         <p:column headerText="Quantity" style="border:none">
                             <p:cellEditor>
                                 <f:facet name="output"><h:outputText value="#{lineItem.quantity}" /></f:facet>
-                                <f:facet name="input"><p:spinner value="#{lineItem.quantity}" min="0"/></f:facet>
+                                <f:facet name="input">
+                                    <p:spinner value="#{lineItem.quantity}" min="1" valueChangeListener="#{checkOutManagedBean.updateQuantity}">
+                                        <p:ajax update="formShoppingCart"/>
+                                        <f:attribute name="lineItemToUpdate" value="#{lineItem}" />
+                                    </p:spinner>
+                                </f:facet>
                             </p:cellEditor>
                         </p:column>
                         <p:column headerText="Subtotal" style="border:none">
@@ -81,13 +91,108 @@
                                 <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
                             </h:outputText>
                         </p:column>
+                        <p:column headerText="Special Request" style="border:none">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{lineItem.specialRequest}" /></f:facet>
+                                <f:facet name="input">
+                                    <p:inputTextarea id="menuItemDescription" rows="4" cols="30" value="#{lineItem.specialRequest}" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
                         <p:column style="border:none">
-                            <p:commandButton icon="fa fa-times" id="icon-only" title="Remove Item"/>
+                            <p:commandButton icon="fa fa-times" id="icon-only" title="Remove Item" actionListener="#{addOrderManagedBean.removeItem}" update="@form :formShoppingCart">
+                                <f:attribute name="lineItem" value="#{lineItem}" />
+                            </p:commandButton>
                         </p:column>
                     </p:dataTable>
+
+                    <p:panelGrid id="totalsPanelGrid">
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="totalLineItem">Total Line Item:</p:outputLabel>
+                            </p:column>
+                            <p:column>
+                                <h:outputText id="totalLineItem" value="#{checkOutManagedBean.totalLineItem}" style="font-weight: bold"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="totalQuantity">Total Quantity:</p:outputLabel>
+                            </p:column>
+                            <p:column>
+                                <h:outputText id="totalQuantity" value="#{checkOutManagedBean.totalQuantity}" style="font-weight: bold"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="totalAmount">Total Amount:</p:outputLabel>
+                            </p:column>
+                            <p:column>
+                                <h:outputText id="totalAmount" value="#{checkOutManagedBean.totalAmount}" style="font-weight: bold">
+                                    <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Dining Options: " for="paymentRadio"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneRadio value="#{checkOutManagedBean.isTakeaway}">
+                                    <f:selectItem itemLabel="Dine in" itemValue="#{false}"/>
+                                    <f:selectItem itemLabel="Takeaway" itemValue="#{true}"/>
+                                </p:selectOneRadio>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Payment: " for="paymentRadio"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneRadio id="paymentRadio" value="#{checkOutManagedBean.paymentType}">
+                                    <f:selectItem itemLabel="Cash" itemValue="cash"/>
+                                    <f:selectItem itemLabel="Credit Card" itemValue="creditCard" />
+                                    <f:selectItem itemLabel="Nets" itemValue="nets" />
+                                    <f:selectItem itemLabel="PayNow" itemValue="paynow" />
+                                </p:selectOneRadio>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:commandButton value="Checkout" actionListener="#{checkOutManagedBean.doCheckout}" update="globalGrowl"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
                 </h:form>
             </p:layoutUnit>
         </p:layout>
+
+
+        <p:dialog id="dialogAddMenuItem" widgetVar="dialogAddMenuItem" modal="true" appendTo="@(body)" focus="formAddMenuItem:menuItemDescription">
+            <h:form id="formAddMenuItem">
+                <p:panelGrid>
+                    <p:row>
+                        <p:column>Quantity: </p:column>
+                        <p:column><p:spinner value="#{addOrderManagedBean.addMenuItemQty}" min="1"/></p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>Special Request </p:column>
+                        <p:column>
+                            <p:inputTextarea id="menuItemDescription" rows="4" cols="30" value="#{addOrderManagedBean.addMenuItemSpecialReq}" counter="display" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false"/>
+                            <br/>
+                            <h:outputText id="display" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton value="Add item" actionListener="#{addOrderManagedBean.addMenuItem}" update="@form formShoppingCart:dataTableCart formShoppingCart:totalsPanelGrid" oncomplete="PF('dialogAddMenuItem').hide();">
+                            </p:commandButton>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
 
     </ui:define>
 

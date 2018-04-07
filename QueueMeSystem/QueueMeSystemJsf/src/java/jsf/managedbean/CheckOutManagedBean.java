@@ -33,6 +33,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import util.exception.CreateNewSaleTransactionException;
 import util.exception.MenuItemNotFoundException;
 import util.exception.MenuNotFoundException;
@@ -57,6 +58,8 @@ public class CheckOutManagedBean implements Serializable {
     private BigDecimal totalAmount;
 
     private Integer quantity;
+    private String paymentType;
+    private Boolean isTakeaway;
 
     public CheckOutManagedBean() {
         initialiseState();
@@ -68,20 +71,22 @@ public class CheckOutManagedBean implements Serializable {
         totalQuantity = 0;
         totalAmount = new BigDecimal("0.00");
         quantity = 0;
+        paymentType = null;
+        isTakeaway = null;
     }
 
-    public void addItem(MenuItemEntity menuItemEntity) {
+    public void addItem(MenuItemEntity menuItemEntity, String specialRequest, Integer menuItemQuantity) {
         //MenuItemEntity menuItemEntity; 
         try {
             //menuItemEntity = menuItemEntityControllerLocal.retrieveMenuItemById(skuCode);
-            BigDecimal subTotal = menuItemEntity.getPrice().multiply(new BigDecimal(quantity));
+            BigDecimal subTotal = menuItemEntity.getPrice().multiply(new BigDecimal(menuItemQuantity));
 
             ++totalLineItem;
-            saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, quantity, menuItemEntity.getPrice(), subTotal, Boolean.FALSE, 0, menuItemEntity));
-            totalQuantity += quantity;
+            saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, menuItemQuantity, menuItemEntity.getPrice(), subTotal, specialRequest, menuItemEntity));
+            totalQuantity += menuItemQuantity;
             totalAmount = totalAmount.add(subTotal);
            
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, menuItemEntity.getMenuItemName() + " added successfully!: " + quantity + " unit @ " + NumberFormat.getCurrencyInstance().format(subTotal), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, menuItemEntity.getMenuItemName() + " added successfully!: " + menuItemQuantity + " unit @ " + NumberFormat.getCurrencyInstance().format(subTotal), null));
             //skuCode = "";
             quantity = 0;
         } catch (Exception ex) {
@@ -89,16 +94,45 @@ public class CheckOutManagedBean implements Serializable {
         }
     }
     
-    public void updateQuantity(SaleTransactionLineItemEntity saleTransactionLineItemEntity) {
+    public void removeItem(SaleTransactionLineItemEntity saleTransactionLineItemEntityToRemove) {
+        totalAmount = totalAmount.subtract(saleTransactionLineItemEntityToRemove.getSubTotal());
+        totalLineItem --;
+        totalQuantity -= saleTransactionLineItemEntityToRemove.getQuantity();
+        saleTransactionLineItemEntities.remove(saleTransactionLineItemEntityToRemove);
+        int serialNum = 1;
+        for(SaleTransactionLineItemEntity stlie: saleTransactionLineItemEntities) {
+            stlie.setSerialNumber(serialNum);
+            serialNum++;
+        }
+    }
+    
+    public void updateQuantity(ValueChangeEvent valueChangeEvent) {
+        Integer oldValue = (Integer) valueChangeEvent.getOldValue();
+        Integer newValue = (Integer) valueChangeEvent.getNewValue();
+        SaleTransactionLineItemEntity saleTransactionLineItemEntity = (SaleTransactionLineItemEntity) valueChangeEvent.getComponent().getAttributes().get("lineItemToUpdate");
+        
+        int updateQty = newValue - oldValue;
+        BigDecimal menuItemPrice = saleTransactionLineItemEntity.getMenuItemEntity().getPrice();
+        BigDecimal updateSubTotal = menuItemPrice.multiply(new BigDecimal(updateQty));
+        
+        saleTransactionLineItemEntity.setSubTotal(saleTransactionLineItemEntity.getSubTotal().add(updateSubTotal));
+        totalQuantity += updateQty;
+        totalAmount = totalAmount.add(updateSubTotal);
     }
 
     public void doCheckout() throws CreateNewSaleTransactionException {
         if (saleTransactionLineItemEntities.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No item in cart.", null));
             return;
+        } else if(isTakeaway == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select a dining option.", null));
+            return;
+        } else if(paymentType == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select a payment type.", null));
+            return;
         }
-        CustomerEntity customerEntity = (CustomerEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("currentCustomerEntity");
-        SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance(), Boolean.FALSE));
+        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance().getTime(), Boolean.FALSE, isTakeaway));
         initialiseState();
 
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Checkout completed successfully (Sales Transaction ID: " + newSaleTransactionEntity.getSaleTransactionId() + ")", null));
@@ -158,6 +192,22 @@ public class CheckOutManagedBean implements Serializable {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public Boolean getIsTakeaway() {
+        return isTakeaway;
+    }
+
+    public void setIsTakeaway(Boolean isTakeaway) {
+        this.isTakeaway = isTakeaway;
     }
 
 }

@@ -6,6 +6,8 @@
 package ejb.session.stateless;
 
 import entity.ReviewEntity;
+import entity.VendorEntity;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -17,4 +19,9 @@ public interface ReviewEntityControllerLocal {
 
     public ReviewEntity createReview(ReviewEntity reviewEntity);
     
+    public List<ReviewEntity> retrieveAllReviews();
+    
+    public int averageReviewScore(VendorEntity vendorEntity);
+    
 }
+

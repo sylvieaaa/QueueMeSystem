@@ -26,7 +26,7 @@ public class VendorEntity extends BusinessEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     private String vendorName;
     private String cuisineType;
-    private BigDecimal rating;
+    private Integer rating;
     private String information;
     @Temporal(javax.persistence.TemporalType.TIME)
     private Date startTime;
@@ -51,11 +51,11 @@ public class VendorEntity extends BusinessEntity implements Serializable {
         this.orderEntities = new ArrayList<>();
         this.reviewEntities = new ArrayList<>();
         menuItemEntities = new ArrayList<>();
-        this.rating = BigDecimal.ZERO;
+        this.rating = new Integer(0);
         this.creditReceived = BigDecimal.ZERO;
     }
 
-    public VendorEntity(String vendorName, String cuisineType, BigDecimal rating, String information, Date startTime, Date endTime, BigDecimal creditReceived, String username, String password, String photo) {
+    public VendorEntity(String vendorName, String cuisineType, Integer rating, String information, Date startTime, Date endTime, BigDecimal creditReceived, String username, String password, String photo) {
         this();
         this.vendorName = vendorName;
         this.cuisineType = cuisineType;
@@ -85,11 +85,11 @@ public class VendorEntity extends BusinessEntity implements Serializable {
         this.cuisineType = cuisineType;
     }
 
-    public BigDecimal getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(BigDecimal rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 

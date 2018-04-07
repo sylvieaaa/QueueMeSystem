@@ -38,8 +38,7 @@ public class SaleTransactionLineItemEntity implements Serializable {
     private BigDecimal unitPrice;
     @Column(precision = 11, scale = 2)
     private BigDecimal subTotal;
-    private Boolean isTakeaway;
-    private Integer takeawayQty;
+    private String specialRequest;
     @ManyToOne
     @JoinColumn(nullable = true)
     private MenuItemEntity menuItemEntity;
@@ -52,17 +51,22 @@ public class SaleTransactionLineItemEntity implements Serializable {
     public SaleTransactionLineItemEntity() {
     }
 
-    public SaleTransactionLineItemEntity(Integer serialNumber, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal, Boolean isTakeaway, Integer takeawayQty, MenuItemEntity menuItemEntity) {
-        this();
+    public SaleTransactionLineItemEntity(Integer serialNumber, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal, String specialRequest) {
         this.serialNumber = serialNumber;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.subTotal = subTotal;
-        this.isTakeaway = isTakeaway;
-        this.takeawayQty = takeawayQty;
+        this.specialRequest = specialRequest;
+    }
+
+    public SaleTransactionLineItemEntity(Integer serialNumber, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal, String specialRequest, MenuItemEntity menuItemEntity) {
+        this.serialNumber = serialNumber;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.subTotal = subTotal;
+        this.specialRequest = specialRequest;
         this.menuItemEntity = menuItemEntity;
     }
-    
 
     @Override
     public int hashCode() {
@@ -132,22 +136,6 @@ public class SaleTransactionLineItemEntity implements Serializable {
         this.subTotal = subTotal;
     }
 
-    public Boolean getIsTakeaway() {
-        return isTakeaway;
-    }
-
-    public void setIsTakeaway(boolean isTakeaway) {
-        this.isTakeaway = isTakeaway;
-    }
-
-    public Integer getTakeawayQty() {
-        return takeawayQty;
-    }
-
-    public void setTakeawayQty(Integer takeawayQty) {
-        this.takeawayQty = takeawayQty;
-    }
-
     public MenuItemEntity getMenuItemEntity() {
         return menuItemEntity;
     }
@@ -170,6 +158,14 @@ public class SaleTransactionLineItemEntity implements Serializable {
 
     public void setSaleTransactionEntity(SaleTransactionEntity saleTransactionEntity) {
         this.saleTransactionEntity = saleTransactionEntity;
+    }
+
+    public String getSpecialRequest() {
+        return specialRequest;
+    }
+
+    public void setSpecialRequest(String specialRequest) {
+        this.specialRequest = specialRequest;
     }
     
 }

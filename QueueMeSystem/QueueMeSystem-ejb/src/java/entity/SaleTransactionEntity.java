@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,8 +41,9 @@ public class SaleTransactionEntity implements Serializable {
     @Column(precision = 11, scale = 2)
     private BigDecimal totalAmount;
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar transactionDateTime;
+    private Date transactionDateTime;
     private Boolean isVoided;
+    private Boolean isTakeaway;
     
     @ManyToOne
     @JoinColumn(nullable = true)
@@ -53,16 +55,16 @@ public class SaleTransactionEntity implements Serializable {
         this.saleTransactionLineItemEntities = new ArrayList<>();
     }
 
-    public SaleTransactionEntity(Integer totalLineItem, Integer totalQuantity, BigDecimal totalAmount, Calendar transactionDateTime, Boolean isVoided) {//, List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities) {
+    public SaleTransactionEntity(Integer totalLineItem, Integer totalQuantity, BigDecimal totalAmount, Date transactionDateTime, Boolean isVoided, Boolean isTakeaway) {
         this();
         this.totalLineItem = totalLineItem;
         this.totalQuantity = totalQuantity;
         this.totalAmount = totalAmount;
         this.transactionDateTime = transactionDateTime;
         this.isVoided = isVoided;
-       // this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
+        this.isTakeaway = isTakeaway;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -144,11 +146,11 @@ public class SaleTransactionEntity implements Serializable {
         this.totalAmount = totalAmount;
     }
 
-    public Calendar getTransactionDateTime() {
+    public Date getTransactionDateTime() {
         return transactionDateTime;
     }
 
-    public void setTransactionDateTime(Calendar transactionDateTime) {
+    public void setTransactionDateTime(Date transactionDateTime) {
         this.transactionDateTime = transactionDateTime;
     }
 
@@ -176,6 +178,12 @@ public class SaleTransactionEntity implements Serializable {
         this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
     }
 
-    
-    
+    public Boolean getIsTakeaway() {
+        return isTakeaway;
+    }
+
+    public void setIsTakeaway(Boolean isTakeaway) {
+        this.isTakeaway = isTakeaway;
+    }
+
 }

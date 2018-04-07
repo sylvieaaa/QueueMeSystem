@@ -40,8 +40,13 @@ public class AddOrderManagedBean implements Serializable {
 
     private MenuEntity displayMenuEntity;
     private List<CategoryEntity> displayCategoryEntities;
-
+    
+    private Integer addMenuItemQty;
+    private String addMenuItemSpecialReq;
+    private MenuItemEntity menuItemEntityToAdd;
+    
     public AddOrderManagedBean() {
+        addMenuItemQty = 1;
     }
 
     @PostConstruct
@@ -55,21 +60,26 @@ public class AddOrderManagedBean implements Serializable {
         }
     }
     
-    public void addMenuItem(ActionEvent event) {
-        MenuItemEntity menuItemEntityToAdd = (MenuItemEntity) event.getComponent().getAttributes().get("menuItemEntityToAdd");
-        checkOutManagedBean.addItem(menuItemEntityToAdd);
+    public void addMenuItem() {
+        checkOutManagedBean.addItem(menuItemEntityToAdd, addMenuItemSpecialReq, addMenuItemQty);
         System.err.println(checkOutManagedBean.getSaleTransactionLineItemEntities().size());
+        addMenuItemQty = 1;
+        addMenuItemSpecialReq = "";
     }
     
-//    public void onCellEdit(CellEditEvent event) {
-//        Object oldValue = event.getOldValue();
-//        Object newValue = event.getNewValue();
-//         
-//        if(newValue != null && !newValue.equals(oldValue)) {
-//            SaleTransactionLineItemEntity saleTransactionLineItemEntity = (SaleTransactionLineItemEntity) event.getComponent().getAttributes().get("lineItem");
-//            
-//        }
-//    }
+     public void removeItem(ActionEvent event) {
+         SaleTransactionLineItemEntity lineItemToRemove = (SaleTransactionLineItemEntity) event.getComponent().getAttributes().get("lineItem");
+         checkOutManagedBean.removeItem(lineItemToRemove);
+     }
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+         System.err.println(oldValue + " " + newValue);
+        if(newValue != null && !newValue.equals(oldValue)) {
+            SaleTransactionLineItemEntity saleTransactionLineItemEntity = (SaleTransactionLineItemEntity) event.getComponent().getAttributes().get("lineItem");
+            
+        }
+    }
 
     public MenuEntity getDisplayMenuEntity() {
         return displayMenuEntity;
@@ -86,4 +96,29 @@ public class AddOrderManagedBean implements Serializable {
     public void setDisplayCategoryEntities(List<CategoryEntity> displayCategoryEntities) {
         this.displayCategoryEntities = displayCategoryEntities;
     }
+
+    public Integer getAddMenuItemQty() {
+        return addMenuItemQty;
+    }
+
+    public void setAddMenuItemQty(Integer addMenuItemQty) {
+        this.addMenuItemQty = addMenuItemQty;
+    }
+
+    public MenuItemEntity getMenuItemEntityToAdd() {
+        return menuItemEntityToAdd;
+    }
+
+    public void setMenuItemEntityToAdd(MenuItemEntity menuItemEntityToAdd) {
+        this.menuItemEntityToAdd = menuItemEntityToAdd;
+    }
+
+    public String getAddMenuItemSpecialReq() {
+        return addMenuItemSpecialReq;
+    }
+
+    public void setAddMenuItemSpecialReq(String addMenuItemSpecialReq) {
+        this.addMenuItemSpecialReq = addMenuItemSpecialReq;
+    }
+    
 }

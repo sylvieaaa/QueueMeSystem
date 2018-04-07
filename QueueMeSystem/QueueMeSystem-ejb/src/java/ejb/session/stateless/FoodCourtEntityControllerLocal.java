@@ -9,6 +9,7 @@ import entity.FoodCourtEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.DeleteFoodCourtException;
+import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
 
 /**
@@ -18,7 +19,7 @@ import util.exception.FoodCourtNotFoundException;
 @Local
 public interface FoodCourtEntityControllerLocal {
 
-    public FoodCourtEntity createFoodCourt(FoodCourtEntity foodCourtEntity);
+    public FoodCourtEntity createFoodCourt(FoodCourtEntity foodCourtEntity)throws DuplicateEmailUserException;
 
     public FoodCourtEntity retrieveFoodCourtById(Long foodCourtId)throws FoodCourtNotFoundException;
 

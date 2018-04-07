@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.ReviewEntity;
 import entity.VendorEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,5 +30,23 @@ public class ReviewEntityController implements ReviewEntityControllerLocal {
         em.refresh(reviewEntity);
         
         return reviewEntity;
+    }
+    
+    @Override
+    public List<ReviewEntity> retrieveAllReviews()
+    {
+        Query query = em.createQuery("SELECT r FROM ReviewEntity r ORDER BY r.reviewId ASC");
+ 
+        return query.getResultList();
+    }
+    
+    @Override
+    public int averageReviewScore(VendorEntity vendorEntity) {
+        int score = 0;
+        int size = vendorEntity.getReviewEntities().size();
+        for (ReviewEntity review: vendorEntity.getReviewEntities()) {
+            score += review.getRating();
+        }
+        return (score / size);
     }
 }

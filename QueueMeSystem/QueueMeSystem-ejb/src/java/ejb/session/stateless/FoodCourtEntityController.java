@@ -14,9 +14,11 @@ import entity.VendorEntity;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.DeleteFoodCourtException;
+import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
 
 /**
@@ -30,10 +32,19 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
     private EntityManager em;
 
     @Override
-    public FoodCourtEntity createFoodCourt(FoodCourtEntity foodCourtEntity) {
-        em.persist(foodCourtEntity);
-        em.flush();
-        em.refresh(foodCourtEntity);
+    public FoodCourtEntity createFoodCourt(FoodCourtEntity foodCourtEntity) throws DuplicateEmailUserException{
+        Query query = em.createQuery("SELECT f FROM FoodCourtEntity f WHERE f.username=:inUsername");
+        query.setParameter("inUsername", foodCourtEntity.getUsername());
+
+        try {
+            FoodCourtEntity check = (FoodCourtEntity) query.getSingleResult();
+            throw new DuplicateEmailUserException("Email is not unique");
+            
+        } catch (NoResultException exc) {
+                em.persist(foodCourtEntity);
+                em.flush();
+                em.refresh(foodCourtEntity);
+        }
 
         return foodCourtEntity;
     }
@@ -63,7 +74,6 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
             foodCourtToUpdate.setName(foodCourt.getName());
             foodCourtToUpdate.setAddress(foodCourt.getAddress());
             foodCourtToUpdate.setDescription(foodCourt.getDescription());
-            foodCourtToUpdate.setRatings(foodCourt.getRatings());
             foodCourtToUpdate.setPostalCode(foodCourt.getPostalCode());
             foodCourtToUpdate.setStartTime(foodCourt.getStartTime());
             foodCourtToUpdate.setEndTime(foodCourt.getEndTime());
@@ -74,7 +84,7 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
     }
 
     @Override
-    public void disableFoodCourt(Long foodCourtId) throws FoodCourtNotFoundException{
+    public void disableFoodCourt(Long foodCourtId) throws FoodCourtNotFoundException {
         if (foodCourtId != null) {
             FoodCourtEntity foodCourtToDisable = retrieveFoodCourtById(foodCourtId);
             foodCourtToDisable.setEnable(Boolean.FALSE);
