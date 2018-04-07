@@ -26,6 +26,7 @@ import entity.ReviewEntity;
 import entity.SaleTransactionEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.VendorEntity;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -86,6 +87,8 @@ public class DataInitializationSessionBean {
     public void postConstruct() {
         try {
             adminEntityControllerLocal.retrieveAdminByUsername("yxsoong");
+            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads";
+            System.err.println(newFilePath);
         } catch (AdminNotFoundException ex) {
             initializeDate();
         }
@@ -93,6 +96,12 @@ public class DataInitializationSessionBean {
 
     private void initializeDate() {
         try {
+            //create folders
+            String filePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator");
+            String[] directory = {"foodPhotos", "vendorLogos", "foodCourtLogos"};
+            for(int i = 0; i < directory.length; i++) {
+                new File(filePath+directory[i]).mkdir();
+            }
 
             // Initialize admin entities
             adminEntityControllerLocal.createAdmin(new AdminEntity("Yi Xuan", "Soong", "yxsoong", "password"));
