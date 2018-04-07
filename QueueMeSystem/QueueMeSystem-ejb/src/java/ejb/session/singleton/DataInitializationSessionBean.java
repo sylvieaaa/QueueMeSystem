@@ -5,7 +5,6 @@
  */
 package ejb.session.singleton;
 
-import ejb.session.stateful.CheckoutControllerLocal;
 import ejb.session.stateless.AdminEntityControllerLocal;
 import ejb.session.stateless.CategoryEntityControllerLocal;
 import ejb.session.stateless.CustomerEntityControllerLocal;
@@ -46,9 +45,6 @@ public class DataInitializationSessionBean {
 
     @EJB
     private SaleTransactionEntityControllerLocal saleTransactionEntityControllerLocal;
-
-    @EJB
-    private CheckoutControllerLocal checkoutControllerLocal;
 
     @EJB
     private OrderEntityControllerLocal orderEntityControllerLocal;
@@ -144,9 +140,9 @@ public class DataInitializationSessionBean {
             
             ++totalLineItem;
             BigDecimal subTotal = chickenRice.getPrice().multiply(new BigDecimal(quantity));
-            SaleTransactionLineItemEntity abc = new SaleTransactionLineItemEntity(totalLineItem, quantity, chickenRice.getPrice(), subTotal, Boolean.FALSE, 0, chickenRice);
+            SaleTransactionLineItemEntity abc = new SaleTransactionLineItemEntity(1, quantity, chickenRice.getPrice(), subTotal, "");
             saleTransactionLineItemEntities.add(abc);
-            SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance(), Boolean.FALSE));
+            SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, calendarStart, Boolean.FALSE, Boolean.FALSE));
             newSaleTransactionEntity.getSaleTransactionLineItemEntities().add(abc);
             abc.setSaleTransactionEntity(newSaleTransactionEntity);
             System.err.println("IRON MAN");
@@ -163,9 +159,9 @@ public class DataInitializationSessionBean {
                 System.err.println("WOO LA LA LA LA");
                 
             }
-            OrderEntity order = new OrderEntity(calendarStart, totalAmount, Boolean.FALSE);
-            order.getSaleTransactionLineItemEntities().add(abc);
-            abc.setOrderEntity(order);
+//            OrderEntity order = new OrderEntity(calendarStart, totalAmount, Boolean.FALSE);
+//            order.getSaleTransactionLineItemEntities().add(abc);
+//            abc.setOrderEntity(order);
             System.err.println("WAKANDA");
             newSaleTransactionEntity.setCustomerEntity(customerEntity);
             customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
