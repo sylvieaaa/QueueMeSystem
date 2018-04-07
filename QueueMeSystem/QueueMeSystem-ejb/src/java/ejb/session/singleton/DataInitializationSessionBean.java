@@ -52,9 +52,6 @@ public class DataInitializationSessionBean {
     private SaleTransactionEntityControllerLocal saleTransactionEntityControllerLocal;
 
     @EJB
-    private SaleTransactionEntityControllerLocal saleTransactionEntityControllerLocal;
-
-    @EJB
     private OrderEntityControllerLocal orderEntityControllerLocal;
 
     @EJB
