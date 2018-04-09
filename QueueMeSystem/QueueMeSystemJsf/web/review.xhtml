@@ -34,11 +34,11 @@
            
                 
             
-            <p:dataTable id="dataTableAllReviews"  value="#{manageReviewManagedBean.reviewEntities}" var="reviewEntity" rowKey="#{reviewEntity.reviewId}" rowIndexVar="row"    
+            <p:dataTable id="dataTableAllReviews"  value="#{manageReviewManagedBean.reviewEntities}" var="reviewEntity" rowIndexVar="rowIndex"    
                          rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
                 
                 <p:column headerText="Review ID" >
-                    <h:outputText value="#{reviewEntity.reviewId}" />
+                    <h:outputText value="#{rowIndex+1}" />
                 </p:column>
                 
                 <p:column headerText="Review">

@@ -19,7 +19,7 @@ public interface ReviewEntityControllerLocal {
 
     public ReviewEntity createReview(ReviewEntity reviewEntity);
     
-    public List<ReviewEntity> retrieveAllReviews();
+    public List<ReviewEntity> retrieveAllReviews(VendorEntity vendorEntity);
     
     public int averageReviewScore(VendorEntity vendorEntity);
     
