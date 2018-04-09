@@ -39,7 +39,7 @@ public class CreateNewVendorManagedBean implements Serializable {
         newVendorEntity = new VendorEntity();
     }
 
-    public void createNewVendor(ActionEvent event) {
+    public void createNewVendor(ActionEvent event) throws IOException{
         try {
             FoodCourtEntity foodCourtEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
             VendorEntity vendorEntity = vendorEntityControllerLocal.createVendorEntity(newVendorEntity, foodCourtEntity);
@@ -47,6 +47,7 @@ public class CreateNewVendorManagedBean implements Serializable {
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New vendor created successfully (Vendor ID: " + vendorEntity.getVendorName() + ")", null));
             file = null;
+            FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
         } catch (DuplicateEmailUserException err) {
             System.err.println("IZZNOTUNIQUE");
             System.err.println(err.toString());
@@ -58,7 +59,7 @@ public class CreateNewVendorManagedBean implements Serializable {
         FoodCourtEntity vendorEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         try {
             String fileName = "";
-            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + "vendorLogos";
+            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodPhotos";
 
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);

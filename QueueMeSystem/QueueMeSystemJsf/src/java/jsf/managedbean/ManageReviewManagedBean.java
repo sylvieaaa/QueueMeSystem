@@ -41,9 +41,9 @@ public class ManageReviewManagedBean implements Serializable {
     
     @PostConstruct
     public void postConstruct()
-    {
-        reviewEntities = reviewEntityControllerLocal.retrieveAllReviews();
+    {     
         VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        reviewEntities = reviewEntityControllerLocal.retrieveAllReviews(vendorEntity);
         avgReviewScore = reviewEntityControllerLocal.averageReviewScore(vendorEntity);
    
     }
