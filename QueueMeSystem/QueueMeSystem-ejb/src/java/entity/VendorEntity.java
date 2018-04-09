@@ -34,6 +34,7 @@ public class VendorEntity extends BusinessEntity implements Serializable {
     private Date endTime;
     private BigDecimal creditReceived;
     private String photoURL;
+    private Boolean enabled;
 
     @ManyToOne
     private FoodCourtEntity foodCourtEntity;
@@ -53,6 +54,7 @@ public class VendorEntity extends BusinessEntity implements Serializable {
         menuItemEntities = new ArrayList<>();
         this.rating = new Integer(0);
         this.creditReceived = BigDecimal.ZERO;
+        this.enabled = Boolean.TRUE;
     }
 
     public VendorEntity(String vendorName, String cuisineType, Integer rating, String information, Date startTime, Date endTime, BigDecimal creditReceived, String username, String password, String photo) {
@@ -197,4 +199,13 @@ public class VendorEntity extends BusinessEntity implements Serializable {
     public void setPhotoURL(String photoURL) {
         this.photoURL = photoURL;
     }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
 }

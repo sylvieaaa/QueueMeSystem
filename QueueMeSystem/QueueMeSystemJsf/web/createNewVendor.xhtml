@@ -9,8 +9,10 @@
 
     <ui:define name="content">
 
-        <br/>
-        <br/>
+        <p:breadCrumb>
+            <p:menuitem value="Main Page" url="foodCourtMainPage.xhtml" />
+            <p:menuitem value="Create New Vendor" url="#"/>
+        </p:breadCrumb> 
 
         <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
         <div class ="ui-g-12 ui-md-6 ui-lg-4">
@@ -109,8 +111,6 @@
                                 </p:panelGrid>
                             </p:panel>
                         </p:tab>
-
-
                     </p:wizard>
                 </h:form>
             </p:panel>

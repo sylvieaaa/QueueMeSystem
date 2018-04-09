@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -76,13 +77,22 @@ public class VendorEntityController implements VendorEntityControllerLocal {
 
     @Override
     public void deleteVendor(Long vendorId) throws VendorNotFoundException {
-        try {
-            VendorEntity vendorEntity = retrieveVendorById(vendorId);
-            em.remove(vendorEntity);
-        } catch (VendorNotFoundException ex) {
-
+        if (vendorId != null) {
+            VendorEntity vendorToDisable = retrieveVendorById(vendorId);
+            vendorToDisable.setEnabled(Boolean.FALSE);
+        } else {
+            throw new VendorNotFoundException("No vendor found.");
         }
     }
+
+    @Override
+    public List<VendorEntity> retrieveAllVendors() {
+        Query query = em.createQuery("SELECT v FROM VendorEntity v WHERE v.enabled = true ORDER BY v.vendorName ASC");
+        List<VendorEntity> vendorEntities = query.getResultList();
+
+        return vendorEntities;
+    }
+
 
     /*
     @Override

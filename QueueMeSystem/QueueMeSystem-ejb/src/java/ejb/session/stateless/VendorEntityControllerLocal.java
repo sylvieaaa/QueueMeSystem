@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
+import java.util.List;
 import javax.ejb.Local;
 import util.exception.DuplicateEmailUserException;
 import util.exception.VendorNotFoundException;
@@ -25,5 +26,7 @@ public interface VendorEntityControllerLocal {
     public void updateVendor(VendorEntity vendorEntity) throws VendorNotFoundException;
 
     public void deleteVendor(Long vendorId) throws VendorNotFoundException;
+
+    public List<VendorEntity> retrieveAllVendors();
 
 }

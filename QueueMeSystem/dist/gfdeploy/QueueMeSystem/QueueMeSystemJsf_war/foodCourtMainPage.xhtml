@@ -23,6 +23,10 @@
                     <h:form id="foodCourtDetails">
                         <p:panelGrid style="text-align: left; border: #000000">
                             <p:row>
+                                <p:column colspan="2"><p:graphicImage style="width:20%; text-align: center" value="http://localhost:8080/queueme-uploads/foodCourtLogos/#{viewAllFoodCourtsManagedBean.foodCourtToView.fileURL}"/></p:column>
+                            </p:row>
+
+                            <p:row>
                                 <p:column><h:outputText style="font-weight: bold" value="Name: " /></p:column>
                                 <p:column><h:outputText value="#{sessionScope['businessEntity'].name}" /></p:column>
                             </p:row>
@@ -71,10 +75,9 @@
                     </h:form>
                 </p:overlayPanel>
 
-                <p:carousel id="vendorCarousel" value="#{sessionScope['businessEntity'].vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
-                    <!-- #TODO: Logos of food courts -->
+                <p:carousel id="vendorCarousel" value="#{updateVendorManagedBean.vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
                     <p:panelGrid columns="1" style="margin-left: 60px; margin-top: 2px">
-                        <p:graphicImage  value="/foodPhotos/vendorLogos/#{vendors.photoURL}" width="70%"/>
+                        <p:graphicImage  value="http://localhost:8080/queueme-uploads/vendorLogos/#{vendors.photoURL}" width="70%"/>
                     </p:panelGrid>
                     <p:panelGrid style="margin-left: 40px;text-align: left">
                         <p:row>
@@ -120,9 +123,8 @@
                                 <p:commandButton update="updateVendorForm" oncomplete="PF('dialogUpdateVendor').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
                                     <f:setPropertyActionListener value="#{vendors}" target="#{updateVendorManagedBean.vendorEntityToUpdate}" />
                                 </p:commandButton>
-                                <p:commandButton value="Delete Vendor" icon="fa fa-trash" actionListener="#{updateVendorManagedBean.postConstruct}" update="vendorCarousel" title="Delete Vendor">
-                                    <f:attribute name="vendorEntityToDelete" value="#{vendors}" />
-                                    <p:confirm header="Confirmation" message="Are you sure you want to delete #{vendors.vendorName}?" icon="ui-icon-alert" />
+                                <p:commandButton value="Delete Vendor" icon="fa fa-trash" update="deleteVendorForm" title="Delete Vendor" oncomplete="PF('dialogDeleteVendor').show()">
+                                    <f:setPropertyActionListener value="#{vendors}" target="#{updateVendorManagedBean.vendorToDisable}" />
                                 </p:commandButton>
                             </p:column>
                         </p:row>
@@ -138,6 +140,19 @@
                 <p:dialog id="dialogUpdateVendor" widgetVar="dialogUpdateVendor" header="Update Vendor" closable="true">
                     <p:messages id="messagesUpdateVendor" redisplay="false" />
                     <p:panelGrid>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="vendorLogoUpload" value="Upload Logo: "/>
+                            </p:column>
+                            <p:column>
+                                <p:fileUpload id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="messagesUpdateVendor" skinSimple="true" fileUploadListener="#{updateVendorManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                </p:fileUpload>
+                            </p:column>
+                            <p:column>
+                                <p:message for="vendorLogoUpload" />
+                            </p:column>
+                        </p:row>
+
                         <p:row>
                             <p:column><p:outputLabel for="name" value="Name: "/></p:column>
                             <p:column><p:inputText id="name" value="#{updateVendorManagedBean.vendorEntityToUpdate.vendorName}" required="true" requiredMessage="Vendor name required." /></p:column>
@@ -192,6 +207,19 @@
                     <p:messages id="messagesUpdateFoodCourt" redisplay="false" />
                     <p:panelGrid>
                         <p:row>
+                            <p:column>
+                                <p:outputLabel for="foodCourtLogoUpload" value="Upload Logo: "/>
+                            </p:column>
+                            <p:column>
+                                <p:fileUpload id="foodCourtLogoUpload" widgetVar="uploader" mode="advanced" update="messagesUpdateFoodCourt" skinSimple="true" fileUploadListener="#{viewAllFoodCourtsManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                </p:fileUpload>
+                            </p:column>
+                            <p:column>
+                                <p:message for="foodCourtLogoUpload" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
                             <p:column><p:outputLabel for="name" value="Name: " /></p:column>
                             <p:column><p:inputText id="name" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.name}" required="true" requiredMessage="Name is required" /></p:column>
                             <p:column><p:message for="name" /></p:column>
@@ -234,6 +262,16 @@
                         </p:row>
 
                     </p:panelGrid>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="deleteVendorForm">
+                <p:dialog id="dialogDeleteVendor" widgetVar="dialogDeleteVendor" header="Delete Vendor" closable="true">
+                    <p:messages id="deleteVendor" redisplay="false" />
+                    <h4 style="text-align: center"> Confirm to delete <h:outputText style="color: blue;" value="#{updateVendorManagedBean.vendorToDisable.vendorName} ?"/></h4>
+
+                    <p:commandButton style="margin: auto; display: block" value="Disable" update="@form vendorCarousel" actionListener="#{updateVendorManagedBean.deleteVendor}" oncomplete="PF('dialogDeleteVendor').hide();" />
+
                 </p:dialog>
             </h:form>
 
