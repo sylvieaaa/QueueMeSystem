@@ -126,6 +126,7 @@ public class SecurityFilter implements Filter {
                 || path.equals("/error404.xhtml")
                 || path.startsWith("/images")
                 || path.startsWith("/foodPhotos")
+                || path.startsWith("/Resources")
                 || path.startsWith("/javax.faces.resource")) {
             return true;
         } else {

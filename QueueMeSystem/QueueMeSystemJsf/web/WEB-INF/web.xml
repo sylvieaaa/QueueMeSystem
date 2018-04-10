@@ -33,29 +33,40 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
-    
     <error-page>
         <error-code>404</error-code>
         <location>/error404.xhtml</location>
     </error-page>
-    <mime-mapping>  
-        <extension>otf</extension>  
-        <mime-type>font/Kirvy-Bold</mime-type>  
+    <mime-mapping>
+        <extension>otf</extension>
+        <mime-type>font/Kirvy-Bold</mime-type>
     </mime-mapping>
-    <mime-mapping>  
-        <extension>eot</extension>  
-        <mime-type>fa/fontawesome-webfont</mime-type>  
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>fa/fontawesome-webfont</mime-type>
     </mime-mapping>
-    <mime-mapping>  
-        <extension>woff</extension>  
-        <mime-type>fa/fontawesome-webfont</mime-type>  
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>fa/fontawesome-webfont</mime-type>
     </mime-mapping>
-    <mime-mapping>  
-        <extension>woff2</extension>  
-        <mime-type>fa/fontawesome-webfont</mime-type>  
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>fa/fontawesome-webfont</mime-type>
     </mime-mapping>
-    <mime-mapping> 
-        <extension>ttf</extension>  
-        <mime-type>fa/fontawesome-webfont</mime-type>  
+    <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>fa/fontawesome-webfont</mime-type>
     </mime-mapping>
+    <ejb-local-ref>
+        <ejb-ref-name>BusinessEntityController</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.BusinessEntityControllerLocal</local>
+        <ejb-link>QueueMeSystem-ejb.jar#BusinessEntityController</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>EmailController</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.EmailControllerLocal</local>
+        <ejb-link>QueueMeSystem-ejb.jar#EmailController</ejb-link>
+    </ejb-local-ref>
 </web-app>
