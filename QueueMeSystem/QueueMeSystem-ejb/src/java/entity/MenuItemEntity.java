@@ -34,6 +34,10 @@ public class MenuItemEntity implements Serializable {
     private BigDecimal price;
     private String photoURL;
     
+
+    @ManyToMany
+    private List<TagEntity> tagEntities;
+    
     @ManyToMany(mappedBy = "menuItemEntities")
     private List<CategoryEntity> categoryEntities;
     
@@ -143,6 +147,14 @@ public class MenuItemEntity implements Serializable {
 
     public void setVendorEntity(VendorEntity vendorEntity) {
         this.vendorEntity = vendorEntity;
+    }
+
+    public List<TagEntity> getTagEntities() {
+        return tagEntities;
+    }
+
+    public void setTagEntities(List<TagEntity> tagEntities) {
+        this.tagEntities = tagEntities;
     }
     
 }
