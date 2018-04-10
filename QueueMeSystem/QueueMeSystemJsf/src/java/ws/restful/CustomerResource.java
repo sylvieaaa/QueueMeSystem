@@ -58,7 +58,16 @@ public class CustomerResource {
             //TODO return proper representation object
             BusinessEntity businessEntity =  businessEntityControllerLocal.login(username, password);
             if(businessEntity instanceof CustomerEntity) {
-                CustomerLoginRsp customerLoginRsp = new CustomerLoginRsp((CustomerEntity) businessEntity);
+                
+                
+                CustomerEntity customerEntity = (CustomerEntity) businessEntity;
+                customerEntity.getCreditCardEntities().clear();
+                customerEntity.getOrderEntities().clear();
+                customerEntity.getReviewEntities().clear();
+                customerEntity.getSaleTransactionEntities().clear();
+                
+                CustomerLoginRsp customerLoginRsp = new CustomerLoginRsp(customerEntity);
+                
                 return Response.status(Status.OK).entity(customerLoginRsp).build();
             } else {
                 return Response.status(Status.UNAUTHORIZED).entity("Create a customer account to make purchase!").build();
