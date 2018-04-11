@@ -9,7 +9,7 @@ import entity.CustomerEntity;
 import javax.ejb.Local;
 import util.exception.CustomerNotFoundException;
 
-/**
+/*
  *
  * @author User
  */
@@ -19,5 +19,7 @@ public interface CustomerEntityControllerLocal {
     
     public CustomerEntity retrieveCustomerByUsername(String username) throws CustomerNotFoundException;
      
-    public void updateCustomer(CustomerEntity customerEntity);
+    public void updateCustomer(CustomerEntity customerEntity) throws CustomerNotFoundException;
+    
+
 }

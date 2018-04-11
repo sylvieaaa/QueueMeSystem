@@ -46,7 +46,13 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
     }
     
     @Override
-    public void updateCustomer(CustomerEntity customerEntity) {
-        em.merge(customerEntity);
+    public void updateCustomer(CustomerEntity customerEntity) throws CustomerNotFoundException {
+       
+        CustomerEntity ce = retrieveCustomerByUsername(customerEntity.getUsername());
+        
+        ce.setAddress(customerEntity.getAddress());
+        ce.setContactNumber(customerEntity.getContactNumber());
+        ce.setFirstName(customerEntity.getFirstName());
+        ce.setLastName(customerEntity.getLastName());
     }
 }
