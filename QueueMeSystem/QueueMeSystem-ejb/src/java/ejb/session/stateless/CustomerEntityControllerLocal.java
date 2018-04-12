@@ -16,9 +16,11 @@ import util.exception.CustomerNotFoundException;
  */
 @Local
 public interface CustomerEntityControllerLocal {
+
     public CustomerEntity createCustomer(CustomerEntity customerEntity) throws CreateCustomerException;
-    
+
     public CustomerEntity retrieveCustomerByUsername(String username) throws CustomerNotFoundException;
-     
-    public void updateCustomer(CustomerEntity customerEntity);
+
+    public void updateCustomer(CustomerEntity customerEntity) throws CustomerNotFoundException;
+
 }

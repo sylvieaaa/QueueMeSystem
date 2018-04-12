@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
@@ -30,8 +31,9 @@ import util.exception.BusinessEntityNotFoundException;
 import util.exception.CreateCustomerException;
 import util.exception.InvalidLoginCredentialException;
 import ws.restful.datamodel.CreateCustomerReq;
-import ws.restful.datamodel.CustomerLoginRsp;
+import ws.restful.datamodel.CustomerRsp;
 import ws.restful.datamodel.ErrorRsp;
+import ws.restful.datamodel.UpdateCustomerReq;
 
 /**
  * REST Web Service
@@ -44,7 +46,7 @@ public class CustomerResource {
     EmailControllerLocal emailControllerLocal = lookupEmailControllerLocal();
 
     BusinessEntityControllerLocal businessEntityControllerLocal = lookupBusinessEntityControllerLocal();
-    
+
     CustomerEntityControllerLocal customerEntityControllerLocal = lookupCustomerEntityControllerLocal();
 
     @Context
@@ -54,6 +56,7 @@ public class CustomerResource {
      * Creates a new instance of CustomerResource
      */
     public CustomerResource() {
+
     }
 
     @Path("login")
@@ -72,7 +75,7 @@ public class CustomerResource {
                 customerEntity.getReviewEntities().clear();
                 customerEntity.getSaleTransactionEntities().clear();
 
-                CustomerLoginRsp customerLoginRsp = new CustomerLoginRsp(customerEntity);
+                CustomerRsp customerLoginRsp = new CustomerRsp(customerEntity);
 
                 return Response.status(Status.OK).entity(customerLoginRsp).build();
             } else {
@@ -97,11 +100,34 @@ public class CustomerResource {
         }
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCustomer(JAXBElement<UpdateCustomerReq> jaxbUpdateCustomerReq) {
+        if ((jaxbUpdateCustomerReq != null) && (jaxbUpdateCustomerReq.getValue() != null)) {
+            try {
+                UpdateCustomerReq updateCustomerReq = jaxbUpdateCustomerReq.getValue();
+
+                customerEntityControllerLocal.updateCustomer(updateCustomerReq.getCustomerEntity());
+
+                return Response.status(Response.Status.OK).entity(this).build();
+            } //            catch (CustomerNotFoundException ex)
+            //            {
+            //                return Response.status(Response.Status.BAD_REQUEST).entity("Customer Not Found").build();
+            //            }
+            catch (Exception ex) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+        }
+    }
+
     /**
      * PUT method for updating or creating an instance of CustomerResource
      *
      * @param createCustomerReq
-     * @return 
+     * @return
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -130,6 +156,16 @@ public class CustomerResource {
         }
     }
 
+    /**
+     * PUT method for updating or creating an instance of CustomerResource
+     *
+     * @param content representation for the resource
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_XML)
+    public void putXml(String content) {
+    }
+
     private BusinessEntityControllerLocal lookupBusinessEntityControllerLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -149,7 +185,7 @@ public class CustomerResource {
             throw new RuntimeException(ne);
         }
     }
-    
+
     private CustomerEntityControllerLocal lookupCustomerEntityControllerLocal() {
         try {
             javax.naming.Context c = new InitialContext();
