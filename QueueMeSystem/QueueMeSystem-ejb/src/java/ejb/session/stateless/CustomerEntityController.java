@@ -12,6 +12,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.CreateCustomerException;
 import util.exception.CustomerNotFoundException;
 
 /**
@@ -25,7 +26,7 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
     private EntityManager em;
 
     @Override
-    public CustomerEntity createCustomer(CustomerEntity customerEntity) {
+    public CustomerEntity createCustomer(CustomerEntity customerEntity) throws CreateCustomerException{
         em.persist(customerEntity);
         em.flush();
         em.refresh(customerEntity);
