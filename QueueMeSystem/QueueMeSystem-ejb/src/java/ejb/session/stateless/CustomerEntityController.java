@@ -12,6 +12,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.CreateCustomerException;
 import util.exception.CustomerNotFoundException;
 
 /**
@@ -25,14 +26,14 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
     private EntityManager em;
 
     @Override
-    public CustomerEntity createCustomer(CustomerEntity customerEntity) {
+    public CustomerEntity createCustomer(CustomerEntity customerEntity) throws CreateCustomerException {
         em.persist(customerEntity);
         em.flush();
         em.refresh(customerEntity);
-        
+
         return customerEntity;
     }
-    
+
     @Override
     public CustomerEntity retrieveCustomerByUsername(String username) throws CustomerNotFoundException {
         Query query = em.createQuery("SELECT c FROM CustomerEntity c WHERE c.username = :inUsername");
@@ -44,9 +45,15 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
             throw new CustomerNotFoundException("Customer Username " + username + " does not exist!");
         }
     }
-    
+
     @Override
-    public void updateCustomer(CustomerEntity customerEntity) {
-        em.merge(customerEntity);
+    public void updateCustomer(CustomerEntity customerEntity) throws CustomerNotFoundException {
+
+        CustomerEntity ce = retrieveCustomerByUsername(customerEntity.getUsername());
+
+        ce.setAddress(customerEntity.getAddress());
+        ce.setContactNumber(customerEntity.getContactNumber());
+        ce.setFirstName(customerEntity.getFirstName());
+        ce.setLastName(customerEntity.getLastName());
     }
 }
