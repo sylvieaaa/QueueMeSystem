@@ -150,15 +150,13 @@ public class OrderEntity implements Serializable {
     
     public String listItemName() {
         
-        // loop thru lineItems in selectedOrderEntity
-        // if size == 1, just add to string
-        // else >1, add to string and add a comma
         String lineItemMenuName = "";
+        String listItemName = "";
         for (SaleTransactionLineItemEntity xyz: saleTransactionLineItemEntities) {
             lineItemMenuName = xyz.getMenuItemEntity().getMenuItemName();
-            lineItemMenuName = lineItemMenuName + ", " + "Quantity = " + xyz.getQuantity();
+            listItemName += lineItemMenuName + ", " + "Quantity = " + xyz.getQuantity() + "\n";
         }
-        return lineItemMenuName;
+        return listItemName;
     }
 
 }
