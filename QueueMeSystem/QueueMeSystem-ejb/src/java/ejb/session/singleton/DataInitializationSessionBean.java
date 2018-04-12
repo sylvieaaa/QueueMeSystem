@@ -42,6 +42,7 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import util.exception.AdminNotFoundException;
+import util.exception.TagAlreadyExistException;
 
 @Singleton
 @LocalBean
@@ -80,7 +81,6 @@ public class DataInitializationSessionBean {
 
     @EJB
     private AdminEntityControllerLocal adminEntityControllerLocal;
-    
 
     @PersistenceContext(unitName = "QueueMeSystem-ejbPU")
     private EntityManager em;
@@ -104,8 +104,8 @@ public class DataInitializationSessionBean {
             //create folders
             String filePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator");
             String[] directory = {"foodPhotos", "vendorLogos", "foodCourtLogos"};
-            for(int i = 0; i < directory.length; i++) {
-                new File(filePath+directory[i]).mkdir();
+            for (int i = 0; i < directory.length; i++) {
+                new File(filePath + directory[i]).mkdir();
             }
 
             // Initialize admin entities
@@ -113,13 +113,13 @@ public class DataInitializationSessionBean {
             adminEntityControllerLocal.createAdmin(new AdminEntity("Zhu Zhi", "Kerk", "kzhuzhi", "password"));
             adminEntityControllerLocal.createAdmin(new AdminEntity("Sylvia", "Swee", "sylvia", "password"));
             adminEntityControllerLocal.createAdmin(new AdminEntity("Rui Jia", "Low", "lruijia", "password"));
-            
+
             CustomerEntity customerEntity = customerEntityControllerLocal.createCustomer(new CustomerEntity("customer", "first", "98765432", "abc street", "customer@gmail.com", "password"));
 
             // Initialize FoodCourt Entity
             Date calendarStart = new Date(0, 0, 0, 8, 0);
             Date calendarEnd = new Date(0, 0, 0, 22, 0);
-   
+
             FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", calendarStart, calendarEnd, "ABCFoodCourt", "password", "fc1.png"));
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", calendarStart, calendarEnd, "royalfoodcourt", "password", "fc1.png"));
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Grandfather's Food Court", "Best in Ang Mo Kio", "AMK Drive 666", "143245", calendarStart, calendarEnd, "amkfoodcourt", "password", "fc1.png"));
@@ -127,29 +127,29 @@ public class DataInitializationSessionBean {
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", calendarStart, calendarEnd, "redhillfoodcourt", "password", "fc1.png"));
 
             VendorEntity chinese = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Singapore Chinese Food", "Chinese", 0, "Best Chicken rice in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "chinese", "password", "chicken_rice.png"), foodCourtEntity);
-            VendorEntity malay = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal",0, "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "malay", "password", "chicken_rice.png"), foodCourtEntity);
+            VendorEntity malay = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal", 0, "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "malay", "password", "chicken_rice.png"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Uncle Charlie's Western", "Western", 0, "Taste of USA in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "western", "password", "chicken_rice.png"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Ah Seng Drink Stores", "Beverages", 0, "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "drink", "password", "chicken_rice.png"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Fruit Store", "Fruits", 0, "Eat me and be healthy", calendarEnd, calendarEnd, BigDecimal.ZERO, "fruit", "password", "chicken_rice.png"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Muthu Curry", "Indian", 0, "Cheapest prata in SG!", calendarEnd, calendarEnd, BigDecimal.ZERO, "indian", "password", "chicken_rice.png"), foodCourtEntity);
-              
+
             MenuItemEntity chickenRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Rice", "Roasted or white", new BigDecimal("2.90"), "chicken_rice.png"), chinese);
             MenuItemEntity duckRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roasted Duck Rice", "Authentic HK taste", new BigDecimal("2.90"), "duck_rice.png"), chinese);
-            MenuItemEntity wantonMee = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Wanton Mee", "Authentic HK taste", new BigDecimal("3.90"), "wanton_mee.png"), chinese);            
+            MenuItemEntity wantonMee = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Wanton Mee", "Authentic HK taste", new BigDecimal("3.90"), "wanton_mee.png"), chinese);
             MenuItemEntity beefhorfun = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Beef Hor Fun", "Best beef hor fun", new BigDecimal("7.90"), "beef_hor_fun.png"), chinese);
 
             MenuEntity menuEntity = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 1", Boolean.TRUE), chinese);
-            
+
             CategoryEntity categoryEntity = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity);
             categoryEntity.getMenuItemEntities().add(chickenRice);
             categoryEntity.getMenuItemEntities().add(duckRice);
-                       
+
             List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = new ArrayList<>();
             Integer totalLineItem = 2;  // used to be 1
             Integer totalQuantity = 2;  // used to be 1
             Integer quantity = 1;
             BigDecimal totalAmount = new BigDecimal("0.00");
-            
+
 //            ++totalLineItem;
 //            BigDecimal subTotal = chickenRice.getPrice().multiply(new BigDecimal(quantity));
 ////            SaleTransactionLineItemEntity abc = new SaleTransactionLineItemEntity(1, quantity, chickenRice.getPrice(), subTotal, "");
@@ -177,8 +177,7 @@ public class DataInitializationSessionBean {
 //            newSaleTransactionEntity.setCustomerEntity(customerEntity);
 //            customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
 //            System.err.println("KABOOOOMM KABOOOOW");
-            
-            ReviewEntity review  = reviewEntityControllerLocal.createReview(new ReviewEntity("thissnkandksiasd ihfiafhiahis adjsiadafhifhn kbkfbssjda   hsiahi h aisdhaiodao ihao ihaoi sahoi ahshidhihiwiwdhwidhidhiiishiiihq    p oihoidhoah oihis dha", 1));
+            ReviewEntity review = reviewEntityControllerLocal.createReview(new ReviewEntity("thissnkandksiasd ihfiafhiahis adjsiadafhifhn kbkfbssjda   hsiahi h aisdhaiodao ihao ihaoi sahoi ahshidhihiwiwdhwidhidhiiishiiihq    p oihoidhoah oihis dha", 1));
             ReviewEntity review2 = reviewEntityControllerLocal.createReview(new ReviewEntity("Rendang is very crispy, bagus", 5));
             ReviewEntity review3 = reviewEntityControllerLocal.createReview(new ReviewEntity("very good", 4));
             System.err.println("SPIDERMAN");
@@ -196,17 +195,21 @@ public class DataInitializationSessionBean {
             review.setVendorEntity(malay);
             malay.getReviewEntities().add(review3);
             malay.setRating(reviewEntityControllerLocal.averageReviewScore(malay));
-            
+
             System.err.println("FRIED CHICKENNNNNN");
-            
+
             String[] tags = {"Rice", "Noodles", "Curry", "Chicken", "Fish", "Pasta", "Meat", "Soup", "Salad", "Dim Sum", "Spicy", "Sweets", "Curry", "Finger Foods", "Fruits"};
-            for(String tag: tags) {
-                tagEntityControllerLocal.createTagEntity(new TagEntity(tag));
+            for (String tag : tags) {
+                try {
+                    tagEntityControllerLocal.createTagEntity(new TagEntity(tag));
+                } catch (TagAlreadyExistException ex) {
+
+                }
             }
-        
+
         } catch (Exception ex) {
             System.err.println("********** DataInitializationSessionBean.initializeData(): An error has occurred while loading initial test data: " + ex.getMessage());
         }
     }
-    
+
 }

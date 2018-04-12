@@ -32,7 +32,7 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
     private EntityManager em;
 
     @Override
-    public MenuItemEntity createMenuItem(MenuItemEntity menuItemEntity, VendorEntity vendorEntity) throws VendorNotFoundException{
+    public MenuItemEntity createMenuItem(MenuItemEntity menuItemEntity, VendorEntity vendorEntity) throws VendorNotFoundException {
         try {
             vendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorEntity.getBusinessId());
             menuItemEntity.setVendorEntity(vendorEntity);
@@ -70,27 +70,31 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
             return menuItemEntities;
         }
     }
-    
+
     @Override
     public List<MenuItemEntity> retrieveAllMenuItemEntityByVendor(VendorEntity vendorEntity) {
         Query query = em.createQuery("SELECT m FROM MenuItemEntity m WHERE m.vendorEntity=:inVendorEntity");
         query.setParameter("inVendorEntity", vendorEntity);
-        
-        List<MenuItemEntity> menuItemEntities = query.getResultList();
 
-      
-            return menuItemEntities;
-        
+        List<MenuItemEntity> menuItemEntities = query.getResultList();
+        for(MenuItemEntity menuItemEntity: menuItemEntities) {
+            menuItemEntity.getTagEntities().size();
+        }
+
+        return menuItemEntities;
+
     }
 
     @Override
     public void updateMenuItem(MenuItemEntity menuItemEntityToUpdate) throws MenuItemNotFoundException {
+        System.err.println(menuItemEntityToUpdate);
         MenuItemEntity menuItemEntity = retrieveMenuItemById(menuItemEntityToUpdate.getMenuItemId());
         
         menuItemEntity.setMenuItemName(menuItemEntityToUpdate.getMenuItemName());
         menuItemEntity.setDescription(menuItemEntityToUpdate.getDescription());
         menuItemEntity.setPrice(menuItemEntityToUpdate.getPrice());
         menuItemEntity.setPhotoURL(menuItemEntityToUpdate.getPhotoURL());
+        menuItemEntity.setTagEntities(menuItemEntityToUpdate.getTagEntities());
     }
 
     @Override

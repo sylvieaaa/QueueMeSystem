@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.TagAlreadyExistException;
 
 /**
  *
@@ -23,18 +24,28 @@ public class TagEntityController implements TagEntityControllerLocal {
     private EntityManager em;
 
     @Override
-    public TagEntity createTagEntity(TagEntity tagEntity) {
-        em.persist(tagEntity);
-        em.flush();
-        em.refresh(tagEntity);
-        
-        return tagEntity;
+    public TagEntity createTagEntity(TagEntity tagEntity) throws TagAlreadyExistException {
+        String tag = tagEntity.getType();
+        tag = tag.substring(0, 1).toUpperCase() + tag.substring(1);
+        Query query = em.createQuery("SELECT t FROM TagEntity t WHERE t.type=:inTagType");
+        query.setParameter("inTagType", tag);
+
+        if (query.getResultList().isEmpty()) {
+            em.persist(tagEntity);
+            em.flush();
+            em.refresh(tagEntity);
+
+            return tagEntity;
+        } else {
+            throw new TagAlreadyExistException("Tag has already been created");
+        }
+
     }
 
     @Override
     public List<TagEntity> retrieveAllTags() {
         Query query = em.createQuery("SELECT t FROM TagEntity t");
-        
+
         return query.getResultList();
     }
 }

@@ -50,8 +50,8 @@
                                             <p:commandButton class="icon-only" icon="fa fa-file" update="dialogViewMenuItem" oncomplete="PF('dialogViewMenuItem').show()" title="View item">
                                                 <f:setPropertyActionListener value="#{menuItem}" target="#{manageMenuManagedBean.menuItemEntityToView}" />
                                             </p:commandButton>
-                                            <p:commandButton class="icon-only" icon="fa fa-edit" update="formEditMenuItems" oncomplete="PF('dialogEditMenuItems').show()" title="Edit item">
-                                                <f:setPropertyActionListener value="#{menuItem}" target="#{manageMenuManagedBean.menuItemEntityToEdit}" />
+                                            <p:commandButton class="icon-only" icon="fa fa-edit" update="formEditMenuItems" actionListener="#{manageMenuManagedBean.dialogEditOpen}" oncomplete="PF('dialogEditMenuItems').show()" title="Edit item">
+                                                <f:attribute name="menuItemEntityToEdit" value="#{menuItem}"/>
                                             </p:commandButton>
                                             <p:commandButton class="icon-only" icon="fa fa-trash" actionListener="#{manageMenuManagedBean.deleteItem}" update="menuForm:menuFormGrowl menuForm" title="Delete item">
                                                 <f:attribute name="menuItemEntityToDelete" value="#{menuItem}" />
@@ -199,12 +199,24 @@
                         </h:outputText>
                     </p:column>
                 </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="menuViewItemTags" value="Tags: " />
+                    </p:column>
+                    <p:column>
+                        <ui:repeat id="menuViewItemTags" value="#{manageMenuManagedBean.menuItemEntityToView.tagEntities}" var="tag">
+                            <p:outputLabel style="color: #045491" value="#{tag.type}"/><p:spacer width="5"/>
+                        </ui:repeat>
+                    </p:column>
+                </p:row>
             </p:panelGrid>
         </p:dialog>
 
-        <h:form id="formEditMenuItems">
 
-            <p:dialog id="dialogEditMenuItems" widgetVar="dialogEditMenuItems" modal="true" appendTo="@(body)" header="Edit Items" closable="true" resizable="false">
+
+        <p:dialog id="dialogEditMenuItems" widgetVar="dialogEditMenuItems" modal="true" appendTo="@(body)" header="Edit Items" closable="true" resizable="false">
+            <p:ajax event="close" listener="#{manageMenuManagedBean.dialogEditClose}" />
+            <h:form id="formEditMenuItems">
                 <p:panelGrid>
                     <p:row>
                         <p:column>
@@ -253,16 +265,46 @@
                         </p:column>
                     </p:row>
                     <p:row>
+                        <p:column>
+                            <p:outputLabel for="menuItemTag" value="Tags: " />
+                        </p:column>
+                        <p:column>
+                            <p:autoComplete id="menuItemTag" widgetVar="menuItemTag" value="#{manageMenuManagedBean.menuItemEntityToEdit.tagEntities}" completeMethod="#{manageMenuManagedBean.completeTag}" multiple="true" var="tag" itemLabel="#{tag.type}" itemValue="#{tag}" converter="tagEntityConverter" forceSelection="true">
+                                <p:ajax event="itemSelect" listener="#{manageMenuManagedBean.onTagSelect}"/>
+                                <p:ajax event="itemUnselect" listener="#{manageMenuManagedBean.onTagUnselect}"/>
+                            </p:autoComplete>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Create new tag" title="Create new tag" icon="fa fa-plus" update="dialogCreateTag" oncomplete="PF('dialogCreateTag').show();"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
                         <p:column colspan="2">
-                            <p:commandButton value="Cancel" actionListener="a" />
-                            <p:commandButton value="Save" actionListener="#{manageMenuManagedBean.saveMenuItemEdit}" update="@form menuForm"/>
+                            <p:commandButton value="Cancel" oncomplete="PF('dialogEditMenuItems').hide();"/>
+                            <p:commandButton value="Save" actionListener="#{manageMenuManagedBean.saveMenuItemEdit}" update="@form menuForm" oncomplete="PF('dialogEditMenuItems').hide();"/>
                         </p:column>
                     </p:row>
                 </p:panelGrid>
-            </p:dialog>
-        </h:form>
+            </h:form>
+        </p:dialog>
 
-
+        <p:dialog id="dialogCreateTag" widgetVar="dialogCreateTag" header="Create New Tag" modal="true" appendTo="@(body)" closable="true" resizable="true">
+            <h:form id="formCreateTag">
+                <p:growl id="growlCreateTag"/>
+                <p:panelGrid>
+                    <p:row>
+                        <p:column><p:outputLabel>Tag: </p:outputLabel></p:column>
+                        <p:column><p:inputText value="#{manageMenuManagedBean.newTagEntity.type}" required="true" requiredMessage="Tag is required." /></p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton value="Create new tag" actionListener="#{manageMenuManagedBean.createNewTag}" update="@form growlCreateTag formEditMenuItems:menuItemTag formCreateNewItem:menuItemTags" oncomplete="PF('dialogCreateTag').hide();">
+                            </p:commandButton>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
 
         <p:dialog id="dialogCreateNewItem" widgetVar="dialogCreateNewItem" header="Create New Item" modal="true" appendTo="@(body)" closable="true" resizable="true">
             <!--<p:messages id="messagesCreateNewItem" redisplay="false"/>-->
@@ -306,6 +348,20 @@
                                     </p:column>
                                     <p:column>
                                         <p:message for="menuItemPrice" />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="menuItemTags" value="Tags: " />
+                                    </p:column>
+                                    <p:column>
+                                        <p:autoComplete id="menuItemTags" value="#{manageMenuManagedBean.selectedTagEntities}" completeMethod="#{manageMenuManagedBean.completeTag}" multiple="true" var="tag" itemLabel="#{tag.type}" itemValue="#{tag}" converter="tagEntityConverter" forceSelection="true">
+                                            <p:ajax event="itemSelect" listener="#{manageMenuManagedBean.onTagSelect}"/>
+                                            <p:ajax event="itemUnselect" listener="#{manageMenuManagedBean.onTagUnselect}"/>
+                                        </p:autoComplete>
+                                    </p:column>
+                                    <p:column>
+                                        <p:commandButton value="Create new tag" title="Create new tag" icon="fa fa-plus" update="dialogCreateTag" oncomplete="PF('dialogCreateTag').show();"/>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>

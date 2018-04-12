@@ -29,6 +29,7 @@ public class TagEntityConverter implements Converter{
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
+        System.err.println(" value:  " + value);
         if (value == null || value.trim().isEmpty() || value.equals("null")) {
             return null;
         }
@@ -36,6 +37,7 @@ public class TagEntityConverter implements Converter{
             List<TagEntity> tagEntities = (List<TagEntity>) context.getExternalContext().getSessionMap().get("TagEntityConverter.tagEntities");
             for(TagEntity tagEntity: tagEntities) {
                 if(tagEntity.getTagId().toString().equals(value)) {
+                     System.err.println("returned");
                     return tagEntity;
                 }
             }
@@ -62,6 +64,7 @@ public class TagEntityConverter implements Converter{
                 if (tagEntity.getTagId()== null) {
                     return "";
                 }
+                System.err.println(tagEntity + " " + value);
                 return tagEntity.getTagId().toString();
             } catch (Exception e) {
                 throw new IllegalArgumentException("Invalid value");

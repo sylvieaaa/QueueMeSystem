@@ -27,11 +27,7 @@ public class TagEntity implements Serializable {
     private Long tagId;
     private String type;
     
-    @ManyToMany(mappedBy = "tagEntities")
-    private List<MenuItemEntity> menuItemEntities;
-
     public TagEntity() {
-        menuItemEntities = new ArrayList<>();
     }
 
     public TagEntity(String type) {
@@ -80,12 +76,4 @@ public class TagEntity implements Serializable {
         this.type = type;
     }
 
-    public List<MenuItemEntity> getMenuItemEntities() {
-        return menuItemEntities;
-    }
-
-    public void setMenuItemEntities(List<MenuItemEntity> menuItemEntities) {
-        this.menuItemEntities = menuItemEntities;
-    }
-    
 }
