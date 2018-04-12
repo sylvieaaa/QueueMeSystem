@@ -49,6 +49,7 @@ public class MenuItemEntity implements Serializable {
     public MenuItemEntity() {
         this.saleTransactionLineItemEntities = new ArrayList<>();
         this.categoryEntities = new ArrayList<>();
+        this.tagEntities = new ArrayList<>();
     }
 
     public MenuItemEntity(String menuItemName, String description, BigDecimal price, String photo) {

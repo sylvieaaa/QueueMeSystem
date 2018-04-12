@@ -28,7 +28,15 @@ public class OrderEntityController implements OrderEntityControllerLocal {
 
     @Override
     public OrderEntity createOrder(OrderEntity orderEntity) {
+        List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = orderEntity.getSaleTransactionLineItemEntities();
+        System.err.println(saleTransactionLineItemEntities);
+        for(SaleTransactionLineItemEntity stlie: saleTransactionLineItemEntities) {
+            System.err.println(stlie.getSerialNumber() + " in order");
+        }
         em.persist(orderEntity);
+        for(SaleTransactionLineItemEntity saleTransactionLineItemEntity: saleTransactionLineItemEntities) {
+            saleTransactionLineItemEntity.setOrderEntity(orderEntity);
+        }
         em.flush();
         em.refresh(orderEntity);
         

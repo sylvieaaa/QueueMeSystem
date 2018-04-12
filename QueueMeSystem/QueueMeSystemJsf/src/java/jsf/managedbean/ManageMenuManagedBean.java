@@ -8,10 +8,12 @@ package jsf.managedbean;
 import ejb.session.stateless.CategoryEntityControllerLocal;
 import ejb.session.stateless.MenuEntityControllerLocal;
 import ejb.session.stateless.MenuItemEntityControllerLocal;
+import ejb.session.stateless.TagEntityControllerLocal;
 import entity.BusinessEntity;
 import entity.CategoryEntity;
 import entity.MenuEntity;
 import entity.MenuItemEntity;
+import entity.TagEntity;
 import entity.VendorEntity;
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,6 +62,9 @@ import util.exception.VendorNotFoundException;
 public class ManageMenuManagedBean implements Serializable {
 
     @EJB
+    private TagEntityControllerLocal tagEntityControllerLocal;
+
+    @EJB
     private CategoryEntityControllerLocal categoryEntityControllerLocal;
 
     @EJB
@@ -72,6 +77,7 @@ public class ManageMenuManagedBean implements Serializable {
     List<MenuItemEntity> menuItemEntities;
     List<MenuItemEntity> menuItemEntitiesCopy;
     List<CategoryEntity> categoryEntities;
+    List<TagEntity> tagEntities;
 
     List<SelectItem> selectItems;
 
@@ -90,7 +96,7 @@ public class ManageMenuManagedBean implements Serializable {
     CategoryEntity newCategoryEntity;
     CategoryEntity selectedCategoryEntity;
 //    List<MenuItemEntity> menuItemEntitiesToDelete;
-    Integer activeTab;
+//    Integer activeTab;
 //    StreamedContent filePhoto;
     public ManageMenuManagedBean() {
         //selectedMenuEntity = new MenuEntity();
@@ -105,7 +111,7 @@ public class ManageMenuManagedBean implements Serializable {
         menuItemEntityToView = null;
         newMenuEntity = new MenuEntity();
         newCategoryEntity = new CategoryEntity();
-        activeTab = 0;
+//        activeTab = 0;
     }
 
     @PostConstruct
@@ -123,6 +129,9 @@ public class ManageMenuManagedBean implements Serializable {
         }
 
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("MenuEntityConverter.menuEntities", menuEntities);
+        
+        tagEntities = tagEntityControllerLocal.retrieveAllTags();
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("TagEntityConverter.tagEntities", tagEntities);
 //        for(CategoryEntity categoryEntity: categoryEntities) {
 //            if(categoryEntity.getCategory().equals("Main")) {
 //                menuItemEntities.addAll(categoryEntity.getMenuItemEntities());
@@ -133,6 +142,7 @@ public class ManageMenuManagedBean implements Serializable {
     @PreDestroy
     public void preDestroy() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("MenuEntityConverter.menuEntities", null);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("TagEntityConverter.tagEntities", null);
     }
 
     public void onChange() {
@@ -146,23 +156,23 @@ public class ManageMenuManagedBean implements Serializable {
         menuItemEntities.clear();
         menuItemEntities.addAll(menuItemEntitiesCopy);
         if (selectedCategoryEntity == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please create a category before adding items", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please create a category before adding items", ""));
             return;
         }
         
         if(selectedCategoryEntity.getMenuItemEntities().contains(menuItemToBeAdded)) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Item already added to category", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Item already added to category", ""));
             return;
         }
         selectedCategoryEntity.getMenuItemEntities().add(menuItemToBeAdded);
         try {
             categoryEntityControllerLocal.addMenuItem(selectedCategoryEntity, menuItemToBeAdded);
 
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item added", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item added", ""));
         } catch (CategoryNotFoundException | MenuItemNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", ""));
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
 
@@ -173,11 +183,11 @@ public class ManageMenuManagedBean implements Serializable {
         try {
             categoryEntityControllerLocal.removeMenuItem(selectedCategoryEntity, menuItemToBeRemoved);
 
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item removed", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item removed", ""));
         } catch (CategoryNotFoundException | MenuItemNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", ""));
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
 
@@ -232,7 +242,7 @@ public class ManageMenuManagedBean implements Serializable {
         VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         try {
             newMenuItemEntity = menuItemEntityControllerLocal.createMenuItem(newMenuItemEntity, vendorEntity);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, newMenuItemEntity.getMenuItemName() + " successfully created", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, newMenuItemEntity.getMenuItemName() + " successfully created", ""));
 
             menuItemEntities.add(newMenuItemEntity);
             menuItemEntitiesCopy.add(newMenuItemEntity);
@@ -241,7 +251,7 @@ public class ManageMenuManagedBean implements Serializable {
         } catch (VendorNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve your account details", null));
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
 
@@ -254,12 +264,13 @@ public class ManageMenuManagedBean implements Serializable {
             List<MenuItemEntity> mie = categoryEntity.getMenuItemEntities();
             mie.remove(menuItemEntityToDelete);
         }
-        String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + menuItemEntityToDelete.getPhotoURL();
+        String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") 
+                + "queueme-uploads" + System.getProperty("file.separator") + "foodPhotos" + System.getProperty("file.separator") + menuItemEntityToDelete.getPhotoURL();
         File deletePhoto = new File(newFilePath);
         if (deletePhoto.exists()) {
             deletePhoto.delete();
         }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item deleted successfully", null));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item deleted successfully", ""));
     }
 
     public String onFlowProcess(FlowEvent event) {
@@ -293,11 +304,11 @@ public class ManageMenuManagedBean implements Serializable {
     public void saveMenuItemEdit(ActionEvent event) {
         try {
             menuItemEntityControllerLocal.updateMenuItem(menuItemEntityToEdit);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item: " + menuItemEntityToEdit.getMenuItemName() + " updated successfully", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item: " + menuItemEntityToEdit.getMenuItemName() + " updated successfully", ""));
         } catch (MenuItemNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve the item details", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve the item details", ""));
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
 
@@ -308,12 +319,12 @@ public class ManageMenuManagedBean implements Serializable {
             menuEntities.add(newMenuEntity);
             selectItems.add(new SelectItem(newMenuEntity, newMenuEntity.getName(), newMenuEntity.getMenuId().toString()));
 
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New menu: " + newMenuEntity.getName() + " is created.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New menu: " + newMenuEntity.getName() + " is created.", ""));
             newMenuEntity = new MenuEntity();
         } catch (VendorNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve your account details", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve your account details", ""));
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
 
@@ -322,7 +333,7 @@ public class ManageMenuManagedBean implements Serializable {
         try {
             menuEntityControllerLocal.removeMenuEntity(selectedMenuEntity, vendorEntity);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("MenuEntityConverter.menuEntities", menuEntities);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, selectedMenuEntity.getName() + " is deleted.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, selectedMenuEntity.getName() + " is deleted.", ""));
             int size = selectItems.size();
             for (int i = 0; i < size; i++) {
                 if (selectItems.get(i).getValue().equals(selectedMenuEntity)) {
@@ -335,9 +346,9 @@ public class ManageMenuManagedBean implements Serializable {
             selectedMenuEntity = null;
             selectedCategoryEntity = null;
         } catch (VendorNotFoundException | MenuNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve your account details", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve your account details", ""));
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
 
@@ -350,13 +361,13 @@ public class ManageMenuManagedBean implements Serializable {
                 selectedCategoryEntity = newCategoryEntity;
             }
             selectedMenuEntity.getCategoryEntities().add(newCategoryEntity);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New category: " + newCategoryEntity.getName() + " is created.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New category: " + newCategoryEntity.getName() + " is created.", ""));
 
             newCategoryEntity = new CategoryEntity();
         } catch (MenuNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu details", ""));
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
 
@@ -366,7 +377,7 @@ public class ManageMenuManagedBean implements Serializable {
 
             int indexOfObject = selectedMenuEntity.getCategoryEntities().indexOf(selectedCategoryEntity);
             selectedMenuEntity.getCategoryEntities().remove(selectedCategoryEntity);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Category: " + selectedCategoryEntity.getName() + " succesfully removed.", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Category: " + selectedCategoryEntity.getName() + " succesfully removed.", ""));
             if (!selectedMenuEntity.getCategoryEntities().isEmpty()) {
                 if(selectedMenuEntity.getCategoryEntities().size() == 1 || selectedMenuEntity.getCategoryEntities().size() <= indexOfObject) {
                     indexOfObject = 0;
@@ -376,9 +387,9 @@ public class ManageMenuManagedBean implements Serializable {
                 selectedCategoryEntity = null;
             }
         } catch (CategoryNotFoundException | MenuNotFoundException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu/category details", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve menu/category details", ""));
         } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
 
@@ -518,13 +529,13 @@ public class ManageMenuManagedBean implements Serializable {
         this.menuItemEntityToView = menuItemEntityToView;
     }
 
-    public Integer getActiveTab() {
-        System.err.println(activeTab);
-        return activeTab;
-    }
-
-    public void setActiveTab(Integer activeTab) {
-        this.activeTab = activeTab;
-    }
+//    public Integer getActiveTab() {
+//        System.err.println(activeTab);
+//        return activeTab;
+//    }
+//
+//    public void setActiveTab(Integer activeTab) {
+//        this.activeTab = activeTab;
+//    }
 
 }

@@ -64,6 +64,19 @@ public class SaleTransactionEntity implements Serializable {
         this.isVoided = isVoided;
         this.isTakeaway = isTakeaway;
     }
+
+    public SaleTransactionEntity(Integer totalLineItem, Integer totalQuantity, BigDecimal totalAmount, Date transactionDateTime, Boolean isVoided, Boolean isTakeaway, CustomerEntity customerEntity, List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities) {
+        this.totalLineItem = totalLineItem;
+        this.totalQuantity = totalQuantity;
+        this.totalAmount = totalAmount;
+        this.transactionDateTime = transactionDateTime;
+        this.isVoided = isVoided;
+        this.isTakeaway = isTakeaway;
+        this.customerEntity = customerEntity;
+        this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
+    }
+    
+    
     
     @Override
     public int hashCode() {

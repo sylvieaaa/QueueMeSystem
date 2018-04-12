@@ -5,13 +5,20 @@
  */
 package ejb.session.stateless; 
 import entity.CustomerEntity;
+import entity.MenuItemEntity;
+import entity.OrderEntity;
 import entity.SaleTransactionEntity;
 import entity.SaleTransactionLineItemEntity;
+import entity.VendorEntity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.EJBContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -28,6 +35,9 @@ import util.exception.CreateNewSaleTransactionException;
 @Stateless
 public class SaleTransactionEntityController implements SaleTransactionEntityControllerLocal {
 
+    @EJB
+    private OrderEntityControllerLocal orderEntityControllerLocal;
+
     @PersistenceContext(unitName = "QueueMeSystem-ejbPU")
     
     private EntityManager em;
@@ -39,12 +49,49 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     @Override
     public SaleTransactionEntity createSaleTransaction(SaleTransactionEntity saleTransactionEntity) {
-        
+        for(SaleTransactionLineItemEntity saleTransactionLineItemEntity: saleTransactionEntity.getSaleTransactionLineItemEntities()) {
+            System.err.println(saleTransactionLineItemEntity.getSerialNumber() + " a");
+            saleTransactionLineItemEntity.setSaleTransactionEntity(saleTransactionEntity);
+        }
         em.persist(saleTransactionEntity);
         em.flush();
         em.refresh(saleTransactionEntity);
         
+        processSaleTransaction(saleTransactionEntity);
+        
         return saleTransactionEntity;
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void processSaleTransaction(SaleTransactionEntity saleTransactionEntity) {
+        System.err.println(saleTransactionEntity.getSaleTransactionLineItemEntities());
+        CustomerEntity customerEntity = saleTransactionEntity.getCustomerEntity();
+        HashMap<VendorEntity, List<SaleTransactionLineItemEntity>> vendorToSales = new HashMap<>();
+        for(SaleTransactionLineItemEntity saleTransactionLineItemEntity: saleTransactionEntity.getSaleTransactionLineItemEntities()) {
+            MenuItemEntity menuItemEntity = saleTransactionLineItemEntity.getMenuItemEntity();
+            VendorEntity vendorEntity = menuItemEntity.getVendorEntity();
+            if(vendorToSales.containsKey(vendorEntity)) {
+                System.err.println("contain");
+                vendorToSales.get(vendorEntity).add(saleTransactionLineItemEntity);
+            } else {
+                System.err.println("not contain");
+                List<SaleTransactionLineItemEntity> newSaleTransactionLineItemEntities = new ArrayList<>();
+                newSaleTransactionLineItemEntities.add(saleTransactionLineItemEntity);
+                vendorToSales.put(vendorEntity, newSaleTransactionLineItemEntities);
+            }
+        }
+        
+        BigDecimal totalEarnings = BigDecimal.ZERO;
+        for(Map.Entry<VendorEntity, List<SaleTransactionLineItemEntity>> entry: vendorToSales.entrySet()) {
+            System.err.println("loopp");
+            VendorEntity vendorEntity = entry.getKey();
+            List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = entry.getValue();
+            for(SaleTransactionLineItemEntity stlie: saleTransactionLineItemEntities) {
+                totalEarnings = totalEarnings.add(stlie.getSubTotal());
+            }
+            OrderEntity oe = orderEntityControllerLocal.createOrder(new OrderEntity(Calendar.getInstance().getTime(), totalEarnings, Boolean.FALSE, customerEntity, vendorEntity, saleTransactionLineItemEntities));
+            System.err.println(oe);
+        }
     }
 
     

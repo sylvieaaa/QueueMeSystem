@@ -42,7 +42,7 @@ public class OrderEntity implements Serializable {
     @JoinColumn(nullable = true)
     private CustomerEntity customerEntity;  
     @ManyToOne
-    @JoinColumn(nullable = true)
+    @JoinColumn(nullable = false)
     private VendorEntity vendorEntity;    
     @OneToMany(mappedBy = "orderEntity", fetch=FetchType.EAGER)
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
@@ -58,6 +58,15 @@ public class OrderEntity implements Serializable {
         this.fulfilled = false;
     }
 
+    public OrderEntity(Date dateTime, BigDecimal totalEarnings, Boolean fulfilled, CustomerEntity customerEntity, VendorEntity vendorEntity, List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities) {
+        this.dateTime = dateTime;
+        this.totalEarnings = totalEarnings;
+        this.fulfilled = fulfilled;
+        this.customerEntity = customerEntity;
+        this.vendorEntity = vendorEntity;
+        this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

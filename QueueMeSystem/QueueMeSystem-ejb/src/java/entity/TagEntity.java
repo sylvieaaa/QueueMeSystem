@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,14 +21,23 @@ import javax.persistence.ManyToMany;
 @Entity
 public class TagEntity implements Serializable {
 
-    @ManyToMany(mappedBy = "tagEntities")
-    private List<MenuItemEntity> menuItemEntities;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tagId;
     private String type;
+    
+    @ManyToMany(mappedBy = "tagEntities")
+    private List<MenuItemEntity> menuItemEntities;
+
+    public TagEntity() {
+        menuItemEntities = new ArrayList<>();
+    }
+
+    public TagEntity(String type) {
+        this();
+        this.type = type;
+    }
     
     public Long getTagId() {
         return tagId;

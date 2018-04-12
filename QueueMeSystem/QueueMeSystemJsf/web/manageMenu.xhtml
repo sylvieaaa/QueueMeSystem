@@ -15,9 +15,10 @@
             }
         </script>
 
-        <h:form>
-
-        </h:form>
+        <p:breadCrumb>
+            <p:menuitem url="mainPage.xhtml" value="Home"/>
+            <p:menuitem url="#" value="Manage Menu"/>
+        </p:breadCrumb>
         <h:form id="menuForm">
             <p:growl id="menuFormGrowl" showDetail="true"/>
             <p:fieldset>
@@ -95,7 +96,7 @@
                                         <p:confirm  header="Confirmation" message="Are you sure you want to delete #{manageMenuManagedBean.selectedCategoryEntity.name}?" icon="ui-icon-alert" />
                                     </p:commandButton>
                                 </f:facet>
-                                <p:tabView activeIndex="#{manageMenuManagedBean.activeTab}" rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.categoryEntities}" var="category">
+                                <p:tabView rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.categoryEntities}" var="category">
                                     <p:ajax event="tabChange" listener="#{manageMenuManagedBean.onTabChange}" update="menuForm:confirmDelete"/>
                                     <p:tab title="#{category.name}">
                                         <p:fieldset id="catItems">
@@ -161,45 +162,45 @@
 
             </h:form>
         </p:dialog>
-        
+
         <p:dialog id="dialogViewMenuItem" widgetVar="dialogViewMenuItem" modal="true" appendTo="@(body)" header="View Item" closable="true" resizable="false">
-                <p:panelGrid>
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="menuItemImage" value="Item image: " />
-                        </p:column>
-                        <p:column>
-                            <p:graphicImage id="menuItemImage"  value="http://localhost:8080/queueme-uploads/foodPhotos/#{manageMenuManagedBean.menuItemEntityToView.photoURL}" width="250px" height="125px"/>
-                        </p:column>
-                    </p:row>
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="menuViewItemName" value="Item name: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText id="menuViewItemName" value="#{manageMenuManagedBean.menuItemEntityToView.menuItemName}"/>
-                        </p:column>
-                    </p:row>
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="menuViewDescription" value="Description: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText id="menuViewDescription" value="#{manageMenuManagedBean.menuItemEntityToView.description}"/>
-                        </p:column>
-                    </p:row>
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="menuViewItemPrice" value="Price: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText id="menuViewItemPrice" value="#{manageMenuManagedBean.menuItemEntityToView.price}">
-                                <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
-                            </h:outputText>
-                        </p:column>
-                    </p:row>
-                </p:panelGrid>
-            </p:dialog>
+            <p:panelGrid>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="menuItemImage" value="Item image: " />
+                    </p:column>
+                    <p:column>
+                        <p:graphicImage id="menuItemImage"  value="http://localhost:8080/queueme-uploads/foodPhotos/#{manageMenuManagedBean.menuItemEntityToView.photoURL}" width="250px" height="125px"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="menuViewItemName" value="Item name: " />
+                    </p:column>
+                    <p:column>
+                        <h:outputText id="menuViewItemName" value="#{manageMenuManagedBean.menuItemEntityToView.menuItemName}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="menuViewDescription" value="Description: " />
+                    </p:column>
+                    <p:column>
+                        <h:outputText id="menuViewDescription" value="#{manageMenuManagedBean.menuItemEntityToView.description}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="menuViewItemPrice" value="Price: " />
+                    </p:column>
+                    <p:column>
+                        <h:outputText id="menuViewItemPrice" value="#{manageMenuManagedBean.menuItemEntityToView.price}">
+                            <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </p:dialog>
 
         <h:form id="formEditMenuItems">
 
@@ -261,10 +262,11 @@
             </p:dialog>
         </h:form>
 
-        <h:form id="formCreateNewItem">
 
-            <p:dialog id="dialogCreateNewItem" widgetVar="dialogCreateNewItem" header="Create New Item" closable="true" resizable="true">
-                <!--<p:messages id="messagesCreateNewItem" redisplay="false"/>-->
+
+        <p:dialog id="dialogCreateNewItem" widgetVar="dialogCreateNewItem" header="Create New Item" modal="true" appendTo="@(body)" closable="true" resizable="true">
+            <!--<p:messages id="messagesCreateNewItem" redisplay="false"/>-->
+            <h:form id="formCreateNewItem">
                 <p:growl id="growl" showDetail="true"/>
                 <p:wizard flowListener="#{manageMenuManagedBean.onFlowProcess}" id="wizardItemMenu" widgetVar="wizardItemMenu">
                     <p:tab id="itemDetails" title="Details">
@@ -327,15 +329,11 @@
                                         <p:message for="menuPhotoUpload" />
                                     </p:column>
                                 </p:row>
-
-                                <!--                                <p:row rendered="">
-                                                                    <h2>File uploaded successfully</h2>
-                                                                </p:row>-->
                             </p:panelGrid>
                         </p:panel>
                     </p:tab>
-                    
-                    
+
+
                     <p:tab id="itemConfirmation" title="Confirmation">
                         <p:messages />
                         <p:panel header="Confirmation">
@@ -354,21 +352,22 @@
                                 </p:row>
                                 <p:row>
                                     <p:column colspan="2">
-                                        <p:commandButton value="Create New Product" actionListener="#{manageMenuManagedBean.createNewMenuItem}" update="@form menuForm:menuItems" oncomplete="PF('wizardItemMenu').loadStep('itemDetails',false); PF('dialogCreateNewItem').show();"/>
+                                        <p:commandButton value="Create New Product" actionListener="#{manageMenuManagedBean.createNewMenuItem}" update="@form menuForm:menuItems" oncomplete="PF('wizardItemMenu').loadStep('itemDetails',false); PF('dialogCreateNewItem').hide();"/>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>
                         </p:panel>
                     </p:tab>
                 </p:wizard>
+            </h:form>
+        </p:dialog>
 
-            </p:dialog>
-        </h:form>
 
-        <h:form id="formCreateNewMenu">
-            <p:growl />
-            <p:dialog id="dialogCreateNewMenu" widgetVar="dialogCreateNewMenu" header="Create New Menu" closable="true" resizable="true">
-                <p:ajax event="close" update="dialogCreateNewMenu"/>
+
+        <p:dialog id="dialogCreateNewMenu" widgetVar="dialogCreateNewMenu" header="Create New Menu" closable="true" resizable="true">
+            <p:ajax event="close" update="dialogCreateNewMenu"/>
+            <h:form id="formCreateNewMenu">
+                <p:growl />
                 <p:panelGrid>
                     <p:row>
                         <p:column><p:outputLabel>Menu name: </p:outputLabel></p:column>
@@ -378,13 +377,16 @@
                         <p:column colspan="2"><p:commandButton value="Create new menu" actionListener="#{manageMenuManagedBean.createNewMenu}" update="@form menuForm:menuCategories menuForm:menuOneMenu" oncomplete="PF('dialogCreateNewMenu').hide();"/></p:column>
                     </p:row>
                 </p:panelGrid>
-            </p:dialog>
-        </h:form>
+            </h:form>
+        </p:dialog>
 
-        <h:form id="formCreateNewCategory">
-            <p:growl />
-            <p:dialog id="dialogCreateNewCategory" widgetVar="dialogCreateNewCategory" header="Create New Category" closable="true" resizable="true">
-                <p:ajax event="close" update="dialogCreateNewCategory"/>
+
+
+
+        <p:dialog id="dialogCreateNewCategory" widgetVar="dialogCreateNewCategory" modal="true" appendTo="@(body)" header="Create New Category" closable="true" resizable="true">
+            <p:ajax event="close" update="dialogCreateNewCategory"/>
+            <h:form id="formCreateNewCategory">
+                <p:growl />
                 <p:panelGrid>
                     <p:row>
                         <p:column><p:outputLabel>Category name: </p:outputLabel></p:column>
@@ -394,8 +396,9 @@
                         <p:column colspan="2"><p:commandButton value="Create new category" actionListener="#{manageMenuManagedBean.createNewCategory}" update="@form menuForm:menuCategories menuForm:menuOneMenu" oncomplete="PF('dialogCreateNewCategory').hide();"/></p:column>
                     </p:row>
                 </p:panelGrid>
-            </p:dialog>
-        </h:form>
+            </h:form>
+        </p:dialog>
+
 
         <h:form id="formDeleteMultipleItems">
 

@@ -39,18 +39,18 @@
                                         </p:row>
                                         <p:row>
                                             <p:column>
-                                                <h:outputText value="#{menuItem.menuItemName}"/>
+                                                <h:outputText value="#{menuItem.menuItemName}" style="font-size: 1.1em; font-weight: bold"/>
                                             </p:column>
                                         </p:row>
                                         <p:row>
                                             <p:column>
-                                                <h:outputText value="#{menuItem.price}">
+                                                <h:outputText value="#{menuItem.price}" style="font-size: 1.1em; font-weight: bold">
                                                     <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
                                                 </h:outputText>
                                             </p:column>
                                         </p:row>
                                         <p:row>
-                                            <p:commandButton class="icon-only" icon="fa fa-plus" title="Add item" update="dialogAddMenuItem" oncomplete="PF('dialogAddMenuItem').show()">
+                                            <p:commandButton value="Add To Cart" icon="fa fa-plus" title="Add item" update="dialogAddMenuItem" oncomplete="PF('dialogAddMenuItem').show()">
                                                 <f:setPropertyActionListener target="#{addOrderManagedBean.menuItemEntityToAdd}" value="${menuItem}" />
                                             </p:commandButton>
                                         </p:row>
@@ -152,14 +152,12 @@
                                 <p:selectOneRadio id="paymentRadio" value="#{checkOutManagedBean.paymentType}">
                                     <f:selectItem itemLabel="Cash" itemValue="cash"/>
                                     <f:selectItem itemLabel="Credit Card" itemValue="creditCard" />
-                                    <f:selectItem itemLabel="Nets" itemValue="nets" />
-                                    <f:selectItem itemLabel="PayNow" itemValue="paynow" />
                                 </p:selectOneRadio>
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
-                                <p:commandButton value="Checkout" actionListener="#{checkOutManagedBean.doCheckout}" update="globalGrowl"/>
+                                <p:commandButton value="Checkout" actionListener="#{addOrderManagedBean.processCheckout}" update="globalGrowl"/>
                             </p:column>
                         </p:row>
                     </p:panelGrid>
@@ -176,7 +174,7 @@
                         <p:column><p:spinner value="#{addOrderManagedBean.addMenuItemQty}" min="1"/></p:column>
                     </p:row>
                     <p:row>
-                        <p:column>Special Request </p:column>
+                        <p:column>Special Request: </p:column>
                         <p:column>
                             <p:inputTextarea id="menuItemDescription" rows="4" cols="30" value="#{addOrderManagedBean.addMenuItemSpecialReq}" counter="display" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false"/>
                             <br/>
@@ -193,6 +191,22 @@
             </h:form>
         </p:dialog>
 
+        <p:dialog id="dialogCashCheckout" widgetVar="dialogCashCheckout" modal="true" appendTo="@(body)">
+            <h:form id="formCashCheckout">
+                <p:outputPanel style="text-align: center">
+                    <p:outputLabel value="Change for: " />
+                    <p:inputNumber id="cashInput" value="#{addOrderManagedBean.cashReceived}" decimalPlaces="2" symbol="$">
+                        <p:ajax event="keyup" process="@this" update="formCashCheckout:changeOutput"/>
+                    </p:inputNumber>
+                </p:outputPanel>
+                <p:outputPanel id="changeOutput" style="text-align: center">
+                    <h2>Change:</h2>
+                    <h1>$#{addOrderManagedBean.cashReceived.subtract(checkOutManagedBean.totalAmount)}</h1>
+                    <br/>
+                    <p:commandButton value="Checkout" actionListener="#{addOrderManagedBean.confirmCheckout}" update="formShoppingCart formCashCheckout globalGrowl" oncomplete="if (args.isSuccess) PF('dialogCashCheckout').hide();"/>
+                </p:outputPanel>
+            </h:form>
+        </p:dialog>
 
     </ui:define>
 

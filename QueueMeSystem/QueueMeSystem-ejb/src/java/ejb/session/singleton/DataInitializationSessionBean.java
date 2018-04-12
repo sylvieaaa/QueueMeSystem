@@ -14,6 +14,7 @@ import ejb.session.stateless.MenuItemEntityControllerLocal;
 import ejb.session.stateless.OrderEntityControllerLocal;
 import ejb.session.stateless.ReviewEntityControllerLocal;
 import ejb.session.stateless.SaleTransactionEntityControllerLocal;
+import ejb.session.stateless.TagEntityControllerLocal;
 import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.AdminEntity;
 import entity.CategoryEntity;
@@ -25,6 +26,7 @@ import entity.OrderEntity;
 import entity.ReviewEntity;
 import entity.SaleTransactionEntity;
 import entity.SaleTransactionLineItemEntity;
+import entity.TagEntity;
 import entity.VendorEntity;
 import java.io.File;
 import java.math.BigDecimal;
@@ -45,6 +47,9 @@ import util.exception.AdminNotFoundException;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB
+    private TagEntityControllerLocal tagEntityControllerLocal;
 
     @EJB
     private ReviewEntityControllerLocal reviewEntityControllerLocal;
@@ -194,6 +199,10 @@ public class DataInitializationSessionBean {
             
             System.err.println("FRIED CHICKENNNNNN");
             
+            String[] tags = {"Rice", "Noodles", "Curry", "Chicken", "Fish", "Pasta", "Meat", "Soup", "Salad", "Dim Sum", "Spicy", "Sweets", "Curry", "Finger Foods", "Fruits"};
+            for(String tag: tags) {
+                tagEntityControllerLocal.createTagEntity(new TagEntity(tag));
+            }
         
         } catch (Exception ex) {
             System.err.println("********** DataInitializationSessionBean.initializeData(): An error has occurred while loading initial test data: " + ex.getMessage());
