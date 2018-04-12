@@ -69,4 +69,11 @@
         <local>ejb.session.stateless.EmailControllerLocal</local>
         <ejb-link>QueueMeSystem-ejb.jar#EmailController</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>FoodCourtEntityControllerLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local-home>ejb.session.stateless.foodCourtEntityControllerLocal</local-home>
+        <local>ejb.session.stateless.foodCourtEntityControllerLocal</local>
+        <ejb-link>QueueMeSystem-ejb.jar#FoodCourtEntityController</ejb-link>
+    </ejb-local-ref>
 </web-app>
