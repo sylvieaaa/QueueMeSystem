@@ -12,16 +12,16 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author User
  */
-@XmlType(name = "customerLoginRsp", propOrder = {
+@XmlType(name = "customerRsp", propOrder = {
     "customerEntity"
 })
-public class CustomerLoginRsp {
+public class CustomerRsp {
     private CustomerEntity customerEntity;
 
-    public CustomerLoginRsp() {
+    public CustomerRsp() {
     }
 
-    public CustomerLoginRsp(CustomerEntity customerEntity) {
+    public CustomerRsp(CustomerEntity customerEntity) {
         this.customerEntity = customerEntity;
     }
 
