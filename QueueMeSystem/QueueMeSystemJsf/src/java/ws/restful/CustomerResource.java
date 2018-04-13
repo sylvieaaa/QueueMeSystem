@@ -75,6 +75,8 @@ public class CustomerResource {
                 customerEntity.getOrderEntities().clear();
                 customerEntity.getReviewEntities().clear();
                 customerEntity.getSaleTransactionEntities().clear();
+                
+                customerEntity.setPassword(null);
 
                 CustomerRsp customerLoginRsp = new CustomerRsp(customerEntity);
 
@@ -153,27 +155,20 @@ public class CustomerResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
+    
 
     @Path("changePassword")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateCustomerPassword(JAXBElement<UpdatePasswordReq> jaxbUpdatePasswordReq) {
-        System.err.println("this happened");
         if ((jaxbUpdatePasswordReq != null) && (jaxbUpdatePasswordReq.getValue() != null)) {
             try {
-                System.err.println("this is spartan");
                 UpdatePasswordReq updatePasswordReq = jaxbUpdatePasswordReq.getValue();
-                if (!updatePasswordReq.getOldPassword().equals(updatePasswordReq.getCustomerEntity().getPassword())) {
-                    System.err.println("not same");
-                    return Response.status(Response.Status.NOT_MODIFIED).build();
-                } else {
-                    System.err.println("this is NOT spartan");
-                    customerEntityControllerLocal.updateCustomerPassword(updatePasswordReq.getCustomerEntity(), updatePasswordReq.getNewPassword());
-                    return Response.status(Response.Status.OK).build();
-                }
+                customerEntityControllerLocal.updateCustomerPassword(updatePasswordReq.getCustomerEntity(), updatePasswordReq.getOldPassword(), updatePasswordReq.getNewPassword());
+                return Response.status(Response.Status.OK).build();
             } catch (Exception ex) {
-                System.err.println("this is dead");
+                System.err.println(ex);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
             }
         } else {
@@ -181,11 +176,6 @@ public class CustomerResource {
         }
     }
 
-    /**
-     * PUT method for updating or creating an instance of CustomerResource
-     *
-     * @param content representation for the resource
-     */
     private BusinessEntityControllerLocal lookupBusinessEntityControllerLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -216,3 +206,4 @@ public class CustomerResource {
         }
     }
 }
+

@@ -17,7 +17,7 @@
         <p:growl id="globalGrowl" globalOnly="true"/>
         <p:layout>
 
-            <p:layoutUnit position="north" size="45">
+            <p:layoutUnit style="border-color: transparent" position="north" size="45">
                 <p:breadCrumb>
                     <p:menuitem url="mainPage.xhtml" value="Home"/>
                     <p:menuitem url="#" value="Add Order"/>
@@ -25,7 +25,7 @@
 
             </p:layoutUnit>
 
-            <p:layoutUnit position="center" >
+            <p:layoutUnit style="border-color: transparent" position="center" >
                 <h:form id="menuForm">
                     <p:panel header="#{addOrderManagedBean.displayMenuEntity.name}">
                         <p:accordionPanel id="accordPanelMenu" value="#{addOrderManagedBean.displayCategoryEntities}" var="category">
