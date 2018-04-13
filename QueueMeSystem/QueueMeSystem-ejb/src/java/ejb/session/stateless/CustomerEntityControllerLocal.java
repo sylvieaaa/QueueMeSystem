@@ -27,6 +27,6 @@ public interface CustomerEntityControllerLocal {
 
     public void updatePassword(String username, String password);
     
-    public void updateCustomerPassword(CustomerEntity customerEntity) throws CustomerNotFoundException;
+    public void updateCustomerPassword(CustomerEntity customerEntity, String password) throws CustomerNotFoundException;
 
 }
