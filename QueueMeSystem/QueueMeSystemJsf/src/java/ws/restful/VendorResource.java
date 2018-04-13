@@ -7,7 +7,11 @@ package ws.restful;
 
 import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.FoodCourtEntity;
+import entity.MenuEntity;
+import entity.MenuItemEntity;
+import entity.ReviewEntity;
 import entity.VendorEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,10 +22,17 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.xml.bind.JAXBElement;
+import ws.restful.datamodel.ErrorRsp;
+import ws.restful.datamodel.VendorReq;
+import ws.restful.datamodel.VendorRsp;
 
 /**
  * REST Web Service
@@ -43,23 +54,51 @@ public class VendorResource {
     }
 
     /**
-     * Retrieves representation of an instance of ws.restful.VendorResource
-     * @return an instance of java.lang.String
+     * PUT method for updating or creating an instance of CustomerResource
+     *
+     * @param vendorReq
+     * @return
      */
-    @Path("retrieveVendor")
-    @GET
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Path("retrieveVendors")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String retrieveAllVendors(@QueryParam("foodCourt") FoodCourtEntity foodCourt ) {
-        //TODO return proper representation object
-        List<VendorEntity> vendors = foodCourt.getVendorEntities();
-        
-        
-        throw new UnsupportedOperationException();
+    public Response retrieveAllVendorsByFoodCourt(JAXBElement<VendorReq> vendorReq) {
+        if ((vendorReq != null) && (vendorReq.getValue() != null)) {
+
+            try {
+                FoodCourtEntity foodCourtEntity = vendorReq.getValue().getFoodCourtEntity();
+                List<VendorEntity> vendorEntities = vendorEntityControllerLocal.retrieveVendorsByFoodCourt(foodCourtEntity);
+
+                for (VendorEntity vendorEntity : vendorEntities) {
+                    vendorEntity.getOrderEntities().clear();
+                    vendorEntity.getMenuItemEntities().clear();
+                    vendorEntity.getMenuEntities().clear();
+                    vendorEntity.setFoodCourtEntity(null);
+
+                    for (ReviewEntity reviewEntity : vendorEntity.getReviewEntities()) {
+                        reviewEntity.setCustomerEntity(null);
+                        reviewEntity.setVendorEntity(null);
+                    }
+                }
+
+                return Response.status(Status.OK).entity(new VendorRsp(vendorEntities)).build();
+            } catch (Exception ex) {
+                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+
+        } else {
+            ErrorRsp errorRsp = new ErrorRsp("Invalid create customer request");
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
     /**
      * PUT method for updating or creating an instance of VendorResource
+     *
      * @param content representation for the resource
      */
     @PUT
@@ -76,4 +115,5 @@ public class VendorResource {
             throw new RuntimeException(ne);
         }
     }
+
 }

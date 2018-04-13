@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -32,7 +33,7 @@ public class MenuEntity implements Serializable {
     @OneToMany(mappedBy = "menuEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CategoryEntity> categoryEntities;
 
-    @OneToOne
+    @ManyToOne
     private VendorEntity vendorEntity;
 
     public MenuEntity() {
