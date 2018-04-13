@@ -38,7 +38,7 @@ public class VendorEntity extends BusinessEntity implements Serializable {
 
     @ManyToOne
     private FoodCourtEntity foodCourtEntity;
-    @OneToOne(mappedBy = "vendorEntity")
+    @OneToMany(mappedBy = "vendorEntity")
     private List<MenuEntity> menuEntities;
     @OneToMany(mappedBy = "vendorEntity")
     private List<OrderEntity> orderEntities;
