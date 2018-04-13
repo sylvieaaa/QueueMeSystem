@@ -33,6 +33,7 @@ public class FoodCourtResource {
 
     FoodCourtEntityControllerLocal foodCourtEntityControllerLocal = lookupFoodCourtEntityControllerLocal();
 
+
     @Context
     private UriInfo context;
 
@@ -80,4 +81,5 @@ public class FoodCourtResource {
             throw new RuntimeException(ne);
         }
     }
+
 }
