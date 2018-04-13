@@ -57,8 +57,8 @@ public class SecurityFilter implements Filter {
         if (!excludeLoginCheck(requestServletPath)) {
             if (isLogin) {
                 BusinessEntity businessEntity = (BusinessEntity) httpSession.getAttribute("businessEntity");
-                
-                if(httpServletRequest.getRequestURL().toString().startsWith("http://localhost:8080/queueme-uploads/")) {
+
+                if (httpServletRequest.getRequestURL().toString().startsWith("http://localhost:8080/queueme-uploads/")) {
                     chain.doFilter(request, response);
                     return;
                 }
@@ -84,7 +84,8 @@ public class SecurityFilter implements Filter {
     public Boolean checkAccessRight(String path, BusinessEntity businessEntity) {
         if (businessEntity instanceof FoodCourtEntity) {
             if (path.equals("/foodCourtMainPage.xhtml")
-                    || path.equals("/createNewVendor.xhtml")) {
+                    || path.equals("/createNewVendor.xhtml")
+                    || path.startsWith("/changePassword.xhtml")) {
                 return true;
             }
         } else if (businessEntity instanceof VendorEntity) {
@@ -100,14 +101,15 @@ public class SecurityFilter implements Filter {
         } else if (businessEntity instanceof CustomerEntity) {
 
         } else if (businessEntity instanceof AdminEntity) {
-            if(path.equals("/adminMainPage.xhtml")
+            if (path.equals("/adminMainPage.xhtml")
                     || path.equals("/viewAllFoodCourts.xhtml")
                     || path.equals("/updateFoodCourt.xhtml")
                     || path.equals("/viewFoodCourtDetails.xhtml")
                     || path.equals("/accessToVendors.xhtml")
                     || path.equals("/foodCourtMainPage.xhtml")
-                    || path.equals("/createNewFoodCourt.xhtml")){
-                
+                    || path.startsWith("/changePassword.xhtml")
+                    || path.equals("/createNewFoodCourt.xhtml")) {
+
                 return true;
             }
         }

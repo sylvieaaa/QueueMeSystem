@@ -17,8 +17,11 @@
 
             <p:panel style="display:block; text-align:center">
 
-                <h1><h:outputText style="color:blue" value="#{sessionScope['businessEntity'].name}"/></h1>&nbsp;&nbsp;
-                <p:commandButton id="viewFoodCourt" title="View Details" icon="ui-icon-search" value="View Details"/>
+                <h:outputText style="color:blue; font-size: x-large; font-weight: bold " value="#{sessionScope['businessEntity'].name}"/> &nbsp;
+                <p:commandButton id="viewFoodCourt" style="background-color: transparent; border: transparent; cursor: pointer" icon="fa fa-search" />
+                <br /><br />
+                <p:button icon="ui-icon-locked" outcome="changePassword.xhtml" value="Change Password" />
+                <br />
                 <p:overlayPanel for="viewFoodCourt" hideEffect="fade">
                     <h:form id="foodCourtDetails">
                         <p:panelGrid style="text-align: left; border: #000000">
