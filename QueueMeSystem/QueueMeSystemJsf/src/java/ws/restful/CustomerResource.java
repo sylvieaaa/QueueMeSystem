@@ -111,10 +111,7 @@ public class CustomerResource {
                 customerEntityControllerLocal.updateCustomer(updateCustomerReq.getCustomerEntity());
 
                 return Response.status(Response.Status.OK).entity(this).build();
-            } //            catch (CustomerNotFoundException ex)
-            //            {
-            //                return Response.status(Response.Status.BAD_REQUEST).entity("Customer Not Found").build();
-            //            }
+            } 
             catch (Exception ex) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
             }
@@ -154,6 +151,26 @@ public class CustomerResource {
             ErrorRsp errorRsp = new ErrorRsp("Invalid create customer request");
 
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCustomerPassword (JAXBElement<UpdateCustomerReq> jaxbUpdateCustomerReq) {
+        if ((jaxbUpdateCustomerReq != null) && (jaxbUpdateCustomerReq.getValue() != null)) {
+            try {
+                UpdateCustomerReq updateCustomerReq = jaxbUpdateCustomerReq.getValue();
+
+                customerEntityControllerLocal.updateCustomerPassword(updateCustomerReq.getCustomerEntity());
+
+                return Response.status(Response.Status.OK).entity(this).build();
+            } 
+            catch (Exception ex) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
         }
     }
 
