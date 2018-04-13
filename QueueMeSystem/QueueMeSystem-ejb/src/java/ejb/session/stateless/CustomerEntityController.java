@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.AdminEntity;
 import entity.CustomerEntity;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.AdminNotFoundException;
 import util.exception.CreateCustomerException;
 import util.exception.CustomerNotFoundException;
 
@@ -47,6 +49,17 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
     }
 
     @Override
+    public CustomerEntity retrieveCustomerById(Long customerId) throws CustomerNotFoundException {
+        CustomerEntity customerEntity = em.find(CustomerEntity.class, customerId);
+
+        if (customerEntity != null) {
+            return customerEntity;
+        } else {
+            throw new CustomerNotFoundException("Customer ID: " + customerId + " does not exist");
+        }
+    }
+
+    @Override
     public void updateCustomer(CustomerEntity customerEntity) throws CustomerNotFoundException {
 
         CustomerEntity ce = retrieveCustomerByUsername(customerEntity.getUsername());
@@ -55,5 +68,16 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
         ce.setContactNumber(customerEntity.getContactNumber());
         ce.setFirstName(customerEntity.getFirstName());
         ce.setLastName(customerEntity.getLastName());
+    }
+    
+    @Override
+    public void updatePassword(String username, String password) {
+        try {
+            CustomerEntity customerToUpdate = retrieveCustomerByUsername(username);
+            customerToUpdate.setPassword(password);
+            em.merge(customerToUpdate);
+        } catch (CustomerNotFoundException ex) {
+
+        }
     }
 }

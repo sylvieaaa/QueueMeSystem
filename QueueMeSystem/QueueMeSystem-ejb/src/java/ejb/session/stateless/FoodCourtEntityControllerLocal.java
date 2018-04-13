@@ -28,5 +28,9 @@ public interface FoodCourtEntityControllerLocal {
     public void updateFoodCourt(FoodCourtEntity foodCourt) throws FoodCourtNotFoundException;
 
     public void disableFoodCourt(Long foodCourtId) throws FoodCourtNotFoundException;
+
+    public FoodCourtEntity retrieveFoodCourtByUsername(String username) throws FoodCourtNotFoundException;
+
+    public void updatePassword(String username, String password);
     
 }

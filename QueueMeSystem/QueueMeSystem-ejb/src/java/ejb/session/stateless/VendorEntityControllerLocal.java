@@ -29,4 +29,8 @@ public interface VendorEntityControllerLocal {
 
     public List<VendorEntity> retrieveAllVendors();
 
+    public VendorEntity retrieveVendorByUsername(String username) throws VendorNotFoundException;
+
+    public void updatePassword(String username, String password);
+
 }
