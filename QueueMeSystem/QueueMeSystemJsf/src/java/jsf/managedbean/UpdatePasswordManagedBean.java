@@ -38,9 +38,6 @@ public class UpdatePasswordManagedBean implements Serializable {
     private AdminEntityControllerLocal adminEntityControllerLocal;
 
     @EJB
-    private BusinessEntityControllerLocal businessEntityControllerLocal;
-
-    @EJB
     private CustomerEntityControllerLocal customerEntityControllerLocal;
 
     @EJB
@@ -64,29 +61,21 @@ public class UpdatePasswordManagedBean implements Serializable {
         BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         username = businessEntity.getUsername();
         String passswordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(oldPassword + businessEntity.getSalt()));
-            
 
         if (businessEntity.getPassword().equals(passswordHash)) {
             if (businessEntity instanceof AdminEntity) {
                 adminEntityControllerLocal.updatePassword(username, newPassword);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
             } else if (businessEntity instanceof FoodCourtEntity) {
-                try {
-                    foodCourtEntityControllerLocal.retrieveFoodCourtByUsername(username).setPassword(newPassword);
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
-                } catch (FoodCourtNotFoundException fcEx) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, fcEx.getMessage(), null));
-                }
+                foodCourtEntityControllerLocal.updatePassword(username, newPassword);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
+
             } else if (businessEntity instanceof VendorEntity) {
                 vendorEntityControllerLocal.updatePassword(username, newPassword);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
             } else {
-                try {
-                    customerEntityControllerLocal.retrieveCustomerByUsername(username).setPassword(newPassword);
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
-                } catch (CustomerNotFoundException cEx) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, cEx.getMessage(), null));
-                }
+                customerEntityControllerLocal.updatePassword(username, newPassword);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
             }
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Incorrect current password", null));
