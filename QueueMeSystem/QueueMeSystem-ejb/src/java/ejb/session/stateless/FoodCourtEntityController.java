@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.AdminEntity;
 import entity.CustomerEntity;
 import entity.FoodCourtEntity;
 import entity.OrderEntity;
@@ -15,8 +16,10 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.AdminNotFoundException;
 import util.exception.DeleteFoodCourtException;
 import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
@@ -90,6 +93,29 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
             foodCourtToDisable.setEnable(Boolean.FALSE);
         } else {
             throw new FoodCourtNotFoundException("Id not provided for FoodCourt to be disabled");
+        }
+    }
+    
+    @Override
+    public FoodCourtEntity retrieveFoodCourtByUsername(String username) throws FoodCourtNotFoundException {
+        Query query = em.createQuery("SELECT f FROM FoodCourtEntity f WHERE f.username=:inUsername");
+        query.setParameter("inUsername", username);
+
+        try {
+            return (FoodCourtEntity) query.getSingleResult();
+        } catch (NonUniqueResultException | NoResultException ex) {
+            throw new FoodCourtNotFoundException("Food Court " + username + " does not exists!");
+        }
+    }
+    
+    @Override
+    public void updatePassword(String username, String password) {
+        try {
+            FoodCourtEntity foodCourtToUpdate = retrieveFoodCourtByUsername(username);
+            foodCourtToUpdate.setPassword(password);
+            em.merge(foodCourtToUpdate);
+        } catch (FoodCourtNotFoundException ex) {
+
         }
     }
 }

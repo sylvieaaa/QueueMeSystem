@@ -31,29 +31,40 @@ public class AdminEntityController implements AdminEntityControllerLocal {
         em.persist(adminEntity);
         em.flush();
         em.refresh(adminEntity);
-        
+
         return adminEntity;
     }
 
-   @Override
-   public AdminEntity retrieveAdminByUsername(String username) throws AdminNotFoundException {
-       Query query = em.createQuery("SELECT a FROM AdminEntity a WHERE a.username=:inUsername");
-       query.setParameter("inUsername", username);
-       
-       try {
-           return (AdminEntity) query.getSingleResult();
-       } catch (NonUniqueResultException | NoResultException ex) {
-           throw new AdminNotFoundException("Admin " + username + " does not exists!");
-       }
-   }
-   
-   @Override
-   public AdminEntity adminLogin(String username, String password) throws InvalidLoginCredentialException {
+    @Override
+    public AdminEntity retrieveAdminByUsername(String username) throws AdminNotFoundException {
+        Query query = em.createQuery("SELECT a FROM AdminEntity a WHERE a.username=:inUsername");
+        query.setParameter("inUsername", username);
+
+        try {
+            return (AdminEntity) query.getSingleResult();
+        } catch (NonUniqueResultException | NoResultException ex) {
+            throw new AdminNotFoundException("Admin " + username + " does not exists!");
+        }
+    }
+
+    @Override
+    public AdminEntity retrieveAdminById(Long adminId) throws AdminNotFoundException {
+        AdminEntity adminEntity = em.find(AdminEntity.class, adminId);
+
+        if (adminEntity != null) {
+            return adminEntity;
+        } else {
+            throw new AdminNotFoundException("Admin ID: " + adminId + " does not exist");
+        }
+    }
+
+    @Override
+    public AdminEntity adminLogin(String username, String password) throws InvalidLoginCredentialException {
         try {
             AdminEntity adminEntity = retrieveAdminByUsername(username);
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + adminEntity.getSalt()));
-            
-            if(passwordHash.equals(adminEntity.getPassword())) {
+
+            if (passwordHash.equals(adminEntity.getPassword())) {
                 return adminEntity;
             } else {
                 throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
@@ -61,7 +72,18 @@ public class AdminEntityController implements AdminEntityControllerLocal {
         } catch (AdminNotFoundException ex) {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
-       
-   }
+
+    }
+
+    @Override
+    public void updatePassword(String username, String password) {
+        try {
+            AdminEntity adminToUpdate = retrieveAdminByUsername(username);
+            adminToUpdate.setPassword(password);
+            em.merge(adminToUpdate);
+        } catch (AdminNotFoundException ex) {
+
+        }
+    }
 
 }

@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.AdminEntity;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
 import java.util.List;
@@ -14,8 +15,10 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.AdminNotFoundException;
 import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
 import util.exception.VendorNotFoundException;
@@ -92,7 +95,29 @@ public class VendorEntityController implements VendorEntityControllerLocal {
 
         return vendorEntities;
     }
+    
+    @Override
+    public VendorEntity retrieveVendorByUsername(String username) throws VendorNotFoundException {
+        Query query = em.createQuery("SELECT v FROM VendorEntity v WHERE v.username=:inUsername");
+        query.setParameter("inUsername", username);
 
+        try {
+            return (VendorEntity) query.getSingleResult();
+        } catch (NonUniqueResultException | NoResultException ex) {
+            throw new VendorNotFoundException("Vendor " + username + " does not exists!");
+        }
+    }
+
+    @Override
+    public void updatePassword(String username, String password) {
+        try {
+            VendorEntity vendorToUpdate = retrieveVendorByUsername(username);
+            vendorToUpdate.setPassword(password);
+            em.merge(vendorToUpdate);
+        } catch (VendorNotFoundException ex) {
+
+        }
+    }
 
     /*
     @Override

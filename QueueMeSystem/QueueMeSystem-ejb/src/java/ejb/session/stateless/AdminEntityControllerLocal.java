@@ -22,5 +22,9 @@ public interface AdminEntityControllerLocal {
     public AdminEntity retrieveAdminByUsername(String username) throws AdminNotFoundException;
 
     public AdminEntity adminLogin(String username, String password) throws InvalidLoginCredentialException;
+
+    public AdminEntity retrieveAdminById(Long adminId) throws AdminNotFoundException;
+
+    public void updatePassword(String username, String password);
     
 }
