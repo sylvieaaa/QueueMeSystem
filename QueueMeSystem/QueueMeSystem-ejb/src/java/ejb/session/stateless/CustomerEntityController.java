@@ -80,4 +80,13 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
 
         }
     }
+    
+    @Override
+    public void updateCustomerPassword(CustomerEntity customerEntity) throws CustomerNotFoundException {
+
+        CustomerEntity ce = retrieveCustomerByUsername(customerEntity.getUsername());
+
+        ce.setPassword(customerEntity.getPassword());
+    }
+    
 }
