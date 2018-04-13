@@ -14,6 +14,7 @@ import entity.AdminEntity;
 import entity.BusinessEntity;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
+import java.io.IOException;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -56,7 +57,7 @@ public class UpdatePasswordManagedBean implements Serializable {
     public UpdatePasswordManagedBean() {
     }
 
-    public void changePassword(ActionEvent event) {
+    public void changePassword(ActionEvent event) throws IOException {
 
         BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         username = businessEntity.getUsername();
@@ -66,13 +67,15 @@ public class UpdatePasswordManagedBean implements Serializable {
             if (businessEntity instanceof AdminEntity) {
                 adminEntityControllerLocal.updatePassword(username, newPassword);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
+                FacesContext.getCurrentInstance().getExternalContext().redirect("adminMainPage.xhtml");
             } else if (businessEntity instanceof FoodCourtEntity) {
                 foodCourtEntityControllerLocal.updatePassword(username, newPassword);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
-
+                FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
             } else if (businessEntity instanceof VendorEntity) {
                 vendorEntityControllerLocal.updatePassword(username, newPassword);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
+                FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
             } else {
                 customerEntityControllerLocal.updatePassword(username, newPassword);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Password updated!", null));
@@ -80,7 +83,6 @@ public class UpdatePasswordManagedBean implements Serializable {
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Incorrect current password", null));
         }
-
     }
 
     public String getOldPassword() {
