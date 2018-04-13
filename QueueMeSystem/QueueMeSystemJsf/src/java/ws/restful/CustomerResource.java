@@ -74,6 +74,8 @@ public class CustomerResource {
                 customerEntity.getOrderEntities().clear();
                 customerEntity.getReviewEntities().clear();
                 customerEntity.getSaleTransactionEntities().clear();
+                
+                customerEntity.setPassword(null);
 
                 CustomerRsp customerLoginRsp = new CustomerRsp(customerEntity);
 
@@ -174,16 +176,6 @@ public class CustomerResource {
         } else {
             return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
         }
-    }
-
-    /**
-     * PUT method for updating or creating an instance of CustomerResource
-     *
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
     }
 
     private BusinessEntityControllerLocal lookupBusinessEntityControllerLocal() {
