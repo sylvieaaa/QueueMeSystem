@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.TagEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.TagAlreadyExistException;
 
 /**
  *
@@ -16,7 +17,7 @@ import javax.ejb.Local;
 @Local
 public interface TagEntityControllerLocal {
 
-    public TagEntity createTagEntity(TagEntity tagEntity);
+    public TagEntity createTagEntity(TagEntity tagEntity) throws TagAlreadyExistException;
 
     public List<TagEntity> retrieveAllTags();
     

@@ -28,7 +28,6 @@ public class MenuEntityConverter implements Converter {
             List<MenuEntity> menuEntities = (List<MenuEntity>) context.getExternalContext().getSessionMap().get("MenuEntityConverter.menuEntities");
             for (MenuEntity menuEntity : menuEntities) {
                 if (menuEntity.getMenuId().toString().equals(value)) {
-                    System.err.println("returned");
                     return menuEntity;
                 }
             }

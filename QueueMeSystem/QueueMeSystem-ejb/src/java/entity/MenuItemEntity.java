@@ -60,6 +60,15 @@ public class MenuItemEntity implements Serializable {
         this.photoURL = photo;
     }
     
+    public MenuItemEntity(String menuItemName, String description, BigDecimal price, String photo, List<TagEntity> tagEntities) {
+        this();
+        this.menuItemName = menuItemName;
+        this.description = description;
+        this.price = price;
+        this.photoURL = photo;
+        this.tagEntities = tagEntities;
+    }
+    
     public Long getMenuItemId() {
         return menuItemId;
     }
