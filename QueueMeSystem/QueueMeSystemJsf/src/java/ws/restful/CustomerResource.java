@@ -100,6 +100,7 @@ public class CustomerResource {
         }
     }
 
+    @Path ("updateCustomer")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -154,6 +155,7 @@ public class CustomerResource {
         }
     }
     
+    @Path ("changePassword")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

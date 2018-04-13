@@ -10,13 +10,11 @@
     <div class ="ui-g-12 ui-md-6 ui-lg-4">
         <ui:define name="content">
 
-            <p:panel style="display:block; text-align:center">
+            <p:panel style="display:block; text-align:center; border-color: transparent">
                 <h2 style="text-align: center"> Welcome, <h:outputText style="color:blue;" value="#{sessionScope['businessEntity'].firstName}"/></h2>
-
 
                 <p:commandButton value="Create Food Court" oncomplete="PF('dialogCreateFoodCourt').show()" icon="fa fa-plus-circle" title="Create"/> &nbsp;&nbsp;
                 <p:button icon="ui-icon-locked" outcome="changePassword.xhtml" value="Change Password" />
-                <br />
 
                 <h:form id="formCreateFoodCourt">
                     <p:dialog id="dialogCreateFoodCourt" widgetVar="dialogCreateFoodCourt" header="Create Food Court" closable="true">
