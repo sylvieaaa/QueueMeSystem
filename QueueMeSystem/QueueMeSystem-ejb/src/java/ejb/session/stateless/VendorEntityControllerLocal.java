@@ -10,6 +10,7 @@ import entity.VendorEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.DuplicateEmailUserException;
+import util.exception.FoodCourtNotFoundException;
 import util.exception.VendorNotFoundException;
 
 /**
@@ -32,6 +33,12 @@ public interface VendorEntityControllerLocal {
     public VendorEntity retrieveVendorByUsername(String username) throws VendorNotFoundException;
 
     public void updatePassword(String username, String password);
+
+    public List<VendorEntity> retrieveVendorsByFoodCourt(FoodCourtEntity foodCourtEntity);
+
+    public List<VendorEntity> retrieveAllVendorsByFoodCourtId(Long foodCourtId) throws FoodCourtNotFoundException;
+
+    public void updateFileUrl(Long vendorId, String url);
 
     public List<VendorEntity> retrieveVendorsByFoodCourtId(Long foodCourtId);
 

@@ -32,5 +32,7 @@ public interface FoodCourtEntityControllerLocal {
     public FoodCourtEntity retrieveFoodCourtByUsername(String username) throws FoodCourtNotFoundException;
 
     public void updatePassword(String username, String password);
+
+    public void updateFileUrl(Long foodCourtId, String url);
     
 }

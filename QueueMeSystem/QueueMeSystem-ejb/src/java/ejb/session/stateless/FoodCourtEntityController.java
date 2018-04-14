@@ -35,18 +35,18 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
     private EntityManager em;
 
     @Override
-    public FoodCourtEntity createFoodCourt(FoodCourtEntity foodCourtEntity) throws DuplicateEmailUserException{
+    public FoodCourtEntity createFoodCourt(FoodCourtEntity foodCourtEntity) throws DuplicateEmailUserException {
         Query query = em.createQuery("SELECT f FROM FoodCourtEntity f WHERE f.username=:inUsername");
         query.setParameter("inUsername", foodCourtEntity.getUsername());
 
         try {
             FoodCourtEntity check = (FoodCourtEntity) query.getSingleResult();
             throw new DuplicateEmailUserException("Email is not unique");
-            
+
         } catch (NoResultException exc) {
-                em.persist(foodCourtEntity);
-                em.flush();
-                em.refresh(foodCourtEntity);
+            em.persist(foodCourtEntity);
+            em.flush();
+            em.refresh(foodCourtEntity);
         }
 
         return foodCourtEntity;
@@ -95,7 +95,7 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
             throw new FoodCourtNotFoundException("Id not provided for FoodCourt to be disabled");
         }
     }
-    
+
     @Override
     public FoodCourtEntity retrieveFoodCourtByUsername(String username) throws FoodCourtNotFoundException {
         Query query = em.createQuery("SELECT f FROM FoodCourtEntity f WHERE f.username=:inUsername");
@@ -107,12 +107,23 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
             throw new FoodCourtNotFoundException("Food Court " + username + " does not exists!");
         }
     }
-    
+
     @Override
     public void updatePassword(String username, String password) {
         try {
             FoodCourtEntity foodCourtToUpdate = retrieveFoodCourtByUsername(username);
             foodCourtToUpdate.setPassword(password);
+            em.merge(foodCourtToUpdate);
+        } catch (FoodCourtNotFoundException ex) {
+
+        }
+    }
+
+    @Override
+    public void updateFileUrl(Long foodCourtId, String url) {
+        try {
+            FoodCourtEntity foodCourtToUpdate = retrieveFoodCourtById(foodCourtId);
+            foodCourtToUpdate.setFileURL(url);
             em.merge(foodCourtToUpdate);
         } catch (FoodCourtNotFoundException ex) {
 
