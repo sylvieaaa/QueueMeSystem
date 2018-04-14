@@ -111,6 +111,7 @@ public class SecurityFilter implements Filter {
                     || path.equals("/foodCourtMainPage.xhtml")
                     || path.startsWith("/changePassword.xhtml")
                     || path.equals("/createNewFoodCourt.xhtml")
+                    || path.equals("/createNewVendor.xhtml")
                     || path.equals("/foodCourtMainPage.xhtml")) {
 
                 return true;
