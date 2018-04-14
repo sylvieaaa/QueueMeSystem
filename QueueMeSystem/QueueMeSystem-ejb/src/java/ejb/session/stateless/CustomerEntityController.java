@@ -92,6 +92,5 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
         } else {
             throw new PasswordDoNotMatchException("Passwords do not match");
         }
-    }
-    
+    }   
 }
