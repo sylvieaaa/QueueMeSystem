@@ -70,6 +70,8 @@ public class SecurityFilter implements Filter {
                         httpServletResponse.sendRedirect(CONTEXT_ROOT + "/mainPage.xhtml");
                     } else if (businessEntity instanceof FoodCourtEntity) {
                         httpServletResponse.sendRedirect(CONTEXT_ROOT + "/foodCourtMainPage.xhtml");
+                    } else if (businessEntity instanceof AdminEntity) {
+                        httpServletResponse.sendRedirect(CONTEXT_ROOT + "/adminMainPage.xhtml");
                     }
                 }
 
@@ -108,7 +110,9 @@ public class SecurityFilter implements Filter {
                     || path.equals("/accessToVendors.xhtml")
                     || path.equals("/foodCourtMainPage.xhtml")
                     || path.startsWith("/changePassword.xhtml")
-                    || path.equals("/createNewFoodCourt.xhtml")) {
+                    || path.equals("/createNewFoodCourt.xhtml")
+                    || path.equals("/createNewVendor.xhtml")
+                    || path.equals("/foodCourtMainPage.xhtml")) {
 
                 return true;
             }

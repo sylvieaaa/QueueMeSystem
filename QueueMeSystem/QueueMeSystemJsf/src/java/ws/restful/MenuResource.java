@@ -6,10 +6,11 @@
 package ws.restful;
 
 import ejb.session.stateless.MenuEntityControllerLocal;
+import entity.CategoryEntity;
 import entity.MenuEntity;
+import entity.MenuItemEntity;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.application.Resource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Context;
@@ -45,24 +46,34 @@ public class MenuResource {
     public MenuResource() {
     }
 
-    /**
-     * Retrieves representation of an instance of ws.restful.MenuResource
-     * @return an instance of java.lang.String
-     */
+    @Path("retrieveMenu")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveMenuEntity(@QueryParam("vendorId") String vendorId) {
+    public Response retrieveMenuEntity(@QueryParam("vendorId") Long vendorId) {
         try {
-            MenuEntity menuEntity = menuEntityControllerLocal.retrieveDefaultMenuByVendorId(Long.parseLong(vendorId));
+            System.err.println(vendorId);
+            MenuEntity menuEntity = menuEntityControllerLocal.retrieveDefaultMenuByVendorId(vendorId);
+            System.out.println("menu here is " + menuEntity);
+            menuEntity.setVendorEntity(null);
+            for (CategoryEntity categoryEntity : menuEntity.getCategoryEntities()) {
+                categoryEntity.setMenuEntity(null);
+                for (MenuItemEntity menuItemEntity : categoryEntity.getMenuItemEntities()) {
+                    menuItemEntity.getCategoryEntities().clear();
+                    menuItemEntity.setVendorEntity(null);
+                    menuItemEntity.getSaleTransactionLineItemEntities().clear();
+                }
+            }
+
             return Response.status(Status.OK).entity(new MenuEntityRsp(menuEntity)).build();
         } catch (MenuNotFoundException ex) {
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(Status.BAD_REQUEST).build();
         }
     }
 
     /**
      * PUT method for updating or creating an instance of MenuResource
+     *
      * @param content representation for the resource
      */
     @PUT

@@ -144,7 +144,6 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
     }
 
     public void disableFoodCourt(ActionEvent event) {
-
         try {
             foodCourtEntityControllerLocal.disableFoodCourt(foodCourtToDisable.getBusinessId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Food Court disabled successfully", null));
@@ -155,7 +154,20 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + e.getMessage(), null));
         }
+    }
 
+    public void viewFoodCourt(ActionEvent event) {
+        try {
+            System.err.println("HEREEEEEEEEEEEEE");
+            Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+            System.err.println("NUM1" + foodCourtIdToView);
+            System.err.println("LOL " + FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate"));
+            System.err.println("NUM2");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+        }
     }
 
     public List<FoodCourtEntity> getFoodCourts() {

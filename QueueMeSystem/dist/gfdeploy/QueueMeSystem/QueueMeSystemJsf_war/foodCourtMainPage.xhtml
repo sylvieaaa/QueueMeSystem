@@ -17,42 +17,47 @@
 
             <p:panel style="display:block; text-align:center; border-color: transparent">
 
-                <h:outputText style="color:blue; font-size: x-large; font-weight: bold " value="#{sessionScope['businessEntity'].name}"/> &nbsp;
+                <h:outputText style="color:blue; font-size: x-large; font-weight: bold " value="#{manageFoodCourtManagedBean.currentFoodCourt.name}"/> &nbsp;
                 <p:commandButton id="viewFoodCourt" style="background-color: transparent; border: transparent; cursor: pointer" icon="fa fa-search" />
                 <br /><br />
-                <p:button icon="ui-icon-locked" outcome="changePassword.xhtml" value="Change Password" />
+                <p:commandButton actionListener="#{manageFoodCourtManagedBean.createVendorPage}" value="Add Vendor" icon="fa fa-plus-circle">
+                    <f:attribute name="foodCourtId" value="#{manageFoodCourtManagedBean.currentFoodCourt.businessId}"/>
+                </p:commandButton>&nbsp;&nbsp;
+                <p:button icon="ui-icon-locked" outcome="changePassword.xhtml" value="Change Password" rendered="#{sessionScope['accountType'] ne 'Admin'}"/> &nbsp;&nbsp;
+                <p:commandButton value="Back" action="adminMainPage.xhtml" rendered="#{sessionScope['accountType'] eq 'Admin'}"/>
+                
                 <br />
                 <p:overlayPanel for="viewFoodCourt" hideEffect="fade">
                     <h:form id="foodCourtDetails">
                         <p:panelGrid style="text-align: left; border: #000000">
                             <p:row>
-                                <p:column colspan="2"><p:graphicImage style="text-align: center" value="http://localhost:8080/queueme-uploads/foodCourtLogos/#{sessionScope['businessEntity'].fileURL}" width="200px" height="100px"/></p:column>
+                                <p:column colspan="2"><p:graphicImage style="text-align: center" value="http://localhost:8080/queueme-uploads/foodCourtLogos/#{manageFoodCourtManagedBean.currentFoodCourt.fileURL}" width="200px" height="100px"/></p:column>
                             </p:row>
 
                             <p:row>
                                 <p:column><h:outputText style="font-weight: bold" value="Name: " /></p:column>
-                                <p:column><h:outputText value="#{sessionScope['businessEntity'].name}" /></p:column>
+                                <p:column><h:outputText value="#{manageFoodCourtManagedBean.currentFoodCourt.name}" /></p:column>
                             </p:row>
 
                             <p:row>
                                 <p:column><h:outputText style="font-weight: bold" value="Description: " /></p:column>
-                                <p:column><h:outputText value="#{sessionScope['businessEntity'].description}" /></p:column>
+                                <p:column><h:outputText value="#{manageFoodCourtManagedBean.currentFoodCourt.description}" /></p:column>
                             </p:row>
 
                             <p:row>
                                 <p:column><h:outputText style="font-weight: bold" value="Address: " /></p:column>
-                                <p:column><h:outputText value="#{sessionScope['businessEntity'].address}" /></p:column>
+                                <p:column><h:outputText value="#{manageFoodCourtManagedBean.currentFoodCourt.address}" /></p:column>
                             </p:row>
 
                             <p:row>
                                 <p:column><h:outputText style="font-weight: bold" value="Postal Code: " /></p:column>
-                                <p:column><h:outputText value="#{sessionScope['businessEntity'].postalCode}" /></p:column>
+                                <p:column><h:outputText value="#{manageFoodCourtManagedBean.currentFoodCourt.postalCode}" /></p:column>
                             </p:row>
 
                             <p:row>
                                 <p:column><h:outputText style="font-weight: bold" value="Start Time: " /></p:column>
                                 <p:column>
-                                    <h:outputText value="#{sessionScope['businessEntity'].startTime}">
+                                    <h:outputText value="#{manageFoodCourtManagedBean.currentFoodCourt.startTime}">
                                         <f:convertDateTime type="time" dateStyle="full"/>
                                     </h:outputText>
                                 </p:column>
@@ -61,7 +66,7 @@
                             <p:row>
                                 <p:column><h:outputText style="font-weight: bold" value="End Time: " /></p:column>
                                 <p:column>
-                                    <h:outputText value="#{sessionScope['businessEntity'].endTime}">
+                                    <h:outputText value="#{manageFoodCourtManagedBean.currentFoodCourt.endTime}">
                                         <f:convertDateTime type="time" dateStyle="full"/>
                                     </h:outputText>
                                 </p:column>
@@ -70,7 +75,7 @@
                             <p:row>
                                 <p:column colspan="2" style="text-align: center">
                                     <p:commandButton update="updateFoodCourtForm" oncomplete="PF('dialogUpdateFoodCourt').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
-                                        <f:setPropertyActionListener value="#{sessionScope['businessEntity']}" target="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate}" />
+                                        <f:setPropertyActionListener value="#{manageFoodCourtManagedBean.currentFoodCourt}" target="#{manageFoodCourtManagedBean.currentFoodCourt}" />
                                     </p:commandButton>
                                 </p:column>
                             </p:row>
@@ -78,7 +83,7 @@
                     </h:form>
                 </p:overlayPanel>
 
-                <p:carousel id="vendorCarousel" value="#{updateVendorManagedBean.vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
+                <p:carousel id="vendorCarousel" value="#{manageFoodCourtManagedBean.vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
                     <p:panelGrid columns="1" style="margin-left: 60px; margin-top: 2px">
                         <p:graphicImage  value="http://localhost:8080/queueme-uploads/vendorLogos/#{vendors.photoURL}" width="200px" height="100px"/>
                     </p:panelGrid>
@@ -124,17 +129,17 @@
                         <p:row>
                             <p:column colspan="2" style="text-align: center">
                                 <p:commandButton update="updateVendorForm" oncomplete="PF('dialogUpdateVendor').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
-                                    <f:setPropertyActionListener value="#{vendors}" target="#{updateVendorManagedBean.vendorEntityToUpdate}" />
+                                    <f:setPropertyActionListener value="#{vendors}" target="#{manageFoodCourtManagedBean.vendorEntityToUpdate}" />
                                 </p:commandButton>
                                 <p:commandButton value="Delete Vendor" icon="fa fa-trash" update="deleteVendorForm" title="Delete Vendor" oncomplete="PF('dialogDeleteVendor').show()">
-                                    <f:setPropertyActionListener value="#{vendors}" target="#{updateVendorManagedBean.vendorToDisable}" />
+                                    <f:setPropertyActionListener value="#{vendors}" target="#{manageFoodCourtManagedBean.vendorToDisable}" />
                                 </p:commandButton>
                             </p:column>
                         </p:row>
                     </p:panelGrid>
                 </p:carousel>
 
-                <p:button outcome="createNewVendor.xhtml" value="Add Vendor" icon="fa fa-plus-circle"></p:button>
+                
 
             </p:panel>
 
@@ -148,7 +153,8 @@
                                 <p:outputLabel for="vendorLogoUpload" value="Upload Logo: "/>
                             </p:column>
                             <p:column>
-                                <p:fileUpload id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="messagesUpdateVendor" skinSimple="true" fileUploadListener="#{updateVendorManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                <p:fileUpload id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="messagesUpdateVendor" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                    <f:attribute name="from" value="vendor" />
                                 </p:fileUpload>
                             </p:column>
                             <p:column>
@@ -158,16 +164,16 @@
 
                         <p:row>
                             <p:column><p:outputLabel for="name" value="Name: "/></p:column>
-                            <p:column><p:inputText id="name" value="#{updateVendorManagedBean.vendorEntityToUpdate.vendorName}" required="true" requiredMessage="Vendor name required." /></p:column>
+                            <p:column><p:inputText id="name" value="#{manageFoodCourtManagedBean.vendorEntityToUpdate.vendorName}" required="true" requiredMessage="Vendor name required." /></p:column>
                             <p:column><p:message for="name" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="cuisine" value="Cuisine: " /></p:column>
                             <p:column>
-                                <p:selectOneMenu id="cuisine" value="#{updateVendorManagedBean.vendorEntityToUpdate.cuisineType}" required="true" requiredMessage="Cuisine type required.">
+                                <p:selectOneMenu id="cuisine" value="#{manageFoodCourtManagedBean.vendorEntityToUpdate.cuisineType}" required="true" requiredMessage="Cuisine type required.">
                                     <f:selectItem itemLabel="Select Cuisine" itemValue="null" noSelectionOption="true"/>
-                                    <f:selectItems value="#{createNewVendorManagedBean.vendorTypes}" var="type" itemLabel="#{type}" itemValue="#{type}"/>
+                                    <f:selectItems value="#{manageFoodCourtManagedBean.vendorTypes}" var="type" itemLabel="#{type}" itemValue="#{type}"/>
                                 </p:selectOneMenu>
                             </p:column>
                             <p:column><p:message for="cuisine" /></p:column>
@@ -175,29 +181,29 @@
 
                         <p:row>
                             <p:column><p:outputLabel for="rating" value="Rating: " /></p:column>
-                            <p:column><p:rating id="rating" value="#{updateVendorManagedBean.vendorEntityToUpdate.rating}" /></p:column>
+                            <p:column><p:rating id="rating" value="#{manageFoodCourtManagedBean.vendorEntityToUpdate.rating}" /></p:column>
                             <p:column><p:message for="rating" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="information" value="Information: " /></p:column>
-                            <p:column><p:inputTextarea id="information" value="#{updateVendorManagedBean.vendorEntityToUpdate.information}" required="true" requiredMessage="Information required."/>  </p:column>                  
+                            <p:column><p:inputTextarea id="information" value="#{manageFoodCourtManagedBean.vendorEntityToUpdate.information}" required="true" requiredMessage="Information required."/>  </p:column>                  
                             <p:column><p:message for="information" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="operatingHours" value="Operating Hours: " /></p:column>
                             <p:column>
-                                <p:calendar pattern="HH:mm:ss" timeOnly="true" value="#{updateVendorManagedBean.vendorEntityToUpdate.startTime}" required="true" requiredMessage="Start time required." />
+                                <p:calendar pattern="HH:mm:ss" timeOnly="true" value="#{manageFoodCourtManagedBean.vendorEntityToUpdate.startTime}" required="true" requiredMessage="Start time required." />
                                 &nbsp;&nbsp;<h:outputText style="font-size: 15px" value="to"></h:outputText>&nbsp;&nbsp;   
-                                <p:calendar id="operatingHours" pattern="HH:mm:ss" timeOnly="true" value="#{updateVendorManagedBean.vendorEntityToUpdate.endTime}" required="true" requiredMessage="End time required." />
+                                <p:calendar id="operatingHours" pattern="HH:mm:ss" timeOnly="true" value="#{manageFoodCourtManagedBean.vendorEntityToUpdate.endTime}" required="true" requiredMessage="End time required." />
                             </p:column>
                             <p:column><p:message for="operatingHours" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column colspan="3" style="text-align: center" >
-                                <p:commandButton value="Update Vendor" update="@form vendorCarousel" actionListener="#{updateVendorManagedBean.updateVendor}" oncomplete="PF('dialogUpdateVendor').show();" />
+                                <p:commandButton value="Update Vendor" update="@form vendorCarousel" actionListener="#{manageFoodCourtManagedBean.updateVendor}" oncomplete="PF('dialogUpdateVendor').show();" />
                             </p:column>
                         </p:row>
 
@@ -214,7 +220,8 @@
                                 <p:outputLabel for="foodCourtLogoUpload" value="Upload Logo: "/>
                             </p:column>
                             <p:column>
-                                <p:fileUpload id="foodCourtLogoUpload" widgetVar="uploader" mode="advanced" update="messagesUpdateFoodCourt" skinSimple="true" fileUploadListener="#{viewAllFoodCourtsManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                <p:fileUpload id="foodCourtLogoUpload" widgetVar="uploader" mode="advanced" update="messagesUpdateFoodCourt" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                    <f:attribute name="from" value="foodCourt" />
                                 </p:fileUpload>
                             </p:column>
                             <p:column>
@@ -224,43 +231,43 @@
 
                         <p:row>
                             <p:column><p:outputLabel for="name" value="Name: " /></p:column>
-                            <p:column><p:inputText id="name" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.name}" required="true" requiredMessage="Name is required" /></p:column>
+                            <p:column><p:inputText id="name" value="#{manageFoodCourtManagedBean.currentFoodCourt.name}" required="true" requiredMessage="Name is required" /></p:column>
                             <p:column><p:message for="name" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="address" value="Address: " /></p:column>
-                            <p:column><p:inputText id="address" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.address}" required="true" requiredMessage="Address is required" /></p:column>
+                            <p:column><p:inputText id="address" value="#{manageFoodCourtManagedBean.currentFoodCourt.address}" required="true" requiredMessage="Address is required" /></p:column>
                             <p:column><p:message for="address" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="postal" value="Postal Code: " /></p:column>
-                            <p:column><p:inputText id="postal" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.postalCode}" required="true" requiredMessage="Postal is required" /></p:column>
+                            <p:column><p:inputText id="postal" value="#{manageFoodCourtManagedBean.currentFoodCourt.postalCode}" required="true" requiredMessage="Postal is required" /></p:column>
                             <p:column><p:message for="postal" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="description" value="Description: " /></p:column>
-                            <p:column><p:inputText id="description" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.description}" required="true" requiredMessage="Description is required" /></p:column>
+                            <p:column><p:inputText id="description" value="#{manageFoodCourtManagedBean.currentFoodCourt.description}" required="true" requiredMessage="Description is required" /></p:column>
                             <p:column><p:message for="description" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="startTime" value="Start Time: " /></p:column>
-                            <p:column><p:calendar id="startTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.startTime}" pattern="HH:mm:ss" timeOnly="true" required="true" requiredMessage="Start Time required" /></p:column>
+                            <p:column><p:calendar id="startTime" value="#{manageFoodCourtManagedBean.currentFoodCourt.startTime}" pattern="HH:mm:ss" timeOnly="true" required="true" requiredMessage="Start Time required" /></p:column>
                             <p:column><p:message for="startTime" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><p:outputLabel for="endTime" value="End Time: " /></p:column>
-                            <p:column><p:calendar id="endTime" value="#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.endTime}" pattern="HH:mm:ss" timeOnly="true" required="true" requiredMessage="End Time required" /></p:column>
+                            <p:column><p:calendar id="endTime" value="#{manageFoodCourtManagedBean.currentFoodCourt.endTime}" pattern="HH:mm:ss" timeOnly="true" required="true" requiredMessage="End Time required" /></p:column>
                             <p:column><p:message for="endTime" /></p:column>
                         </p:row>
 
                         <p:row>
                             <p:column colspan="3" style="text-align: center" >
-                                <p:commandButton value="Update Food Court" update="@all" actionListener="#{viewAllFoodCourtsManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
+                                <p:commandButton value="Update Food Court" update="@all" actionListener="#{manageFoodCourtManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
                             </p:column>
                         </p:row>
 
@@ -271,9 +278,9 @@
             <h:form id="deleteVendorForm">
                 <p:dialog id="dialogDeleteVendor" widgetVar="dialogDeleteVendor" header="Delete Vendor" closable="true">
                     <p:messages id="deleteVendor" redisplay="false" />
-                    <h4 style="text-align: center"> Confirm to delete <h:outputText style="color: blue;" value="#{updateVendorManagedBean.vendorToDisable.vendorName} ?"/></h4>
+                    <h4 style="text-align: center"> Confirm to delete <h:outputText style="color: blue;" value="#{manageFoodCourtManagedBean.vendorToDisable.vendorName} ?"/></h4>
 
-                    <p:commandButton style="margin: auto; display: block" value="Delete" update="@form vendorCarousel" actionListener="#{updateVendorManagedBean.deleteVendor}" oncomplete="PF('dialogDeleteVendor').hide();" />
+                    <p:commandButton style="margin: auto; display: block" value="Delete" update="@form vendorCarousel" actionListener="#{manageFoodCourtManagedBean.deleteVendor}" oncomplete="PF('dialogDeleteVendor').hide();" />
 
                 </p:dialog>
             </h:form>
