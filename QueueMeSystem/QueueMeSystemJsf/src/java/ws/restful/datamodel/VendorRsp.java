@@ -7,11 +7,11 @@ package ws.restful.datamodel;
 
 import entity.VendorEntity;
 import java.util.List;
+import javax.xml.bind.annotation.XmlType;
 
-/**
- *
- * @author SYLVIA
- */
+@XmlType(name = "vendorRsp", propOrder = {
+    "vendorEntities"
+})
 public class VendorRsp {
     private List<VendorEntity> vendorEntities;
 

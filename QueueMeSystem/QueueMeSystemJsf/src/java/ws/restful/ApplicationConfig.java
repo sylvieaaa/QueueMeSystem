@@ -31,6 +31,7 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(ws.restful.CustomerResource.class);
         resources.add(ws.restful.FoodCourtResource.class);
+        resources.add(ws.restful.MenuResource.class);
         resources.add(ws.restful.VendorResource.class);
     }
     

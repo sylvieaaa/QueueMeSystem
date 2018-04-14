@@ -87,4 +87,10 @@
         <local>ejb.session.stateless.VendorEntityControllerLocal</local>
         <ejb-link>QueueMeSystem-ejb.jar#VendorEntityController</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>MenuEntityController</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.MenuEntityControllerLocal</local>
+        <ejb-link>QueueMeSystem-ejb.jar#MenuEntityController</ejb-link>
+    </ejb-local-ref>
 </web-app>
