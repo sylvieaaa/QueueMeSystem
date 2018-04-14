@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,10 +29,11 @@ public class CreditCardEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long creditCardId;
     private Integer cardNo;
-    private Integer cvv;
+    //private Integer cvv;
     private String name;
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar expiryDate;
+    private Date expiryDate;
+    private boolean defaultCard;
     @ManyToOne
     @JoinColumn (nullable = true)
     private CustomerEntity customerEntity;
@@ -39,11 +41,12 @@ public class CreditCardEntity implements Serializable {
     public CreditCardEntity() {
     }
 
-    public CreditCardEntity(Integer cardNo, Integer cvv, String name, Calendar expiryDate) {
+    public CreditCardEntity(Integer cardNo, String name, Date expiryDate, boolean defaultCard) {
         this.cardNo = cardNo;
-        this.cvv = cvv;
+        //this.cvv = cvv;
         this.name = name;
         this.expiryDate = expiryDate;
+        this.defaultCard = defaultCard;
     }
   
 
@@ -97,16 +100,16 @@ public class CreditCardEntity implements Serializable {
     /**
      * @return the cvv
      */
-    public Integer getCvv() {
-        return cvv;
-    }
-
-    /**
-     * @param cvv the cvv to set
-     */
-    public void setCvv(Integer cvv) {
-        this.cvv = cvv;
-    }
+//    public Integer getCvv() {
+//        return cvv;
+//    }
+//
+//    /**
+//     * @param cvv the cvv to set
+//     */
+//    public void setCvv(Integer cvv) {
+//        this.cvv = cvv;
+//    }
 
     /**
      * @return the name
@@ -125,14 +128,14 @@ public class CreditCardEntity implements Serializable {
     /**
      * @return the expiryDate
      */
-    public Calendar getExpiryDate() {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 
     /**
      * @param expiryDate the expiryDate to set
      */
-    public void setExpiryDate(Calendar expiryDate) {
+    public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 
@@ -149,5 +152,12 @@ public class CreditCardEntity implements Serializable {
     public void setCustomerEntity(CustomerEntity customerEntity) {
         this.customerEntity = customerEntity;
     }
-    
+
+    public boolean isDefaultCard() {
+        return defaultCard;
+    }
+
+    public void setDefaultCard(boolean defaultCard) {
+        this.defaultCard = defaultCard;
+    }
 }

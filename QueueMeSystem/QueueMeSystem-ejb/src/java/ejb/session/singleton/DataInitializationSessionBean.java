@@ -7,6 +7,7 @@ package ejb.session.singleton;
 
 import ejb.session.stateless.AdminEntityControllerLocal;
 import ejb.session.stateless.CategoryEntityControllerLocal;
+import ejb.session.stateless.CreditCardEntityControllerLocal;
 import ejb.session.stateless.CustomerEntityControllerLocal;
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
 import ejb.session.stateless.MenuEntityControllerLocal;
@@ -18,6 +19,7 @@ import ejb.session.stateless.TagEntityControllerLocal;
 import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.AdminEntity;
 import entity.CategoryEntity;
+import entity.CreditCardEntity;
 import entity.CustomerEntity;
 import entity.FoodCourtEntity;
 import entity.MenuEntity;
@@ -48,6 +50,9 @@ import util.exception.TagAlreadyExistException;
 @LocalBean
 @Startup
 public class DataInitializationSessionBean {
+
+    @EJB
+    private CreditCardEntityControllerLocal creditCardEntityControllerLocal;
 
     @EJB
     private TagEntityControllerLocal tagEntityControllerLocal;
@@ -116,9 +121,15 @@ public class DataInitializationSessionBean {
 
             CustomerEntity customerEntity = customerEntityControllerLocal.createCustomer(new CustomerEntity("customer", "first", "98765432", "abc street", "customer@gmail.com", "password"));
 
-            // Initialize FoodCourt Entity
             Date calendarStart = new Date(0, 0, 0, 8, 0);
             Date calendarEnd = new Date(0, 0, 0, 22, 0);
+            
+            CreditCardEntity creditCard = creditCardEntityControllerLocal.createCreditCard(new CreditCardEntity(1234567899, "customer", calendarEnd , true));
+            customerEntity.getCreditCardEntities().add(creditCard);
+            creditCard.setCustomerEntity(customerEntity);
+            
+            // Initialize FoodCourt Entity
+            
 
             FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", calendarStart, calendarEnd, "ABCFoodCourt", "password", "fc1.png"));
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", calendarStart, calendarEnd, "royalfoodcourt", "password", "fc1.png"));
