@@ -59,7 +59,7 @@ public class CreateNewVendorManagedBean implements Serializable {
         FoodCourtEntity vendorEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         try {
             String fileName = "";
-            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodPhotos";
+            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "vendorLogos";
 
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
