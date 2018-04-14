@@ -5,8 +5,11 @@
  */
 package ejb.session.stateless;
 
+import entity.CustomerEntity;
+import java.io.File;
 import javax.ejb.Local;
 import util.exception.BusinessEntityNotFoundException;
+import util.exception.CustomerNotFoundException;
 
 /**
  *
@@ -16,5 +19,7 @@ import util.exception.BusinessEntityNotFoundException;
 public interface EmailControllerLocal {
 
     public void forgetPasswordEmail(String toEmail) throws BusinessEntityNotFoundException;
+
+    public void sendReceipt(File receiptFile, CustomerEntity customerEntity) throws CustomerNotFoundException;
     
 }

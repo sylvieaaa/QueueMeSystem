@@ -62,7 +62,7 @@ public class IndexManagedBean {
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (AdminEntity) businessEntity);
                 FacesContext.getCurrentInstance().getExternalContext().redirect("adminMainPage.xhtml");
             } else if (businessEntity instanceof FoodCourtEntity) {
-                if (((FoodCourtEntity) businessEntity).getEnable()) {
+                if (((FoodCourtEntity) businessEntity).getEnabled()) {
                     accountType = "FoodCourt";
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (FoodCourtEntity) businessEntity);
                 } else {
