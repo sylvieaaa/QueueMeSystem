@@ -5,6 +5,7 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.EmailControllerLocal;
 import ejb.session.stateless.MenuEntityControllerLocal;
 import ejb.session.stateless.MenuItemEntityController;
 import ejb.session.stateless.MenuItemEntityControllerLocal;
@@ -16,25 +17,41 @@ import entity.MenuItemEntity;
 import entity.SaleTransactionEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.VendorEntity;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.sql.DataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import util.exception.CreateNewSaleTransactionException;
+import util.exception.CustomerNotFoundException;
 import util.exception.MenuItemNotFoundException;
 import util.exception.MenuNotFoundException;
 
@@ -45,6 +62,12 @@ import util.exception.MenuNotFoundException;
 @Named(value = "checkOutManagedBean")
 @SessionScoped
 public class CheckOutManagedBean implements Serializable {
+
+    @EJB
+    private EmailControllerLocal emailControllerLocal;
+
+    @Resource(name = "queueMeSystemDataSource")
+    private DataSource queueMeSystemDataSource;
 
     @EJB
     private MenuItemEntityControllerLocal menuItemEntityControllerLocal;
@@ -124,6 +147,7 @@ public class CheckOutManagedBean implements Serializable {
 
         VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance().getTime(), Boolean.FALSE, isTakeaway, null, saleTransactionLineItemEntities));
+        generateReport(newSaleTransactionEntity.getSaleTransactionId());
         initialiseState();
 
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Checkout completed successfully (Sales Transaction ID: " + newSaleTransactionEntity.getSaleTransactionId() + ")", null));
@@ -135,6 +159,31 @@ public class CheckOutManagedBean implements Serializable {
     public void clearShoppingCart() {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Shopping cart cleared", null));
         initialiseState();
+    }
+    
+    public void generateReport(Long saleTransactionId) {
+        try {
+            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "abc.html";
+            //String another = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "Queue_Me_Receipt.jrxml";
+            InputStream input = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/jasperreports/Queue_Me_Receipt.jasper");
+            Connection conn = queueMeSystemDataSource.getConnection();
+            HashMap map = new HashMap();
+            map.put("SaleTransactionId", saleTransactionId);
+//            JasperReport report = JasperCompileManager.compileReport(input);
+            JasperPrint print = JasperFillManager.fillReport(input, map, conn);
+            JasperExportManager.exportReportToHtmlFile(print, newFilePath);
+            System.err.println("done");
+            File outputFile = new File(newFilePath);
+            try {
+                emailControllerLocal.sendReceipt(outputFile, new CustomerEntity());
+            } catch (CustomerNotFoundException ex) {
+                System.err.println("failed");
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        } catch (JRException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
     public SaleTransactionEntityControllerLocal getSaleTransactionEntityControllerLocal() {

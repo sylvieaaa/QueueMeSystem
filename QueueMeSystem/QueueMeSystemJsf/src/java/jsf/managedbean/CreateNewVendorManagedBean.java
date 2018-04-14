@@ -1,6 +1,9 @@
 package jsf.managedbean;
 
+import ejb.session.stateless.FoodCourtEntityControllerLocal;
 import ejb.session.stateless.VendorEntityControllerLocal;
+import entity.AdminEntity;
+import entity.BusinessEntity;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
 import java.io.File;
@@ -8,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.application.FacesMessage;
@@ -18,10 +22,14 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 import util.enumeration.VendorTypeEnum;
 import util.exception.DuplicateEmailUserException;
+import util.exception.FoodCourtNotFoundException;
 
 @Named(value = "createNewVendorManagedBean")
 @ViewScoped
 public class CreateNewVendorManagedBean implements Serializable {
+
+    @EJB
+    private FoodCourtEntityControllerLocal foodCourtEntityControllerLocal;
 
     @EJB
     private VendorEntityControllerLocal vendorEntityControllerLocal;
@@ -32,6 +40,9 @@ public class CreateNewVendorManagedBean implements Serializable {
 
     private File file;
 
+    private FoodCourtEntity currentFoodCourt;
+    private Long currentFoodCourtId;
+
     /**
      * Creates a new instance of CreateNewVendorManagedBean
      */
@@ -39,15 +50,43 @@ public class CreateNewVendorManagedBean implements Serializable {
         newVendorEntity = new VendorEntity();
     }
 
-    public void createNewVendor(ActionEvent event) throws IOException{
+    @PostConstruct
+    public void postConstruct() {
+        //need to get current food court
         try {
-            FoodCourtEntity foodCourtEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+            currentFoodCourtId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate");
+            currentFoodCourt = foodCourtEntityControllerLocal.retrieveFoodCourtById(currentFoodCourtId);
+        } catch (FoodCourtNotFoundException ex) {
+
+        }
+    }
+
+    public void createNewVendor(ActionEvent event) throws IOException {
+        try {
+            Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
+            System.err.println("IHIHI" + foodCourtIdToView);
+            FoodCourtEntity foodCourtEntity;
+
+            try {
+                foodCourtEntity = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtIdToView);
+            } catch (FoodCourtNotFoundException ex) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+                return;
+            }
+
             VendorEntity vendorEntity = vendorEntityControllerLocal.createVendorEntity(newVendorEntity, foodCourtEntity);
             newVendorEntity = new VendorEntity();
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New vendor created successfully (Vendor ID: " + vendorEntity.getVendorName() + ")", null));
             file = null;
-            FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
+
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
+            } catch (IOException ex) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+            }
+            
         } catch (DuplicateEmailUserException err) {
             System.err.println("IZZNOTUNIQUE");
             System.err.println(err.toString());
@@ -56,7 +95,11 @@ public class CreateNewVendorManagedBean implements Serializable {
     }
 
     public void upload(FileUploadEvent event) {
-        FoodCourtEntity vendorEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+
+        AdminEntity adminEntity;
+        FoodCourtEntity foodCourtEntity;
+
         try {
             String fileName = "";
             String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "vendorLogos";
@@ -65,7 +108,13 @@ public class CreateNewVendorManagedBean implements Serializable {
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
 
             file = new File(newFilePath);
-            file = File.createTempFile("F0" + vendorEntity.getBusinessId(), ".png", file);
+            if (businessEntity instanceof AdminEntity) {
+                adminEntity = (AdminEntity) businessEntity;
+                file = File.createTempFile("F0" + adminEntity.getBusinessId(), ".png", file);
+            } else {
+                foodCourtEntity = (FoodCourtEntity) businessEntity;
+                file = File.createTempFile("F0" + foodCourtEntity.getBusinessId(), ".png", file);
+            }
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 
             int a;
@@ -122,6 +171,22 @@ public class CreateNewVendorManagedBean implements Serializable {
 
     public void setVendorTypes(VendorTypeEnum[] vendorTypes) {
         this.vendorTypes = vendorTypes;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public FoodCourtEntity getCurrentFoodCourt() {
+        return currentFoodCourt;
+    }
+
+    public void setCurrentFoodCourt(FoodCourtEntity currentFoodCourt) {
+        this.currentFoodCourt = currentFoodCourt;
     }
 
 }

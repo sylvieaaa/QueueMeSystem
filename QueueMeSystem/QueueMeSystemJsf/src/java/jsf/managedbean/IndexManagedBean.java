@@ -39,7 +39,6 @@ public class IndexManagedBean {
 
     @EJB
     private BusinessEntityControllerLocal businessEntityControllerLocal;
-    
 
     private String username;
     private String password;
@@ -61,26 +60,37 @@ public class IndexManagedBean {
             if (businessEntity instanceof AdminEntity) {
                 accountType = "Admin";
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (AdminEntity) businessEntity);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("adminMainPage.xhtml");
             } else if (businessEntity instanceof FoodCourtEntity) {
-                accountType = "FoodCourt";
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (FoodCourtEntity) businessEntity);
+                if (((FoodCourtEntity) businessEntity).getEnabled()) {
+                    accountType = "FoodCourt";
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (FoodCourtEntity) businessEntity);
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", null));
+                    return;
+                }
             } else if (businessEntity instanceof VendorEntity) {
-                accountType = "Vendor";
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (VendorEntity) businessEntity);
+                if (((VendorEntity) businessEntity).getEnabled()) {
+                    accountType = "Vendor";
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (VendorEntity) businessEntity);
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", null));
+                    return;
+                }
             } else {
                 accountType = "Customer";
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (CustomerEntity) businessEntity);
             }
 
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountType", accountType);
-            
+
             FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
 
         } catch (InvalidLoginCredentialException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", null));
         }
     }
-    
+
     public void forgetPassword(ActionEvent event) {
         try {
             emailControllerLocal.forgetPasswordEmail(email);

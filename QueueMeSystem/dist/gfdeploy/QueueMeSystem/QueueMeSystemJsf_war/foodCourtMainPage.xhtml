@@ -20,8 +20,12 @@
                 <h:outputText style="color:blue; font-size: x-large; font-weight: bold " value="#{manageFoodCourtManagedBean.currentFoodCourt.name}"/> &nbsp;
                 <p:commandButton id="viewFoodCourt" style="background-color: transparent; border: transparent; cursor: pointer" icon="fa fa-search" />
                 <br /><br />
+                <p:commandButton actionListener="#{manageFoodCourtManagedBean.createVendorPage}" value="Add Vendor" icon="fa fa-plus-circle">
+                    <f:attribute name="foodCourtId" value="#{manageFoodCourtManagedBean.currentFoodCourt.businessId}"/>
+                </p:commandButton>&nbsp;&nbsp;
                 <p:button icon="ui-icon-locked" outcome="changePassword.xhtml" value="Change Password" rendered="#{sessionScope['accountType'] ne 'Admin'}"/> &nbsp;&nbsp;
-                <p:commandButton value="Back" onclick="history.back()" rendered="#{sessionScope['accountType'] eq 'Admin'}"/>
+                <p:commandButton value="Back" action="adminMainPage.xhtml" rendered="#{sessionScope['accountType'] eq 'Admin'}"/>
+                
                 <br />
                 <p:overlayPanel for="viewFoodCourt" hideEffect="fade">
                     <h:form id="foodCourtDetails">
@@ -135,7 +139,7 @@
                     </p:panelGrid>
                 </p:carousel>
 
-                <p:button outcome="createNewVendor.xhtml" value="Add Vendor" icon="fa fa-plus-circle"></p:button>
+                
 
             </p:panel>
 

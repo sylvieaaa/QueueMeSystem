@@ -52,14 +52,11 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
     private VendorTypeEnum[] vendorTypes = VendorTypeEnum.values();
 
-    private String disabled;
-
     /**
      * Creates a new instance of UpdateVendorManagedBean
      */
     public ManageFoodCourtManagedBean() {
         vendorEntityToUpdate = new VendorEntity();
-        this.disabled = "false";
     }
 
     public void updateVendor(ActionEvent event) {
@@ -83,11 +80,9 @@ public class ManageFoodCourtManagedBean implements Serializable {
             System.err.println(FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate"));
             foodCourtId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate");
             System.err.println("ENTERED HERE ADMIN");
-            disabled = "true";
         } else {
             foodCourtId = ((FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity")).getBusinessId();
             System.err.println("ENTERED HERE FOODCOURT");
-            disabled = "false";
         }
         try {
             currentFoodCourt = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtId);
@@ -177,6 +172,16 @@ public class ManageFoodCourtManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + e.getMessage(), null));
         }
     }
+    
+    public void createVendorPage(ActionEvent event) {
+        try {
+            Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("createNewVendor.xhtml");
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+        }
+    }
 
     public VendorEntity getVendorEntityToUpdate() {
         return vendorEntityToUpdate;
@@ -232,14 +237,6 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
     public void setVendorTypes(VendorTypeEnum[] vendorTypes) {
         this.vendorTypes = vendorTypes;
-    }
-
-    public String getDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(String disabled) {
-        this.disabled = disabled;
     }
 
 }

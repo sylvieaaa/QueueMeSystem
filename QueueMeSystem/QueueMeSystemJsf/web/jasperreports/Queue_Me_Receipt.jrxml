@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Queue Me" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="45ca3636-7936-4808-b40e-afe65a2c9c71">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Queue Me System"/>
+	<parameter name="SaleTransactionId" class="java.lang.String">
+		<parameterDescription><![CDATA[SaleTransactionId]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT queuemesystem.saletransactionlineitementity.`SALETRANSACTIONLINEITEMID`,
+	queuemesystem.saletransactionlineitementity.`QUANTITY`,
+	queuemesystem.saletransactionlineitementity.`SERIALNUMBER`,
+	queuemesystem.saletransactionlineitementity.`SPECIALREQUEST`,
+	queuemesystem.saletransactionlineitementity.`SUBTOTAL`,
+	queuemesystem.saletransactionlineitementity.`UNITPRICE`,
+	queuemesystem.saletransactionlineitementity.`MENUITEMENTITY_MENUITEMID`,
+	queuemesystem.saletransactionlineitementity.`SALETRANSACTIONENTITY_SALETRANSACTIONID`,
+	queuemesystem.saletransactionentity.`SALETRANSACTIONID`,
+	queuemesystem.saletransactionentity.`ISTAKEAWAY`,
+	queuemesystem.saletransactionentity.`ISVOIDED`,
+	queuemesystem.saletransactionentity.`TOTALAMOUNT`,
+	queuemesystem.saletransactionentity.`TOTALLINEITEM`,
+	queuemesystem.saletransactionentity.`TOTALQUANTITY`,
+	queuemesystem.saletransactionentity.`TRANSACTIONDATETIME`,
+	queuemesystem.menuitementity.`MENUITEMID`,
+	queuemesystem.menuitementity.`DESCRIPTION`,
+	queuemesystem.menuitementity.`MENUITEMNAME`,
+	queuemesystem.menuitementity.`PRICE`,
+	queuemesystem.menuitementity.`VENDORENTITY_BUSINESSID`,
+	queuemesystem.vendorentity.`BUSINESSID`,
+	queuemesystem.vendorentity.`VENDORNAME`,
+	queuemesystem.vendorentity.`FOODCOURTENTITY_BUSINESSID`,
+	queuemesystem.foodcourtentity.`BUSINESSID`,
+	queuemesystem.foodcourtentity.`ADDRESS`,
+	queuemesystem.foodcourtentity.`POSTALCODE`,
+	queuemesystem.foodcourtentity.`NAME`
+FROM queuemesystem.foodcourtentity
+	INNER JOIN queuemesystem.vendorentity ON 
+	 queuemesystem.vendorentity.`FOODCOURTENTITY_BUSINESSID` = queuemesystem.foodcourtentity.`BUSINESSID` 
+	INNER JOIN queuemesystem.menuitementity ON 
+	 queuemesystem.menuitementity.`VENDORENTITY_BUSINESSID` = queuemesystem.vendorentity.`BUSINESSID` 
+	INNER JOIN queuemesystem.saletransactionlineitementity ON 
+	 queuemesystem.saletransactionlineitementity.`MENUITEMENTITY_MENUITEMID` = queuemesystem.menuitementity.`MENUITEMID` 
+	INNER JOIN queuemesystem.saletransactionentity ON 
+	 queuemesystem.saletransactionlineitementity.`SALETRANSACTIONENTITY_SALETRANSACTIONID` = queuemesystem.saletransactionentity.`SALETRANSACTIONID` 
+WHERE 
+	 queuemesystem.saletransactionentity.`SALETRANSACTIONID` = $P{SaleTransactionId} 
+ORDER BY queuemesystem.saletransactionlineitementity.`SERIALNUMBER` ASC]]>
+	</queryString>
+	<field name="SALETRANSACTIONLINEITEMID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="SALETRANSACTIONLINEITEMID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionlineitementity"/>
+	</field>
+	<field name="QUANTITY" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="QUANTITY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionlineitementity"/>
+	</field>
+	<field name="SERIALNUMBER" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SERIALNUMBER"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionlineitementity"/>
+	</field>
+	<field name="SPECIALREQUEST" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SPECIALREQUEST"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionlineitementity"/>
+	</field>
+	<field name="SUBTOTAL" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="SUBTOTAL"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionlineitementity"/>
+	</field>
+	<field name="UNITPRICE" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="UNITPRICE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionlineitementity"/>
+	</field>
+	<field name="MENUITEMENTITY_MENUITEMID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="MENUITEMENTITY_MENUITEMID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionlineitementity"/>
+	</field>
+	<field name="SALETRANSACTIONENTITY_SALETRANSACTIONID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="SALETRANSACTIONENTITY_SALETRANSACTIONID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionlineitementity"/>
+	</field>
+	<field name="SALETRANSACTIONID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="SALETRANSACTIONID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionentity"/>
+	</field>
+	<field name="ISTAKEAWAY" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="ISTAKEAWAY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionentity"/>
+	</field>
+	<field name="ISVOIDED" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="ISVOIDED"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionentity"/>
+	</field>
+	<field name="TOTALAMOUNT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="TOTALAMOUNT"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionentity"/>
+	</field>
+	<field name="TOTALLINEITEM" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="TOTALLINEITEM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionentity"/>
+	</field>
+	<field name="TOTALQUANTITY" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="TOTALQUANTITY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionentity"/>
+	</field>
+	<field name="TRANSACTIONDATETIME" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="TRANSACTIONDATETIME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="saletransactionentity"/>
+	</field>
+	<field name="MENUITEMID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="MENUITEMID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="menuitementity"/>
+	</field>
+	<field name="DESCRIPTION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESCRIPTION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="menuitementity"/>
+	</field>
+	<field name="MENUITEMNAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MENUITEMNAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="menuitementity"/>
+	</field>
+	<field name="PRICE" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PRICE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="menuitementity"/>
+	</field>
+	<field name="VENDORENTITY_BUSINESSID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="VENDORENTITY_BUSINESSID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="menuitementity"/>
+	</field>
+	<field name="BUSINESSID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="BUSINESSID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendorentity"/>
+	</field>
+	<field name="VENDORNAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="VENDORNAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendorentity"/>
+	</field>
+	<field name="FOODCOURTENTITY_BUSINESSID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="FOODCOURTENTITY_BUSINESSID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendorentity"/>
+	</field>
+	<field name="COLUMN_24" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="BUSINESSID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="foodcourtentity"/>
+	</field>
+	<field name="ADDRESS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ADDRESS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="foodcourtentity"/>
+	</field>
+	<field name="POSTALCODE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="POSTALCODE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="foodcourtentity"/>
+	</field>
+	<field name="NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="foodcourtentity"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-20" y="-20" width="595" height="97" backcolor="#FCA460" uuid="dd6270c4-7fd2-40a2-bd52-a1fdd178431a"/>
+				<graphicElement>
+					<pen lineColor="#FCFAFA"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="30" forecolor="#FCFAFA" uuid="ec424fc4-f6aa-458b-adcd-b84e78b5285b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="22" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="555" height="30" forecolor="#FCFAFA" uuid="40817dbf-8151-4734-8663-d6608dd3e767"/>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="22" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VENDORNAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="11" width="150" height="30" uuid="dea18419-0ad2-4c07-ad58-b288bebcb7b3"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Helvetica Neue" size="14"/>
+				</textElement>
+				<text><![CDATA[Transaction ID:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="11" width="100" height="30" uuid="8ecf3e59-5d7b-4bf3-b562-df5dd971d053"/>
+				<textElement>
+					<font fontName="Helvetica Neue" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALETRANSACTIONID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="34" width="160" height="18" uuid="4d2613a9-d32e-4ebc-99ad-2afa160810c6"/>
+				<textElement>
+					<font fontName="Helvetica Neue" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TRANSACTIONDATETIME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="34" width="150" height="19" uuid="92e9499c-20fd-4235-a81e-e4054d92248d"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Helvetica Neue" size="14"/>
+				</textElement>
+				<text><![CDATA[Transaction Date:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="22" width="100" height="30" uuid="049b0a3a-1d0c-4479-892a-4dd2791f8389">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6709692f-0597-4feb-8486-8add22184b7e"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[S/N]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="22" width="100" height="30" uuid="55c68326-9920-438b-b585-65ec1c69de75">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9d36b38c-1893-4abd-8ffb-f77ffc099113"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="14" isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="227" y="22" width="100" height="30" uuid="f6dca4fb-aa39-4f2f-90a5-8e2cf2382336">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4166e172-a8de-4910-8903-6e2328eb564b"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="463" y="22" width="100" height="30" uuid="a5088c7f-292d-4bff-8364-f23c5253d9f7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b63aa7b2-767b-4079-8ee9-f28e72163e1b"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="327" y="22" width="100" height="30" uuid="1ac829aa-477a-4991-86e2-dc28034cfbb3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="eddd0c5e-c3c6-4013-8c6c-2a6d478a7407"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="14" isBold="true"/>
+					<paragraph lineSpacingSize="2.0"/>
+				</textElement>
+				<text><![CDATA[Special Req]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="10" width="556" height="40" forecolor="#F7C76D" backcolor="#F4BC5B" uuid="c93267ba-0590-4e84-9b12-646e8560700e"/>
+			</rectangle>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="4" width="100" height="30" uuid="45d27800-b9ec-4d35-bb23-fd10bda161e9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6709692f-0597-4feb-8486-8add22184b7e"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SERIALNUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="4" width="100" height="30" uuid="8c80cfb8-ddbc-4a19-abd9-cbce610f8a0a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9d36b38c-1893-4abd-8ffb-f77ffc099113"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MENUITEMNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="ElementGroupBottom" x="230" y="4" width="100" height="30" uuid="cc1d6c28-4bba-40db-b0a0-4590a8f26a87">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4166e172-a8de-4910-8903-6e2328eb564b"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="13"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="470" y="4" width="100" height="30" uuid="5a15449c-a10a-4ce7-b662-a553ce330bb6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b63aa7b2-767b-4079-8ee9-f28e72163e1b"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUBTOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="4" width="100" height="30" uuid="e1b70b24-db76-4ae8-8f38-575523edd47f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="eddd0c5e-c3c6-4013-8c6c-2a6d478a7407"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Helvetica Neue" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SPECIALREQUEST}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="49" splitType="Stretch">
+			<textField>
+				<reportElement x="477" y="9" width="57" height="30" uuid="ea8db07e-c9f1-4d89-a594-7ebfec74999c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Helvetica Neue" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTALAMOUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="437" y="10" width="100" height="30" uuid="d408ea18-4b0b-426f-b879-a26d5dc24cb8"/>
+				<textElement>
+					<font fontName="Helvetica Neue" size="14"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
