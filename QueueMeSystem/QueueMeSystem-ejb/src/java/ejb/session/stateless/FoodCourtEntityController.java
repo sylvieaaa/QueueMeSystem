@@ -65,7 +65,7 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
 
     @Override
     public List<FoodCourtEntity> retrieveAllFoodCourts() {
-        Query query = em.createQuery("SELECT f FROM FoodCourtEntity f WHERE f.enable = TRUE ORDER BY f.name ASC");
+        Query query = em.createQuery("SELECT f FROM FoodCourtEntity f WHERE f.enabled = TRUE ORDER BY f.name ASC");
         return query.getResultList();
     }
 
