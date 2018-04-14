@@ -144,6 +144,14 @@ public class VendorEntityController implements VendorEntityControllerLocal {
         }
     }
 
+    @Override
+    public List<VendorEntity> retrieveVendorsByFoodCourtId(Long foodCourtId) {
+        Query query = em.createQuery("SELECT v FROM VendorEntity v WHERE v.foodCourtEntity.businessId = :inFoodCourtId");
+        query.setParameter("inFoodCourtId", foodCourtId);
+
+        return query.getResultList();
+    }
+
     /*
     @Override
     public VendorStaffEntity createVendorStaff(VendorStaffEntity vendorStaffEntity) {

@@ -90,7 +90,7 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
     public void disableFoodCourt(Long foodCourtId) throws FoodCourtNotFoundException {
         if (foodCourtId != null) {
             FoodCourtEntity foodCourtToDisable = retrieveFoodCourtById(foodCourtId);
-            foodCourtToDisable.setEnable(Boolean.FALSE);
+            foodCourtToDisable.setEnabled(Boolean.FALSE);
         } else {
             throw new FoodCourtNotFoundException("Id not provided for FoodCourt to be disabled");
         }

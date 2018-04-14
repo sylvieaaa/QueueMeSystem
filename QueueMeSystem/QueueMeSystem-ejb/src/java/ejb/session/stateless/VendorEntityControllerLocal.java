@@ -40,4 +40,6 @@ public interface VendorEntityControllerLocal {
 
     public void updateFileUrl(Long vendorId, String url);
 
+    public List<VendorEntity> retrieveVendorsByFoodCourtId(Long foodCourtId);
+
 }
