@@ -33,6 +33,6 @@ public interface VendorEntityControllerLocal {
 
     public void updatePassword(String username, String password);
 
-    public List<VendorEntity> retrieveVendorsByFoodCourt(FoodCourtEntity foodCourtEntity);
+    public List<VendorEntity> retrieveVendorsByFoodCourtId(Long foodCourtId);
 
 }

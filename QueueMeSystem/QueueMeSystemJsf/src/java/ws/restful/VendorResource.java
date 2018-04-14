@@ -53,47 +53,33 @@ public class VendorResource {
     public VendorResource() {
     }
 
-    /**
-     * PUT method for updating or creating an instance of CustomerResource
-     *
-     * @param vendorReq
-     * @return
-     */
     @Path("retrieveVendors")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllVendorsByFoodCourt(JAXBElement<VendorReq> vendorReq) {
-        if ((vendorReq != null) && (vendorReq.getValue() != null)) {
+    public Response retrieveAllVendorsByFoodCourt(@QueryParam("foodCourtId") Long foodCourtId) {
 
-            try {
-                FoodCourtEntity foodCourtEntity = vendorReq.getValue().getFoodCourtEntity();
-                List<VendorEntity> vendorEntities = vendorEntityControllerLocal.retrieveVendorsByFoodCourt(foodCourtEntity);
+        try {
+            List<VendorEntity> vendorEntities = vendorEntityControllerLocal.retrieveVendorsByFoodCourtId(foodCourtId);
 
-                for (VendorEntity vendorEntity : vendorEntities) {
-                    vendorEntity.getOrderEntities().clear();
-                    vendorEntity.getMenuItemEntities().clear();
-                    vendorEntity.getMenuEntities().clear();
-                    vendorEntity.setFoodCourtEntity(null);
+            for (VendorEntity vendorEntity : vendorEntities) {
+                vendorEntity.getOrderEntities().clear();
+                vendorEntity.getMenuItemEntities().clear();
+                vendorEntity.getMenuEntities().clear();
+                vendorEntity.setFoodCourtEntity(null);
 
-                    for (ReviewEntity reviewEntity : vendorEntity.getReviewEntities()) {
-                        reviewEntity.setCustomerEntity(null);
-                        reviewEntity.setVendorEntity(null);
-                    }
+                for (ReviewEntity reviewEntity : vendorEntity.getReviewEntities()) {
+                    reviewEntity.setCustomerEntity(null);
+                    reviewEntity.setVendorEntity(null);
                 }
-
-                return Response.status(Status.OK).entity(new VendorRsp(vendorEntities)).build();
-            } catch (Exception ex) {
-                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
-
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
+            return Response.status(Status.OK).entity(new VendorRsp(vendorEntities)).build();
+        } catch (Exception ex) {
+            ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
 
-        } else {
-            ErrorRsp errorRsp = new ErrorRsp("Invalid create customer request");
-
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+
     }
 
     /**
