@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author KERK
  */
-@XmlType(name = "updateCustomerRsp", propOrder = {
+@XmlType(name = "updateCustomerReq", propOrder = {
     "customerEntity"
 })
 public class UpdateCustomerReq {

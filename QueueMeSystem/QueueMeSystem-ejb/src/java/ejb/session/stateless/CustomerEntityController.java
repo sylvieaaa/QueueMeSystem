@@ -16,6 +16,8 @@ import javax.persistence.Query;
 import util.exception.AdminNotFoundException;
 import util.exception.CreateCustomerException;
 import util.exception.CustomerNotFoundException;
+import util.exception.PasswordDoNotMatchException;
+import util.security.CryptographicHelper;
 
 /**
  *
@@ -80,4 +82,15 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
 
         }
     }
+    
+    @Override
+    public void updateCustomerPassword(CustomerEntity customerEntity, String oldPassword, String newPassword) throws CustomerNotFoundException, PasswordDoNotMatchException {
+        customerEntity = retrieveCustomerByUsername(customerEntity.getUsername());
+        String oldPasswordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(oldPassword + customerEntity.getSalt()));
+        if(customerEntity.getPassword().equals(oldPasswordHash)) {
+            customerEntity.setPassword(newPassword);
+        } else {
+            throw new PasswordDoNotMatchException("Passwords do not match");
+        }
+    }   
 }

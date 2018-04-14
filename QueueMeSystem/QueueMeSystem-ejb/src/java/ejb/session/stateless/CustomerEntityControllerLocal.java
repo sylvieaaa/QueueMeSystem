@@ -9,6 +9,7 @@ import entity.CustomerEntity;
 import javax.ejb.Local;
 import util.exception.CreateCustomerException;
 import util.exception.CustomerNotFoundException;
+import util.exception.PasswordDoNotMatchException;
 
 /**
  *
@@ -26,5 +27,7 @@ public interface CustomerEntityControllerLocal {
     public CustomerEntity retrieveCustomerById(Long customerId) throws CustomerNotFoundException;
 
     public void updatePassword(String username, String password);
+    
+    public void updateCustomerPassword(CustomerEntity customerEntity, String oldPassword, String newPassword) throws CustomerNotFoundException, PasswordDoNotMatchException;
 
 }

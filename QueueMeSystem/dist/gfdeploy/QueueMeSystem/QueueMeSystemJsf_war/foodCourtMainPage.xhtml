@@ -15,7 +15,7 @@
             <br/>
 
 
-            <p:panel style="display:block; text-align:center">
+            <p:panel style="display:block; text-align:center; border-color: transparent">
 
                 <h:outputText style="color:blue; font-size: x-large; font-weight: bold " value="#{sessionScope['businessEntity'].name}"/> &nbsp;
                 <p:commandButton id="viewFoodCourt" style="background-color: transparent; border: transparent; cursor: pointer" icon="fa fa-search" />
@@ -26,7 +26,7 @@
                     <h:form id="foodCourtDetails">
                         <p:panelGrid style="text-align: left; border: #000000">
                             <p:row>
-                                <p:column colspan="2"><p:graphicImage style="width:20%; text-align: center" value="http://localhost:8080/queueme-uploads/vendorLogos/#{viewAllFoodCourtsManagedBean.foodCourtToView.fileURL}"/></p:column>
+                                <p:column colspan="2"><p:graphicImage style="text-align: center" value="http://localhost:8080/queueme-uploads/foodCourtLogos/#{sessionScope['businessEntity'].fileURL}" width="200px" height="100px"/></p:column>
                             </p:row>
 
                             <p:row>
@@ -80,7 +80,7 @@
 
                 <p:carousel id="vendorCarousel" value="#{updateVendorManagedBean.vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
                     <p:panelGrid columns="1" style="margin-left: 60px; margin-top: 2px">
-                        <p:graphicImage  value="http://localhost:8080/queueme-uploads/foodPhotos/#{vendors.photoURL}" width="70%"/>
+                        <p:graphicImage  value="http://localhost:8080/queueme-uploads/vendorLogos/#{vendors.photoURL}" width="200px" height="100px"/>
                     </p:panelGrid>
                     <p:panelGrid style="margin-left: 40px;text-align: left">
                         <p:row>
@@ -273,7 +273,7 @@
                     <p:messages id="deleteVendor" redisplay="false" />
                     <h4 style="text-align: center"> Confirm to delete <h:outputText style="color: blue;" value="#{updateVendorManagedBean.vendorToDisable.vendorName} ?"/></h4>
 
-                    <p:commandButton style="margin: auto; display: block" value="Disable" update="@form vendorCarousel" actionListener="#{updateVendorManagedBean.deleteVendor}" oncomplete="PF('dialogDeleteVendor').hide();" />
+                    <p:commandButton style="margin: auto; display: block" value="Delete" update="@form vendorCarousel" actionListener="#{updateVendorManagedBean.deleteVendor}" oncomplete="PF('dialogDeleteVendor').hide();" />
 
                 </p:dialog>
             </h:form>
