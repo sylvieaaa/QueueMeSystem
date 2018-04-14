@@ -34,6 +34,7 @@ import ws.restful.datamodel.CreateCustomerReq;
 import ws.restful.datamodel.CustomerRsp;
 import ws.restful.datamodel.ErrorRsp;
 import ws.restful.datamodel.UpdateCustomerReq;
+import ws.restful.datamodel.UpdatePasswordReq;
 
 /**
  * REST Web Service
@@ -74,6 +75,8 @@ public class CustomerResource {
                 customerEntity.getOrderEntities().clear();
                 customerEntity.getReviewEntities().clear();
                 customerEntity.getSaleTransactionEntities().clear();
+                
+                customerEntity.setPassword(null);
 
                 CustomerRsp customerLoginRsp = new CustomerRsp(customerEntity);
 
@@ -100,7 +103,7 @@ public class CustomerResource {
         }
     }
 
-    @Path ("updateCustomer")
+    @Path("updateCustomer")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -112,8 +115,7 @@ public class CustomerResource {
                 customerEntityControllerLocal.updateCustomer(updateCustomerReq.getCustomerEntity());
 
                 return Response.status(Response.Status.OK).entity(this).build();
-            } 
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
             }
         } else {
@@ -138,12 +140,11 @@ public class CustomerResource {
                 CustomerEntity customerEntity = customerEntityControllerLocal.createCustomer(createCustomer.getCustomerEntity());
 
                 return Response.status(Response.Status.OK).build();
-            }catch (CreateCustomerException ex) {
+            } catch (CreateCustomerException ex) {
                 ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
 
                 return Response.status(Response.Status.BAD_REQUEST).build();
-            } 
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
 
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -155,35 +156,24 @@ public class CustomerResource {
         }
     }
     
-    @Path ("changePassword")
+
+    @Path("changePassword")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateCustomerPassword (JAXBElement<UpdateCustomerReq> jaxbUpdateCustomerReq) {
-        if ((jaxbUpdateCustomerReq != null) && (jaxbUpdateCustomerReq.getValue() != null)) {
+    public Response updateCustomerPassword(JAXBElement<UpdatePasswordReq> jaxbUpdatePasswordReq) {
+        if ((jaxbUpdatePasswordReq != null) && (jaxbUpdatePasswordReq.getValue() != null)) {
             try {
-                UpdateCustomerReq updateCustomerReq = jaxbUpdateCustomerReq.getValue();
-
-                customerEntityControllerLocal.updateCustomerPassword(updateCustomerReq.getCustomerEntity());
-
-                return Response.status(Response.Status.OK).entity(this).build();
-            } 
-            catch (Exception ex) {
+                UpdatePasswordReq updatePasswordReq = jaxbUpdatePasswordReq.getValue();
+                customerEntityControllerLocal.updateCustomerPassword(updatePasswordReq.getCustomerEntity(), updatePasswordReq.getOldPassword(), updatePasswordReq.getNewPassword());
+                return Response.status(Response.Status.OK).build();
+            } catch (Exception ex) {
+                System.err.println(ex);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
             }
         } else {
             return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
         }
-    }
-
-    /**
-     * PUT method for updating or creating an instance of CustomerResource
-     *
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
     }
 
     private BusinessEntityControllerLocal lookupBusinessEntityControllerLocal() {
@@ -216,3 +206,4 @@ public class CustomerResource {
         }
     }
 }
+
