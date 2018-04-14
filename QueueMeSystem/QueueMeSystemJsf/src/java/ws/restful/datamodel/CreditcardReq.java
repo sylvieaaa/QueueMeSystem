@@ -6,6 +6,7 @@
 package ws.restful.datamodel;
 
 import entity.CreditCardEntity;
+import entity.CustomerEntity;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -13,23 +14,44 @@ import javax.xml.bind.annotation.XmlType;
  * @author KERK
  */
 @XmlType(name = "creditCardReq", propOrder = {
-    "creditCardEntity"
+    "cardNum", "cardName", "customerEntity"
 })
 public class CreditcardReq {
-    private CreditCardEntity creditCardEntity;
+    
+    private String cardNum;
+    private String cardName;
+    private CustomerEntity customerEntity;
 
     public CreditcardReq() {
     }
 
-    public CreditcardReq(CreditCardEntity creditCardEntity) {
-        this.creditCardEntity = creditCardEntity;
+    public CreditcardReq(CreditCardEntity creditCardEntity, String cardNum, String cardName) {
+        this.cardNum = cardNum;
+        this.cardName = cardName;
+        this.customerEntity = customerEntity;
     }
 
-    public CreditCardEntity getCreditCardEntity() {
-        return creditCardEntity;
+    public String getCardNum() {
+        return cardNum;
     }
 
-    public void setCreditCardEntity(CreditCardEntity creditCardEntity) {
-        this.creditCardEntity = creditCardEntity;
-    } 
+    public void setCardNum(String cardNum) {
+        this.cardNum = cardNum;
+    }
+
+    public String getCardName() {
+        return cardName;
+    }
+
+    public void setCardName(String cardName) {
+        this.cardName = cardName;
+    }
+
+    public CustomerEntity getCustomerEntity() {
+        return customerEntity;
+    }
+
+    public void setCustomerEntity(CustomerEntity customerEntity) {
+        this.customerEntity = customerEntity;
+    }
 }

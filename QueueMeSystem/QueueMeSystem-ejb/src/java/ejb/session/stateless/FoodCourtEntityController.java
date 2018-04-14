@@ -65,7 +65,7 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
 
     @Override
     public List<FoodCourtEntity> retrieveAllFoodCourts() {
-        Query query = em.createQuery("SELECT f FROM FoodCourtEntity f WHERE f.enable = TRUE ORDER BY f.name ASC");
+        Query query = em.createQuery("SELECT f FROM FoodCourtEntity f WHERE f.enabled = TRUE ORDER BY f.name ASC");
         return query.getResultList();
     }
 
@@ -90,7 +90,7 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
     public void disableFoodCourt(Long foodCourtId) throws FoodCourtNotFoundException {
         if (foodCourtId != null) {
             FoodCourtEntity foodCourtToDisable = retrieveFoodCourtById(foodCourtId);
-            foodCourtToDisable.setEnable(Boolean.FALSE);
+            foodCourtToDisable.setEnabled(Boolean.FALSE);
         } else {
             throw new FoodCourtNotFoundException("Id not provided for FoodCourt to be disabled");
         }

@@ -28,11 +28,11 @@ public class CreditCardEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long creditCardId;
-    private Integer cardNo;
+    private String cardNo;
     //private Integer cvv;
     private String name;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date expiryDate;
+    //@Temporal(TemporalType.TIMESTAMP)
+    //private Date expiryDate;
     private boolean defaultCard;
     @ManyToOne
     @JoinColumn (nullable = true)
@@ -41,11 +41,11 @@ public class CreditCardEntity implements Serializable {
     public CreditCardEntity() {
     }
 
-    public CreditCardEntity(Integer cardNo, String name, Date expiryDate, boolean defaultCard) {
+    public CreditCardEntity(String cardNo, String name, boolean defaultCard) {
         this.cardNo = cardNo;
         //this.cvv = cvv;
         this.name = name;
-        this.expiryDate = expiryDate;
+        //this.expiryDate = expiryDate;
         this.defaultCard = defaultCard;
     }
   
@@ -86,14 +86,14 @@ public class CreditCardEntity implements Serializable {
     /**
      * @return the cardNo
      */
-    public Integer getCardNo() {
+    public String getCardNo() {
         return cardNo;
     }
 
     /**
      * @param cardNo the cardNo to set
      */
-    public void setCardNo(Integer cardNo) {
+    public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
     }
 
@@ -124,21 +124,6 @@ public class CreditCardEntity implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    /**
-     * @return the expiryDate
-     */
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    /**
-     * @param expiryDate the expiryDate to set
-     */
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
     /**
      * @return the customerEntity
      */

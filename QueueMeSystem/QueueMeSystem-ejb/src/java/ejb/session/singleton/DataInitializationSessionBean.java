@@ -124,9 +124,9 @@ public class DataInitializationSessionBean {
             Date calendarStart = new Date(0, 0, 0, 8, 0);
             Date calendarEnd = new Date(0, 0, 0, 22, 0);
             
-            CreditCardEntity creditCard = creditCardEntityControllerLocal.createCreditCard(new CreditCardEntity(1234567899, "customer", calendarEnd , true));
-            customerEntity.getCreditCardEntities().add(creditCard);
-            creditCard.setCustomerEntity(customerEntity);
+            CreditCardEntity creditCard = creditCardEntityControllerLocal.createCreditCard("1234-5678-9999-0000", "customer", customerEntity);
+//            customerEntity.getCreditCardEntities().add(creditCard);
+//            creditCard.setCustomerEntity(customerEntity);
             
             // Initialize FoodCourt Entity
             

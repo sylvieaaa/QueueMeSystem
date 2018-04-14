@@ -40,7 +40,7 @@ public class MenuEntityController implements MenuEntityControllerLocal {
     @Override
     public MenuEntity createMenu(MenuEntity menuEntity, VendorEntity vendorEntity) throws VendorNotFoundException {
         vendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorEntity.getBusinessId());
-        if(vendorEntity.getMenuEntities().isEmpty()) {
+        if (vendorEntity.getMenuEntities().isEmpty()) {
             menuEntity.setSelected(Boolean.TRUE);
         }
         menuEntity.setVendorEntity(vendorEntity);
@@ -110,7 +110,7 @@ public class MenuEntityController implements MenuEntityControllerLocal {
             }
             //categoryEntity.setMenuEntity(null);
         }
-        
+
         em.remove(menuEntity);
     }
 
@@ -118,29 +118,41 @@ public class MenuEntityController implements MenuEntityControllerLocal {
     public void removeCategoryFromMenu(MenuEntity menuEntity, CategoryEntity categoryEntity) throws CategoryNotFoundException, MenuNotFoundException {
         menuEntity = retrieveMenuById(menuEntity.getMenuId());
         categoryEntity = categoryEntityControllerLocal.retrieveCategoryById(categoryEntity.getCategoryId());
-        
-        for(MenuItemEntity menuItemEntity: categoryEntity.getMenuItemEntities()) {
+
+        for (MenuItemEntity menuItemEntity : categoryEntity.getMenuItemEntities()) {
             menuItemEntity.getCategoryEntities().remove(categoryEntity);
         }
-        
+
         menuEntity.getCategoryEntities().remove(categoryEntity);
         em.remove(categoryEntity);
     }
-    
+
     @Override
     public MenuEntity retrieveDisplayMenu(VendorEntity vendorEntity) throws MenuNotFoundException {
         Query query = em.createQuery("SELECT m FROM MenuEntity m WHERE m.selected=true AND m.vendorEntity=:inVendorEntity");
         query.setParameter("inVendorEntity", vendorEntity);
-        
+
         try {
             MenuEntity menuEntity = (MenuEntity) query.getSingleResult();
-            for(CategoryEntity categoryEntity: menuEntity.getCategoryEntities()) {
+            for (CategoryEntity categoryEntity : menuEntity.getCategoryEntities()) {
                 categoryEntity.getMenuItemEntities().size();
             }
-            
+
             return menuEntity;
         } catch (NonUniqueResultException | NoResultException ex) {
             throw new MenuNotFoundException("No menu has been selected for display");
+        }
+    }
+
+    @Override
+    public MenuEntity retrieveDefaultMenuByVendorId(Long vendorId) throws MenuNotFoundException {
+        Query query = em.createQuery("SELECT m FROM MenuEntity m WHERE m.selected=true AND m.vendorEntity.businessId=:inVendorId");
+        query.setParameter("inVendorId", vendorId);
+
+        try {
+            return (MenuEntity) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new MenuNotFoundException("No menu available");
         }
     }
 }
