@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.CategoryEntity;
 import entity.MenuEntity;
 import entity.MenuItemEntity;
+import entity.TagEntity;
 import entity.VendorEntity;
 import java.util.List;
 import javax.ejb.EJB;
@@ -150,7 +151,8 @@ public class MenuEntityController implements MenuEntityControllerLocal {
         query.setParameter("inVendorId", vendorId);
 
         try {
-            return (MenuEntity) query.getSingleResult();
+            MenuEntity menuEntity = (MenuEntity) query.getSingleResult();
+            return menuEntity;
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new MenuNotFoundException("No menu available");
         }
