@@ -129,8 +129,8 @@ public class DataInitializationSessionBean {
             FoodCourtEntity foodCourtEntity = foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("ABC Food Court", "BEST in SG", "ABC Road", "123123", calendarStart, calendarEnd, "ABCFoodCourt", "password", "fc1.png"));
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Royal Food Court", "Best in Kent Ridge", "Kent Ridge Drive 123", "117417", calendarStart, calendarEnd, "royalfoodcourt", "password", "fc2.png"));
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("Grandfather's Food Court", "Best in Ang Mo Kio", "AMK Drive 666", "143245", calendarStart, calendarEnd, "amkfoodcourt", "password", "fc3.png"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", calendarStart, calendarEnd, "changifoodcourt", "password", "fc1.png"));
-            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", calendarStart, calendarEnd, "redhillfoodcourt", "password", "fc2.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", calendarStart, calendarEnd, "changifoodcourt", "password", "fc4.png"));
+            foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", calendarStart, calendarEnd, "redhillfoodcourt", "password", "fc5.png"));
             
             CreditCardEntity creditCardEntity = creditCardEntityControllerLocal.createCreditCard(new CreditCardEntity(12347788, 123, "Customer", Calendar.getInstance()));
             customerEntity.getCreditCardEntities().add(creditCardEntity);
