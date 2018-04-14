@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.CategoryEntity;
 import entity.MenuItemEntity;
 import entity.VendorEntity;
 import java.util.List;
@@ -61,7 +62,7 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
 
     @Override
     public List<MenuItemEntity> retrieveAllMenuItemEntity() throws MenuItemNotFoundException {
-        Query query = em.createQuery("SELECT * FROM MenuItemEntity");
+        Query query = em.createQuery("SELECT m FROM MenuItemEntity m WHERE m.enabled=true");
         List<MenuItemEntity> menuItemEntities = query.getResultList();
 
         if (menuItemEntities.isEmpty()) {
@@ -73,11 +74,11 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
 
     @Override
     public List<MenuItemEntity> retrieveAllMenuItemEntityByVendor(VendorEntity vendorEntity) {
-        Query query = em.createQuery("SELECT m FROM MenuItemEntity m WHERE m.vendorEntity=:inVendorEntity");
+        Query query = em.createQuery("SELECT m FROM MenuItemEntity m WHERE m.vendorEntity=:inVendorEntity AND m.enabled=true");
         query.setParameter("inVendorEntity", vendorEntity);
 
         List<MenuItemEntity> menuItemEntities = query.getResultList();
-        for(MenuItemEntity menuItemEntity: menuItemEntities) {
+        for (MenuItemEntity menuItemEntity : menuItemEntities) {
             menuItemEntity.getTagEntities().size();
         }
 
@@ -89,7 +90,7 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
     public void updateMenuItem(MenuItemEntity menuItemEntityToUpdate) throws MenuItemNotFoundException {
         System.err.println(menuItemEntityToUpdate);
         MenuItemEntity menuItemEntity = retrieveMenuItemById(menuItemEntityToUpdate.getMenuItemId());
-        
+
         menuItemEntity.setMenuItemName(menuItemEntityToUpdate.getMenuItemName());
         menuItemEntity.setDescription(menuItemEntityToUpdate.getDescription());
         menuItemEntity.setPrice(menuItemEntityToUpdate.getPrice());
@@ -103,7 +104,17 @@ public class MenuItemEntityController implements MenuItemEntityControllerLocal {
             MenuItemEntity menuItemEntity = retrieveMenuItemById(menuItemId);
             VendorEntity vendorEntity = menuItemEntity.getVendorEntity();
             vendorEntity.getMenuItemEntities().remove(menuItemEntity);
-            em.remove(menuItemEntity);
+            Query query = em.createQuery("SELECT s FROM SaleTransactionLineItemEntity s WHERE s.menuItemEntity = :inMenuItemEntity");
+            query.setParameter("inMenuItemEntity", menuItemEntity);
+            if (!query.getResultList().isEmpty()) {
+                System.err.println("Not Empty");
+                menuItemEntity.setEnabled(Boolean.FALSE);
+                for (CategoryEntity categoryEntity : menuItemEntity.getCategoryEntities()) {
+                    categoryEntity.getMenuItemEntities().remove(menuItemEntity);
+                }
+            } else {
+                em.remove(menuItemEntity);
+            }
         } catch (MenuItemNotFoundException ex) {
 
         }

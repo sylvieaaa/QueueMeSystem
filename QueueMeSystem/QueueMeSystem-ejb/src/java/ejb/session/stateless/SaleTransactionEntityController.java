@@ -50,7 +50,6 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
     @Override
     public SaleTransactionEntity createSaleTransaction(SaleTransactionEntity saleTransactionEntity) {
         for(SaleTransactionLineItemEntity saleTransactionLineItemEntity: saleTransactionEntity.getSaleTransactionLineItemEntities()) {
-            System.err.println(saleTransactionLineItemEntity.getSerialNumber() + " a");
             saleTransactionLineItemEntity.setSaleTransactionEntity(saleTransactionEntity);
         }
         em.persist(saleTransactionEntity);
@@ -68,6 +67,8 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
         CustomerEntity customerEntity = saleTransactionEntity.getCustomerEntity();
         HashMap<VendorEntity, List<SaleTransactionLineItemEntity>> vendorToSales = new HashMap<>();
         for(SaleTransactionLineItemEntity saleTransactionLineItemEntity: saleTransactionEntity.getSaleTransactionLineItemEntities()) {
+            saleTransactionLineItemEntity.getMenuItemEntity().getSaleTransactionLineItemEntities().add(saleTransactionLineItemEntity);
+            System.err.println(saleTransactionLineItemEntity.getMenuItemEntity().getSaleTransactionLineItemEntities().size() + " m");
             MenuItemEntity menuItemEntity = saleTransactionLineItemEntity.getMenuItemEntity();
             VendorEntity vendorEntity = menuItemEntity.getVendorEntity();
             if(vendorToSales.containsKey(vendorEntity)) {

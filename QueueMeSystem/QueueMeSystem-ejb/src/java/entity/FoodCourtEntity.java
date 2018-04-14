@@ -32,7 +32,7 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
     private Date startTime;
     @Temporal(javax.persistence.TemporalType.TIME)
     private Date endTime;
-    private Boolean enable;
+    private Boolean enabled;
     private String fileURL;
     
     @OneToMany(mappedBy = "foodCourtEntity", cascade = CascadeType.REMOVE)
@@ -41,7 +41,7 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
     public FoodCourtEntity() {
         super();
         this.vendorEntities = new ArrayList<>();
-        this.enable = true;
+        this.enabled = true;
     }
 
     public FoodCourtEntity(String name, String description, String address, String postalCode, Date startTime, Date endTime, String username, String password, String photo) {
@@ -138,12 +138,12 @@ public class FoodCourtEntity extends BusinessEntity implements Serializable {
         this.vendorEntities = vendorEntities;
     }
 
-    public Boolean getEnable() {
-        return enable;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getFileURL() {

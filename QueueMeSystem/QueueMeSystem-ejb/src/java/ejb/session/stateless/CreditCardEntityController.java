@@ -6,9 +6,11 @@
 package ejb.session.stateless;
 
 import entity.CreditCardEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -33,5 +35,13 @@ public class CreditCardEntityController implements CreditCardEntityControllerLoc
     public void updateCreditCard(CreditCardEntity creditCardEntity) {
         em.merge(creditCardEntity);
        
+    }
+    
+    @Override
+    public List<CreditCardEntity> retrieveAllCreditCards(Long customerId) {
+        Query query = em.createQuery("SELECT c FROM CreditCardEntity c WHERE c.customerEntity.businessId=:inCustomerId");
+        query.setParameter("inCustomerId", customerId);
+        
+        return query.getResultList();
     }
 }

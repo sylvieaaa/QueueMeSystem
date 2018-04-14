@@ -33,7 +33,7 @@ public class MenuItemEntity implements Serializable {
     private String description;
     private BigDecimal price;
     private String photoURL;
-    
+    private Boolean enabled;
 
     @ManyToMany
     private List<TagEntity> tagEntities;
@@ -50,6 +50,7 @@ public class MenuItemEntity implements Serializable {
         this.saleTransactionLineItemEntities = new ArrayList<>();
         this.categoryEntities = new ArrayList<>();
         this.tagEntities = new ArrayList<>();
+        enabled = Boolean.TRUE;
     }
 
     public MenuItemEntity(String menuItemName, String description, BigDecimal price, String photo) {
@@ -165,6 +166,14 @@ public class MenuItemEntity implements Serializable {
 
     public void setTagEntities(List<TagEntity> tagEntities) {
         this.tagEntities = tagEntities;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
     
 }
