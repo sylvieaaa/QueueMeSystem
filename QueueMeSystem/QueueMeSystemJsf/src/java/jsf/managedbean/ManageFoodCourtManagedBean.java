@@ -5,6 +5,7 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.FoodCourtEntityControllerLocal;
 import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
@@ -23,28 +24,42 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import org.primefaces.event.FileUploadEvent;
+import util.enumeration.VendorTypeEnum;
+import util.exception.FoodCourtNotFoundException;
 import util.exception.VendorNotFoundException;
 
-@Named(value = "updateVendorManagedBean")
+@Named(value = "manageFoodCourtManagedBean")
 @ViewScoped
-public class UpdateVendorManagedBean implements Serializable {
+public class ManageFoodCourtManagedBean implements Serializable {
+
+    @EJB
+    private FoodCourtEntityControllerLocal foodCourtEntityControllerLocal;
 
     @EJB
     private VendorEntityControllerLocal vendorEntityControllerLocal;
 
     private VendorEntity vendorEntityToUpdate;
+
     private Long vendorIdToUpdate;
 
     private VendorEntity vendorToDisable;
+
+    private FoodCourtEntity currentFoodCourt;
 
     private List<VendorEntity> vendorEntities = new ArrayList<>();
 
     private File file;
 
+    private VendorTypeEnum[] vendorTypes = VendorTypeEnum.values();
+
+    private String disabled;
+
     /**
      * Creates a new instance of UpdateVendorManagedBean
      */
-    public UpdateVendorManagedBean() {
+    public ManageFoodCourtManagedBean() {
+        vendorEntityToUpdate = new VendorEntity();
+        this.disabled = "false";
     }
 
     public void updateVendor(ActionEvent event) {
@@ -61,18 +76,31 @@ public class UpdateVendorManagedBean implements Serializable {
 
     @PostConstruct
     public void postConstruct() {
-        vendorIdToUpdate = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("vendorIdToUpdate");
-        vendorEntities = vendorEntityControllerLocal.retrieveAllVendors();
+        String accountType = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("accountType");
+
+        Long foodCourtId;
+        if (accountType.equals("Admin")) {
+            System.err.println(FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate"));
+            foodCourtId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate");
+            System.err.println("ENTERED HERE ADMIN");
+            disabled = "true";
+        } else {
+            foodCourtId = ((FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity")).getBusinessId();
+            System.err.println("ENTERED HERE FOODCOURT");
+            disabled = "false";
+        }
+        try {
+            currentFoodCourt = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtId);
+        } catch (FoodCourtNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+        }
 
         try {
-            vendorEntityToUpdate = vendorEntityControllerLocal.retrieveVendorById(vendorIdToUpdate);
-        } catch (VendorNotFoundException ex) {
-            vendorEntityToUpdate = new VendorEntity();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while retrieving the vendor details: " + ex.getMessage(), null));
-        } catch (Exception ex) {
-            vendorEntityToUpdate = new VendorEntity();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+            vendorEntities = vendorEntityControllerLocal.retrieveAllVendorsByFoodCourtId(foodCourtId);
+        } catch (FoodCourtNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No vendors found.", null));
         }
+
     }
 
     public void deleteVendor(ActionEvent event) {
@@ -89,16 +117,22 @@ public class UpdateVendorManagedBean implements Serializable {
     }
 
     public void upload(FileUploadEvent event) {
-        FoodCourtEntity vendorEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        FoodCourtEntity foodCourtEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+
+        String from = (String) event.getComponent().getAttributes().get("from");
+        String newFilePath;
         try {
             String fileName = "";
-            String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodPhotos";
-            
+            if (from.equals("vendor")) {
+                newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "vendorLogos";
+            } else {
+                newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodCourtLogos";
+            }
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
 
             file = new File(newFilePath);
-            file = File.createTempFile("F0" + vendorEntity.getBusinessId(), ".png", file);
+            file = File.createTempFile("F0" + foodCourtEntity.getBusinessId(), ".png", file);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 
             int a;
@@ -118,7 +152,11 @@ public class UpdateVendorManagedBean implements Serializable {
                 fileOutputStream.flush();
             }
 
-            vendorEntityToUpdate.setPhotoURL(file.getName());
+            if (from.equals("vendor")) {
+                vendorEntityControllerLocal.updateFileUrl(vendorEntityToUpdate.getBusinessId(), file.getName());
+            } else {
+                foodCourtEntityControllerLocal.updateFileUrl(currentFoodCourt.getBusinessId(), file.getName());
+            }
 
             fileOutputStream.close();
             inputStream.close();
@@ -126,6 +164,17 @@ public class UpdateVendorManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
+        }
+    }
+
+    public void updateFoodCourt(ActionEvent event) {
+        try {
+            foodCourtEntityControllerLocal.updateFoodCourt(currentFoodCourt);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Food Court updated successfully", null));
+        } catch (FoodCourtNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating Food Court: " + ex.getMessage(), null));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + e.getMessage(), null));
         }
     }
 
@@ -167,6 +216,30 @@ public class UpdateVendorManagedBean implements Serializable {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public FoodCourtEntity getCurrentFoodCourt() {
+        return currentFoodCourt;
+    }
+
+    public void setCurrentFoodCourt(FoodCourtEntity currentFoodCourt) {
+        this.currentFoodCourt = currentFoodCourt;
+    }
+
+    public VendorTypeEnum[] getVendorTypes() {
+        return vendorTypes;
+    }
+
+    public void setVendorTypes(VendorTypeEnum[] vendorTypes) {
+        this.vendorTypes = vendorTypes;
+    }
+
+    public String getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(String disabled) {
+        this.disabled = disabled;
     }
 
 }

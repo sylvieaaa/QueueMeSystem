@@ -5,7 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entity.AdminEntity;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
 import java.util.List;
@@ -18,7 +17,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import util.exception.AdminNotFoundException;
 import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
 import util.exception.VendorNotFoundException;
@@ -95,7 +93,7 @@ public class VendorEntityController implements VendorEntityControllerLocal {
 
         return vendorEntities;
     }
-    
+
     @Override
     public VendorEntity retrieveVendorByUsername(String username) throws VendorNotFoundException {
         Query query = em.createQuery("SELECT v FROM VendorEntity v WHERE v.username=:inUsername");
@@ -118,13 +116,32 @@ public class VendorEntityController implements VendorEntityControllerLocal {
 
         }
     }
-    
+
     @Override
     public List<VendorEntity> retrieveVendorsByFoodCourt(FoodCourtEntity foodCourtEntity) {
         Query query = em.createQuery("SELECT v FROM VendorEntity v WHERE v.foodCourtEntity = :inFoodCourtEntity");
         query.setParameter("inFoodCourtEntity", foodCourtEntity);
-        
+
         return query.getResultList();
+    }
+
+    @Override
+    public List<VendorEntity> retrieveAllVendorsByFoodCourtId(Long foodCourtId) throws FoodCourtNotFoundException {
+        Query query = em.createQuery("SELECT v FROM VendorEntity v WHERE v.enabled = true AND v.foodCourtEntity.businessId = :inFoodCourtId ORDER BY v.vendorName ASC");
+        query.setParameter("inFoodCourtId", foodCourtId);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public void updateFileUrl(Long vendorId, String url) {
+        try {
+            VendorEntity vendorToUpdate = retrieveVendorById(vendorId);
+            vendorToUpdate.setPhotoURL(url);
+            em.merge(vendorToUpdate);
+        } catch (VendorNotFoundException ex) {
+
+        }
     }
 
     /*
