@@ -28,5 +28,5 @@ public interface CreditCardEntityControllerLocal {
     public void deleteCreditCard(CreditCardEntity creditCard);
 
     public void selectDefaultCard(CreditCardEntity creditCardEntity);
-    
+
 }

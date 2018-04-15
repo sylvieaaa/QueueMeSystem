@@ -12,7 +12,8 @@
         <ui:define name="content">
 
             <br/>
-            <br/>
+
+            <p:commandButton value="Back" icon="fa fa-arrow-left" action="adminMainPage.xhtml" rendered="#{sessionScope['accountType'] eq 'Admin'}"/>
 
 
             <p:panel style="display:block; text-align:center; border-color: transparent">
@@ -24,8 +25,7 @@
                     <f:attribute name="foodCourtId" value="#{manageFoodCourtManagedBean.currentFoodCourt.businessId}"/>
                 </p:commandButton>&nbsp;&nbsp;
                 <p:button icon="ui-icon-locked" outcome="changePassword.xhtml" value="Change Password" rendered="#{sessionScope['accountType'] ne 'Admin'}"/> &nbsp;&nbsp;
-                <p:commandButton value="Back" action="adminMainPage.xhtml" rendered="#{sessionScope['accountType'] eq 'Admin'}"/>
-                
+
                 <br />
                 <p:overlayPanel for="viewFoodCourt" hideEffect="fade">
                     <h:form id="foodCourtDetails">
@@ -142,7 +142,7 @@
                     </p:panelGrid>
                 </p:carousel>
 
-                
+
 
             </p:panel>
 

@@ -9,16 +9,16 @@
     <ui:define name="content">
 
         <br/>
-        <br/>
+        <p:commandButton value="Back" icon="fa fa-arrow-left" actionListener="#{mainPageManagedBean.backToFoodCourt}" rendered="#{sessionScope['accountType'] eq 'Admin'}">
+            <f:attribute name="foodCourtId" value="#{mainPageManagedBean.currentVendor.foodCourtEntity.businessId}" />
+        </p:commandButton>
 
         <h:panelGroup style="display:block; text-align:center">
 
             <h:outputText style="color: black; font-weight: bold; font-size: large" value="Welcome," /> 
             <h:outputText style="color:blue; font-weight: bold; font-size: large" value="#{mainPageManagedBean.currentVendor.vendorName}" rendered="#{sessionScope['accountType'] ne 'Admin'}"/> &nbsp;&nbsp;
             <h:outputText style="color:blue; font-weight: bold; font-size: large" value="#{mainPageManagedBean.currentVendor.vendorName}" rendered="#{sessionScope['accountType'] eq 'Admin'}"/> &nbsp;&nbsp;
-            <p:commandButton value="Back" actionListener="#{mainPageManagedBean.backToFoodCourt}" rendered="#{sessionScope['accountType'] eq 'Admin'}">
-                <f:attribute name="foodCourtId" value="#{mainPageManagedBean.currentVendor.foodCourtEntity.businessId}" />
-            </p:commandButton>
+
 
 
             <br/>

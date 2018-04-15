@@ -9,6 +9,7 @@ import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.VendorEntity;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -16,7 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
-import javax.servlet.http.HttpSession;
 import util.exception.VendorNotFoundException;
 
 /**
@@ -42,14 +42,18 @@ public class MainPageManagedBean implements Serializable {
     public void postConstruct() {
         String accountType = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("accountType");
         System.err.println(accountType);
-        Long vendorId;
+        //temp variables
+        Long vendorId = 0L;
+        String from = "";
         if (accountType.equals("Admin")) {
             vendorId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("vendorIdToView");
         } else {
             vendorId = ((VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity")).getBusinessId();
         }
+
+        System.err.println("THIS IS LINE 63");
         try {
-            currentVendor = vendorEntityControllerLocal.retrieveVendorById(vendorId);
+                currentVendor = vendorEntityControllerLocal.retrieveVendorById(vendorId);
         } catch (VendorNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
         }
