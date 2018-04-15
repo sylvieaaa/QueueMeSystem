@@ -8,6 +8,7 @@ package jsf.managedbean;
 import ejb.session.stateless.OrderEntityControllerLocal;
 import entity.OrderEntity;
 import entity.SaleTransactionLineItemEntity;
+import entity.VendorEntity;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -55,8 +56,9 @@ public class ManageOrderManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct()
     {
-        pendingOrderEntities = orderEntityControllerLocal.retrieveAllPendingOrders();
-        completedOrderEntities = orderEntityControllerLocal.retrieveAllCompletedOrders();
+         VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        pendingOrderEntities = orderEntityControllerLocal.retrieveAllPendingOrders(vendorEntity);
+        completedOrderEntities = orderEntityControllerLocal.retrieveAllCompletedOrders(vendorEntity);
         
     }
     

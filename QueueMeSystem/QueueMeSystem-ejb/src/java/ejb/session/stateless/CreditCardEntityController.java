@@ -68,7 +68,9 @@ public class CreditCardEntityController implements CreditCardEntityControllerLoc
     
     @Override
     public void deleteCreditCard(CreditCardEntity creditCard) {
-        creditCard.setCustomerEntity(null);
-        em.remove(creditCard);
+        CreditCardEntity ce = em.find(CreditCardEntity.class, creditCard.getCreditCardId());
+        ce.setCustomerEntity(null);
+        em.merge(ce);
+        em.remove(ce);
     }
 }

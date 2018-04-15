@@ -7,8 +7,8 @@ package ejb.session.stateless;
 
 import entity.OrderEntity;
 import entity.SaleTransactionLineItemEntity;
+import entity.VendorEntity;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -54,26 +54,29 @@ public class OrderEntityController implements OrderEntityControllerLocal {
     }
     
     @Override
-    public List<OrderEntity> retrieveAllOrders()
+    public List<OrderEntity> retrieveAllOrders (VendorEntity vendorEntity)
     {
-        Query query = em.createQuery("SELECT p FROM OrderEntity p ORDER BY p.orderId ASC");
- 
+        Long vendorId = vendorEntity.getBusinessId();
+        Query query = em.createQuery("SELECT p FROM OrderEntity p ORDER BY p.orderId ASC AND p.vendorEntity.businessId = :inVendorId");
+        query.setParameter("inVendorId", vendorId);
         return query.getResultList();
     }
     
      @Override
-    public List<OrderEntity> retrieveAllPendingOrders()
+    public List<OrderEntity> retrieveAllPendingOrders(VendorEntity vendorEntity)
     {
-        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.fulfilled = 0");
-        
+        Long vendorId = vendorEntity.getBusinessId();
+        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.fulfilled = 0 AND p.vendorEntity.businessId = :inVendorId");
+         query.setParameter("inVendorId", vendorId);
         return query.getResultList();
     }
     
      @Override
-    public List<OrderEntity> retrieveAllCompletedOrders()
+    public List<OrderEntity> retrieveAllCompletedOrders(VendorEntity vendorEntity)
     {
-        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.fulfilled = 1");
-        
+        Long vendorId = vendorEntity.getBusinessId();
+        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.fulfilled = 1 AND p.vendorEntity.businessId = :inVendorId");
+         query.setParameter("inVendorId", vendorId);
         return query.getResultList();
     }
     

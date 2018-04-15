@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.OrderEntity;
 import entity.SaleTransactionLineItemEntity;
+import entity.VendorEntity;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Local;
@@ -23,11 +24,11 @@ public interface OrderEntityControllerLocal {
 
     public OrderEntity createOrder(OrderEntity orderEntity);
     
-    public List<OrderEntity> retrieveAllOrders();
+    public List<OrderEntity> retrieveAllOrders(VendorEntity vendorEntity);
     
-    public List<OrderEntity> retrieveAllPendingOrders();
+    public List<OrderEntity> retrieveAllPendingOrders(VendorEntity vendorEntity);
     
-    public List<OrderEntity> retrieveAllCompletedOrders();
+    public List<OrderEntity> retrieveAllCompletedOrders(VendorEntity vendorEntity);
     
     public OrderEntity retrieveOrderByOrderId(Long orderId) throws OrderNotFoundException;
     
