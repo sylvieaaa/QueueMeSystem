@@ -29,7 +29,7 @@ import javax.xml.bind.JAXBElement;
 import ws.restful.datamodel.CreditCardRsp;
 import ws.restful.datamodel.CreditcardReq;
 import ws.restful.datamodel.ErrorRsp;
-import ws.restful.datamodel.SelectedCreditCardReq;
+import ws.restful.datamodel.SelectDefaultCardReq;
 
 /**
  * REST Web Service
@@ -98,30 +98,32 @@ public class CreditCardResource {
     }
     
     @Path("selectedCard")
-    @GET
-    @Consumes(MediaType.TEXT_PLAIN)
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateCreditCard(@QueryParam("creditCardId") Long creditCardId) {
-        try{
-        creditCardEntityControllerLocal.selectDefaultCard(creditCardId);
-        return Response.status(Status.OK).build();
-        } catch (Exception ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build(); 
-        }
-//        System.err.println("it went in");
-//        if ((selectCreditcardReq != null) && (selectCreditcardReq.getValue() != null)) {
-//            try {
-//                SelectedCreditCardReq selectCreditCardReq = selectCreditcardReq.getValue();
-//                creditCardEntityControllerLocal.selectedCreditCard(selectCreditCardReq.getCustomerEntity(), selectCreditCardReq.getCreditCardEntity());
-//                System.err.println("it passed");
-//                return Response.status(Response.Status.OK).build();
-//            } catch (Exception ex) {
-//                System.err.println(ex);
-//                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
-//            }
-//        } else {
-//            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+    public Response updateCreditCard(JAXBElement<SelectDefaultCardReq> jaxbeSelectDefaultReq) {
+        
+//        System.err.println("in her");
+//        try{
+//        creditCardEntityControllerLocal.selectDefaultCard(creditCardId);
+//        return Response.status(Status.OK).build();
+//        } catch (Exception ex) {
+//            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build(); 
 //        }
+//        System.err.println("it went in");
+        if ((jaxbeSelectDefaultReq != null) && (jaxbeSelectDefaultReq.getValue() != null)) {
+            try {
+                SelectDefaultCardReq selectCreditCardReq = jaxbeSelectDefaultReq.getValue();
+                creditCardEntityControllerLocal.selectDefaultCard(selectCreditCardReq.getCreditCardEntity());
+                System.err.println("it passed");
+                return Response.status(Response.Status.OK).build();
+            } catch (Exception ex) {
+                System.err.println(ex);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+        }
     }
 
     /**
