@@ -102,7 +102,7 @@
                                             <p:outputLabel for="username" value="Username"/>
                                         </p:column>
                                         <p:column>
-                                            <p:inputText id="username" value="#{viewAllFoodCourtsManagedBean.newFoodCourt.username}" required="true" requiredMessage="Username is required">
+                                            <p:inputText id="username" value="#{viewAllFoodCourtsManagedBean.newFoodCourt.username}" required="true" validatorMessage="Username must be in an email format!">
                                                 <!--                                        <f:validateLength minimum="4" />-->
                                                 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" for="username" />
                                             </p:inputText>
