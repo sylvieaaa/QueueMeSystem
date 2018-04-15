@@ -50,19 +50,7 @@ public class CreditCardEntityController implements CreditCardEntityControllerLoc
         query.setParameter("inCustomerId", customerId);
         return query.getResultList();
     }
-    
-    @Override
-    public void selectedCreditCard(CustomerEntity customerEntity, CreditCardEntity creditCardEntity) {
-        Long customerId = customerEntity.getBusinessId();
-        System.err.println("1");
-        List<CreditCardEntity> ces = retrieveAllCreditCards(customerId);
-        for (CreditCardEntity ce : ces) {
-            ce.setDefaultCard(false);
-        }
-        System.err.println("2");
-         creditCardEntity.setDefaultCard(true);  
-    }
-    
+        
     @Override
     public void selectDefaultCard(CreditCardEntity creditCardEntity) {
         creditCardEntity = em.find(CreditCardEntity.class, creditCardEntity.getCreditCardId());

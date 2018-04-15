@@ -23,14 +23,10 @@ public interface CreditCardEntityControllerLocal {
 
     public List<CreditCardEntity> retrieveAllCreditCards(Long customerId);
 
-    public void selectedCreditCard(CustomerEntity customerEntity,CreditCardEntity creditCardEntity);
-
-    public void selectDefaultCard(Long creditCardId);
-
     public CreditCardEntity retrieveCreditCard(Long creditCardId);
 
     public void deleteCreditCard(CreditCardEntity creditCard);
 
-    //public void selectDefaultCard(CreditCardEntity creditCardEntity);
+    public void selectDefaultCard(CreditCardEntity creditCardEntity);
     
 }
