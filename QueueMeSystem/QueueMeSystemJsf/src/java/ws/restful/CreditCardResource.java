@@ -64,8 +64,6 @@ public class CreditCardResource {
             for(CreditCardEntity creditCardEntity: creditCardEntities) {
                 creditCardEntity.setCustomerEntity(null);
             }
-            System.err.println("spartan!!");
-            System.err.println(creditCardEntities);
             return Response.status(Status.OK).entity(new CreditCardRsp(creditCardEntities)).build();
         } catch (Exception ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorRsp(ex.getMessage())).build();
@@ -122,6 +120,22 @@ public class CreditCardResource {
 //        } else {
 //            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
 //        }
+    }
+    
+    @Path("deleteCreditCard")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCreditCard(@QueryParam("creditCardId") Long cardId) {
+        try {
+            System.err.println(cardId);
+            CreditCardEntity ce = creditCardEntityControllerLocal.retrieveCreditCard(cardId);
+            System.err.println("IT WENT IN HERE");
+            creditCardEntityControllerLocal.deleteCreditCard(ce);
+            return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorRsp(ex.getMessage())).build();
+        }
     }
 
     /**

@@ -26,5 +26,9 @@ public interface CreditCardEntityControllerLocal {
     public void selectedCreditCard(CustomerEntity customerEntity,CreditCardEntity creditCardEntity);
 
     public void selectDefaultCard(Long creditCardId);
+
+    public CreditCardEntity retrieveCreditCard(Long creditCardId);
+
+    public void deleteCreditCard(CreditCardEntity creditCard);
     
 }

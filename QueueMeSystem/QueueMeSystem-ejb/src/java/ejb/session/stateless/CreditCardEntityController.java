@@ -71,4 +71,16 @@ public class CreditCardEntityController implements CreditCardEntityControllerLoc
         }
         creditCardEntity.setDefaultCard(true);
     }
+    
+    @Override
+    public CreditCardEntity retrieveCreditCard(Long creditCardId) {
+         CreditCardEntity creditCardEntity = em.find(CreditCardEntity.class, creditCardId);
+         return creditCardEntity;
+    }
+    
+    @Override
+    public void deleteCreditCard(CreditCardEntity creditCard) {
+        creditCard.setCustomerEntity(null);
+        em.remove(creditCard);
+    }
 }
