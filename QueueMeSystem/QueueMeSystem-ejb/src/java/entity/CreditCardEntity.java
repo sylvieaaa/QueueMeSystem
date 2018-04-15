@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,11 +28,12 @@ public class CreditCardEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long creditCardId;
-    private Integer cardNo;
-    private Integer cvv;
+    private String cardNo;
+    //private Integer cvv;
     private String name;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar expiryDate;
+    //@Temporal(TemporalType.TIMESTAMP)
+    //private Date expiryDate;
+    private boolean defaultCard;
     @ManyToOne
     @JoinColumn (nullable = true)
     private CustomerEntity customerEntity;
@@ -39,11 +41,12 @@ public class CreditCardEntity implements Serializable {
     public CreditCardEntity() {
     }
 
-    public CreditCardEntity(Integer cardNo, Integer cvv, String name, Calendar expiryDate) {
+    public CreditCardEntity(String cardNo, String name, boolean defaultCard) {
         this.cardNo = cardNo;
-        this.cvv = cvv;
+        //this.cvv = cvv;
         this.name = name;
-        this.expiryDate = expiryDate;
+        //this.expiryDate = expiryDate;
+        this.defaultCard = defaultCard;
     }
   
 
@@ -83,30 +86,30 @@ public class CreditCardEntity implements Serializable {
     /**
      * @return the cardNo
      */
-    public Integer getCardNo() {
+    public String getCardNo() {
         return cardNo;
     }
 
     /**
      * @param cardNo the cardNo to set
      */
-    public void setCardNo(Integer cardNo) {
+    public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
     }
 
     /**
      * @return the cvv
      */
-    public Integer getCvv() {
-        return cvv;
-    }
-
-    /**
-     * @param cvv the cvv to set
-     */
-    public void setCvv(Integer cvv) {
-        this.cvv = cvv;
-    }
+//    public Integer getCvv() {
+//        return cvv;
+//    }
+//
+//    /**
+//     * @param cvv the cvv to set
+//     */
+//    public void setCvv(Integer cvv) {
+//        this.cvv = cvv;
+//    }
 
     /**
      * @return the name
@@ -121,21 +124,6 @@ public class CreditCardEntity implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    /**
-     * @return the expiryDate
-     */
-    public Calendar getExpiryDate() {
-        return expiryDate;
-    }
-
-    /**
-     * @param expiryDate the expiryDate to set
-     */
-    public void setExpiryDate(Calendar expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
     /**
      * @return the customerEntity
      */
@@ -149,5 +137,12 @@ public class CreditCardEntity implements Serializable {
     public void setCustomerEntity(CustomerEntity customerEntity) {
         this.customerEntity = customerEntity;
     }
-    
+
+    public boolean isDefaultCard() {
+        return defaultCard;
+    }
+
+    public void setDefaultCard(boolean defaultCard) {
+        this.defaultCard = defaultCard;
+    }
 }

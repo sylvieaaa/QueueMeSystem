@@ -23,7 +23,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.xml.bind.JAXBElement;
 import ws.restful.datamodel.CreditCardRsp;
+import ws.restful.datamodel.CreditcardReq;
 import ws.restful.datamodel.ErrorRsp;
 
 /**
@@ -59,10 +61,64 @@ public class CreditCardResource {
             for(CreditCardEntity creditCardEntity: creditCardEntities) {
                 creditCardEntity.setCustomerEntity(null);
             }
+            System.err.println("spartan!!");
+            System.err.println(creditCardEntities);
             return Response.status(Status.OK).entity(new CreditCardRsp(creditCardEntities)).build();
         } catch (Exception ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorRsp(ex.getMessage())).build();
         }
+    }
+    
+    @Path("createCard")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createCreditcard(JAXBElement<CreditcardReq> createCreditcardReq) {
+        System.err.println("it went in");
+        if ((createCreditcardReq!= null) && (createCreditcardReq.getValue() != null)) {
+            try {
+                CreditcardReq createCreditcard = createCreditcardReq.getValue();
+                
+                CreditCardEntity creditCardEntity = creditCardEntityControllerLocal.createCreditCard(createCreditcard.getCardNum(), createCreditcard.getCardName(), createCreditcard.getCustomerEntity());
+                System.err.println("it passed");
+                return Response.status(Response.Status.OK).build();
+            } catch (Exception ex) {
+                ErrorRsp errorRsp = new ErrorRsp(ex.getMessage());
+
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            ErrorRsp errorRsp = new ErrorRsp("Invalid create card request");
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+    
+    @Path("selectedCard")
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCreditCard(@QueryParam("creditCardId") Long creditCardId) {
+        try{
+        creditCardEntityControllerLocal.selectDefaultCard(creditCardId);
+        return Response.status(Status.OK).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build(); 
+        }
+//        System.err.println("it went in");
+//        if ((selectCreditcardReq != null) && (selectCreditcardReq.getValue() != null)) {
+//            try {
+//                SelectedCreditCardReq selectCreditCardReq = selectCreditcardReq.getValue();
+//                creditCardEntityControllerLocal.selectedCreditCard(selectCreditCardReq.getCustomerEntity(), selectCreditCardReq.getCreditCardEntity());
+//                System.err.println("it passed");
+//                return Response.status(Response.Status.OK).build();
+//            } catch (Exception ex) {
+//                System.err.println(ex);
+//                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
+//            }
+//        } else {
+//            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+//        }
     }
 
     /**
@@ -83,4 +139,6 @@ public class CreditCardResource {
             throw new RuntimeException(ne);
         }
     }
+    
+    
 }

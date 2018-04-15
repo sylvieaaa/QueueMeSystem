@@ -5,10 +5,13 @@
  */
 package ejb.session.stateless;
 
+import entity.CustomerEntity;
+import java.io.File;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import util.email.EmailManager;
 import util.exception.BusinessEntityNotFoundException;
+import util.exception.CustomerNotFoundException;
 
 /**
  *
@@ -18,12 +21,22 @@ import util.exception.BusinessEntityNotFoundException;
 public class EmailController implements EmailControllerLocal {
 
     @EJB
-    private BusinessEntityControllerLocal businessEntityControllerLocal;
+    private CustomerEntityControllerLocal customerEntityControllerLocal;
 
+    @EJB
+    private BusinessEntityControllerLocal businessEntityControllerLocal;
+    
     @Override
     public void forgetPasswordEmail(String toEmail) throws BusinessEntityNotFoundException {
         String newPassword = businessEntityControllerLocal.generateRandomPassword(toEmail);
         EmailManager emailManager = new EmailManager("<REPLACE_WITH_YOUR_UNIX_USERNAME>@sunfire.comp.nus.edu.sg", "<REPLACE_WITH_YOUR_UNIX_PASSWORD>");
         emailManager.forgetPasswordEmail("your email address", toEmail, newPassword);
+    }
+    
+    @Override
+    public void sendReceipt(File receiptFile, CustomerEntity customerEntity) throws CustomerNotFoundException {
+        customerEntity = customerEntityControllerLocal.retrieveCustomerByUsername(customerEntity.getUsername());
+        EmailManager emailManager = new EmailManager("<REPLACE_WITH_YOUR_UNIX_USERNAME>@sunfire.comp.nus.edu.sg", "<REPLACE_WITH_YOUR_UNIX_PASSWORD>");
+        emailManager.receiptEmail("your email address", customerEntity.getUsername(), receiptFile);
     }
 }

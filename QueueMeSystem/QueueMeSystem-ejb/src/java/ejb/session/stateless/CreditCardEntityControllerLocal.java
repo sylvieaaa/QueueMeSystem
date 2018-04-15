@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.CreditCardEntity;
+import entity.CustomerEntity;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -16,10 +17,14 @@ import javax.ejb.Local;
 @Local
 public interface CreditCardEntityControllerLocal {
 
-    public CreditCardEntity createCreditCard(CreditCardEntity creditCardEntity);
+    public CreditCardEntity createCreditCard(String cardNum, String cardName, CustomerEntity customerEntity);
 
     public void updateCreditCard(CreditCardEntity creditCardEntity);
 
     public List<CreditCardEntity> retrieveAllCreditCards(Long customerId);
+
+    public void selectedCreditCard(CustomerEntity customerEntity,CreditCardEntity creditCardEntity);
+
+    public void selectDefaultCard(Long creditCardId);
     
 }
