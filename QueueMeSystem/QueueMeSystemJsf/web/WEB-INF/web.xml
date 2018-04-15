@@ -99,4 +99,10 @@
         <local>ejb.session.stateless.CreditCardEntityControllerLocal</local>
         <ejb-link>QueueMeSystem-ejb.jar#CreditCardEntityController</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>OrderEntityController</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.OrderEntityControllerLocal</local>
+        <ejb-link>QueueMeSystem-ejb.jar#OrderEntityController</ejb-link>
+    </ejb-local-ref>
 </web-app>

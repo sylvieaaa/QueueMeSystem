@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.CustomerEntity;
 import entity.OrderEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.VendorEntity;
@@ -35,5 +36,7 @@ public interface OrderEntityControllerLocal {
     public List<SaleTransactionLineItemEntity> retrieveSaleTransactionLineItemEntities(Long orderId);
     
     public BigDecimal getEarnings (Long orderId);
+
+    public List<OrderEntity> retrieveCustomerOrders(Long customerId);
   
 }

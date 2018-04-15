@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.CustomerEntity;
 import entity.OrderEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.VendorEntity;
@@ -102,6 +103,7 @@ public class OrderEntityController implements OrderEntityControllerLocal {
         return query.getResultList();     
     }
     
+    @Override
     public BigDecimal getEarnings (Long orderId) {
         
         Query query = em.createQuery("SELECT l FROM LineItemEntity l WHERE l.orderId =:inOrderId");
@@ -114,4 +116,10 @@ public class OrderEntityController implements OrderEntityControllerLocal {
         return earnings;        
     }
     
+    @Override
+    public List<OrderEntity> retrieveCustomerOrders (Long customerId) {
+        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.customerEntity.businessId = :inCustomerId");
+         query.setParameter("inCustomerId", customerId);
+        return query.getResultList();
+    }  
 }
