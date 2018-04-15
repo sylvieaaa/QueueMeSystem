@@ -18,6 +18,9 @@
             <h:outputText style="color: black; font-weight: bold; font-size: large" value="Welcome," /> 
             <h:outputText style="color:blue; font-weight: bold; font-size: large" value="#{mainPageManagedBean.currentVendor.vendorName}" rendered="#{sessionScope['accountType'] ne 'Admin'}"/> &nbsp;&nbsp;
             <h:outputText style="color:blue; font-weight: bold; font-size: large" value="#{mainPageManagedBean.currentVendor.vendorName}" rendered="#{sessionScope['accountType'] eq 'Admin'}"/> &nbsp;&nbsp;
+            <br />
+            <br />
+            <p:button icon="ui-icon-locked" outcome="changePassword.xhtml" value="Change Password" rendered="#{sessionScope['accountType'] ne 'Admin'}"/>
 
 
 
@@ -26,22 +29,17 @@
             <br/>
 
             <font size="4">
-                <p:button outcome="addOrder.xhtml" value="Add Order" style="width:15%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
+                <p:button outcome="addOrder.xhtml" value="Add Order" style="width:20%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
                 </p:button>&nbsp;
 
-                <p:commandButton actionListener="#{mainPageManagedBean.manageMenu}" value="Manage Menu" style="width: 15%; height: 300">
+                <p:commandButton actionListener="#{mainPageManagedBean.manageMenu}" value="Manage Menu" style="width: 20%; height: 300">
                     <f:attribute name="vendorId" value="#{mainPageManagedBean.currentVendor.businessId}" />
                 </p:commandButton>&nbsp;
 
-
-                <p:button outcome="manageOrders.xhtml" value="Manage Orders" style="width: 15%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
+                <p:button outcome="manageOrders.xhtml" value="Manage Orders" style="width: 20%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
                 </p:button>&nbsp;
 
-                <p:button outcome="changePassword.xhtml" value="Change Password" style="width: 15%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
-                </p:button>&nbsp;
-
-
-                <p:button outcome="review.xhtml" value="Reviews" style="width: 15%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
+                <p:button outcome="review.xhtml" value="Reviews" style="width: 20%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
                 </p:button>
 
             </font>

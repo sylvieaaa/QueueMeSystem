@@ -25,11 +25,13 @@
             <p:menuitem url="mainPage.xhtml" value="Home"/>
             <p:menuitem url="#" value="Manage Menu"/>
         </p:breadCrumb>
-        <br/>
+        <p style="font-size: xx-small"></p>
         <p:commandButton value="Back" icon="fa fa-arrow-left" actionListener="#{manageMenuManagedBean.backToVendor}" rendered="#{sessionScope['accountType'] eq 'Admin'}">
             <f:attribute name="vendorId" value="#{manageMenuManagedBean.currentVendorEntity.businessId}" />
             <f:attribute name="from" value="back" />
-        </p:commandButton>     
+        </p:commandButton>   
+        <p:commandButton value="Back" icon="fa fa-arrow-left" action="mainPage.xhtml" rendered="#{sessionScope['accountType'] eq 'Vendor'}"/>
+
 
         <h:form id="menuForm">
             <p:growl id="menuFormGrowl" showDetail="true"/>

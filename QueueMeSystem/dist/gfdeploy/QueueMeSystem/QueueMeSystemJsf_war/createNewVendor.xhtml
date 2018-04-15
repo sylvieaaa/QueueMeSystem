@@ -13,15 +13,18 @@
             <p:menuitem value="Main Page" url="foodCourtMainPage.xhtml" />
             <p:menuitem value="Create New Vendor" url="#"/>
         </p:breadCrumb> 
+        <p style="font-size: xx-small"></p>
+        <p:commandButton value="Back" icon="fa fa-arrow-left" action="foodCourtMainPage.xhtml" />
+
 
         <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
         <div class ="ui-g-12 ui-md-6 ui-lg-4">
-
-            <p:panel style="display: block; text-align:center; width: 550px">
+            <br />
+            <p:panel style="display: block; text-align:center; width: 550px; border-color: transparent">
                 <h1><h:outputText style="color:blue" value="#{createNewVendorManagedBean.currentFoodCourt.name}"/></h1>
                 <h3>Add New Vendor</h3>
 
-                <h:form>
+                <h:form >
                     <p:growl id="growl" showDetail="true" autoUpdate="true"/>
 
                     <p:wizard flowListener="#{createNewVendorManagedBean.onFlowProcess}" id="wizardVendorLogo">

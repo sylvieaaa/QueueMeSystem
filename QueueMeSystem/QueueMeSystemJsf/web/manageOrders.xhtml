@@ -8,127 +8,130 @@
                 xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="content">
-        
+
         <p:breadCrumb>
             <p:menuitem value="Home" url="mainPage.xhtml" />
             <p:menuitem value="Manage Orders" url="manageOrders.xhtml"/>
         </p:breadCrumb>
+        <p style="font-size: xx-small"></p>
+        <p:commandButton value="Back" icon="fa fa-arrow-left" action="mainPage.xhtml" />
 
-        
+
+
         <style>
             .ui-datatable-data {
                 text-align: center;
             }
         </style>
-        
+
         <h2 style="text-align: center">Order List</h2>
         <br/>
-        
-       
+
+
         <h:form id="formAllOrders">
-            
+
             <p:messages id="messages" redisplay="false" closable="true"/>
-            
+
             <p:tabView>
                 <p:tab title="Orders (Pending)">
-            
+
                     <p:dataTable id="dataTableAllPendingOrders" widgetVar="dataTableAllPendingOrders" value="#{manageOrderManagedBean.pendingOrderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"    
-                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
-                
-                <p:column headerText="Order ID" >
-                    <h:outputText value="#{orderEntity.orderId}" />
-                </p:column>
-                
-                <p:column headerText="Date Time">
-                    <h:outputText value="#{orderEntity.dateTime.time}">
-                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                    </h:outputText>
-                </p:column>
-                
-                <p:column headerText="Earnings" >
-                    <h:outputText value="#{orderEntity.totalEarnings}" style="text-align: center">
-                     <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
-                    </h:outputText>
-                </p:column>
-                
- 
-                <p:column headerText="Details" >
-                    <p:commandButton update="formViewPendingOrder" oncomplete="PF('dialogViewPendingOrder').show()" icon="ui-icon-document" title="View">
-                        <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
-                    </p:commandButton>
-                </p:column>
+                                 rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
-                <p:column headerText="Fulfilment Status">     
-                    <p:commandButton class="icon-only" icon="fa fa-check" actionListener="#{manageOrderManagedBean.editFulfilled}" update="@form">     
-                    <f:attribute name="orderFulfilled" value="#{orderEntity}"/>
-                    </p:commandButton>
-                </p:column>
-                    
-                
-            </p:dataTable>
-            
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-            </p:confirmDialog>
+                        <p:column headerText="Order ID" >
+                            <h:outputText value="#{orderEntity.orderId}" />
+                        </p:column>
 
-        </p:tab>
-                
-                 
+                        <p:column headerText="Date Time">
+                            <h:outputText value="#{orderEntity.dateTime.time}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Earnings" >
+                            <h:outputText value="#{orderEntity.totalEarnings}" style="text-align: center">
+                                <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+
+                        <p:column headerText="Details" >
+                            <p:commandButton update="formViewPendingOrder" oncomplete="PF('dialogViewPendingOrder').show()" icon="ui-icon-document" title="View">
+                                <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <p:column headerText="Fulfilment Status">     
+                            <p:commandButton class="icon-only" icon="fa fa-check" actionListener="#{manageOrderManagedBean.editFulfilled}" update="@form">     
+                                <f:attribute name="orderFulfilled" value="#{orderEntity}"/>
+                            </p:commandButton>
+                        </p:column>
+
+
+                    </p:dataTable>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </p:tab>
+
+
                 <!-- 2nd Tab --> 
-                
+
                 <p:tab title="Orders (Completed)">
-            
+
                     <p:dataTable id="dataTableAllCompletedOrders" widgetVar="dataTableAllCompletedOrders" value="#{manageOrderManagedBean.completedOrderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"
-                         
-                         rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
-                
-              
-                
-                <p:column headerText="Order ID">
-                    <h:outputText value="#{orderEntity.orderId}" />
-                </p:column>
-                
-                <p:column headerText="Date Time">
-                    <h:outputText value="#{orderEntity.dateTime.time}" style="text-align: center">
-                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                    </h:outputText>
-                </p:column>
-                
-                <p:column headerText="Earnings">
-                    <h:outputText value="#{orderEntity.totalEarnings}" style="text-align: center">
-                     <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
-                    </h:outputText>
-                </p:column>
-               
- 
-                <p:column headerText="Details" >
-                    <p:commandButton update="formViewCompletedOrder" oncomplete="PF('dialogViewCompletedOrder').show()" icon="ui-icon-document" title="View">
-                        <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
-                    </p:commandButton>
-       
-                </p:column>
-                    
-                
-            </p:dataTable>
-            
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-            </p:confirmDialog>
-            
-        </p:tab>
-                
-               </p:tabView>
-                    </h:form>
+
+                                 rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+
+
+                        <p:column headerText="Order ID">
+                            <h:outputText value="#{orderEntity.orderId}" />
+                        </p:column>
+
+                        <p:column headerText="Date Time">
+                            <h:outputText value="#{orderEntity.dateTime.time}" style="text-align: center">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Earnings">
+                            <h:outputText value="#{orderEntity.totalEarnings}" style="text-align: center">
+                                <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+
+
+                        <p:column headerText="Details" >
+                            <p:commandButton update="formViewCompletedOrder" oncomplete="PF('dialogViewCompletedOrder').show()" icon="ui-icon-document" title="View">
+                                <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
+                            </p:commandButton>
+
+                        </p:column>
+
+
+                    </p:dataTable>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </p:tab>
+
+            </p:tabView>
+        </h:form>
 
         <h:form id="formViewPendingOrder">
-            
+
             <p:dialog id="dialogViewPendingOrder" widgetVar="dialogViewPendingOrder" header="View Order" closable="true">
-               
+
 
                 <p:panelGrid>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Order ID: " />
@@ -137,7 +140,7 @@
                             <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.orderId}" />
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Date Time: " />
@@ -148,7 +151,7 @@
                             </h:outputText>
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Earnings: " />
@@ -159,7 +162,7 @@
                             </h:outputText>
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Items: " />
@@ -168,21 +171,21 @@
                             <pre><h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.listItemName()}" /></pre>
                         </p:column>
                     </p:row>
-                    
-    
+
+
                 </p:panelGrid>
 
             </p:dialog>
-            
+
         </h:form>
-        
+
         <h:form id="formViewCompletedOrder">
-            
+
             <p:dialog id="dialogViewCompletedOrder" widgetVar="dialogViewCompletedOrder" header="View Order" closable="true">
-               
+
 
                 <p:panelGrid>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Order ID: " />
@@ -191,7 +194,7 @@
                             <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.orderId}" />
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Date Time: " />
@@ -202,7 +205,7 @@
                             </h:outputText>
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Earnings: " />
@@ -213,7 +216,7 @@
                             </h:outputText>
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Order Items: " />
@@ -222,14 +225,14 @@
                             <pre><h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.listItemName()}" /></pre>
                         </p:column>
                     </p:row>
-                    
-    
+
+
                 </p:panelGrid>
 
             </p:dialog>
-            
+
         </h:form>
- 
+
     </ui:define>
 
 </ui:composition>
