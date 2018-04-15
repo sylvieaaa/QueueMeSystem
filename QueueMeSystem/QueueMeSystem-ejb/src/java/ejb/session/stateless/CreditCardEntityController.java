@@ -52,8 +52,8 @@ public class CreditCardEntityController implements CreditCardEntityControllerLoc
     }
         
     @Override
-    public void selectDefaultCard(Long creditCardId) {
-        CreditCardEntity creditCardEntity = em.find(CreditCardEntity.class, creditCardId);
+    public void selectDefaultCard(CreditCardEntity creditCardEntity) {
+        creditCardEntity = em.find(CreditCardEntity.class, creditCardEntity.getCreditCardId());
         for(CreditCardEntity cce: creditCardEntity.getCustomerEntity().getCreditCardEntities()) {
             cce.setDefaultCard(false);
         }
@@ -68,7 +68,9 @@ public class CreditCardEntityController implements CreditCardEntityControllerLoc
     
     @Override
     public void deleteCreditCard(CreditCardEntity creditCard) {
-        creditCard.setCustomerEntity(null);
-        em.remove(creditCard);
+        CreditCardEntity ce = em.find(CreditCardEntity.class, creditCard.getCreditCardId());
+        ce.setCustomerEntity(null);
+        em.merge(ce);
+        em.remove(ce);
     }
 }
