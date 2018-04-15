@@ -127,9 +127,7 @@ public class DataInitializationSessionBean {
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("KorKor Food Court", "Best in Changi", "Changi Drive 888", "555555", calendarStart, calendarEnd, "changifoodcourt", "password", "fc4.png"));
             foodCourtEntityControllerLocal.createFoodCourt(new FoodCourtEntity("JieJie Food Court", "Best in Redhill", "Redhill Drive 555", "777654", calendarStart, calendarEnd, "redhillfoodcourt", "password", "fc5.png"));
 
-//            CreditCardEntity creditCardEntity = creditCardEntityControllerLocal.createCreditCard(new CreditCardEntity(12347788, 123, "Customer", Calendar.getInstance()));
-//            customerEntity.getCreditCardEntities().add(creditCardEntity);
-//            creditCardEntity.setCustomerEntity(customerEntity);
+
             CreditCardEntity creditCard = creditCardEntityControllerLocal.createCreditCard("1234-5678-9999-0000", "customer", customerEntity);
 //            customerEntity.getCreditCardEntities().add(creditCard);
 //            creditCard.setCustomerEntity(customerEntity);
@@ -153,43 +151,9 @@ public class DataInitializationSessionBean {
             categoryEntity.getMenuItemEntities().add(chickenRice);
             categoryEntity.getMenuItemEntities().add(duckRice);
 
-            List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = new ArrayList<>();
-            Integer totalLineItem = 2;  // used to be 1
-            Integer totalQuantity = 2;  // used to be 1
-            Integer quantity = 1;
-            BigDecimal totalAmount = new BigDecimal("0.00");
-
-//            ++totalLineItem;
-//            BigDecimal subTotal = chickenRice.getPrice().multiply(new BigDecimal(quantity));
-////            SaleTransactionLineItemEntity abc = new SaleTransactionLineItemEntity(1, quantity, chickenRice.getPrice(), subTotal, "");
-//            SaleTransactionLineItemEntity abc  = new SaleTransactionLineItemEntity(1, quantity, chickenRice.getPrice(), subTotal, "no meat");
-//            saleTransactionLineItemEntities.add(abc);
-//            SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, calendarStart, Boolean.FALSE, Boolean.FALSE));
-//            newSaleTransactionEntity.getSaleTransactionLineItemEntities().add(abc);
-//            abc.setSaleTransactionEntity(newSaleTransactionEntity);
-//            System.err.println("IRON MAN");
-//            
-//            for (SaleTransactionLineItemEntity xyz : newSaleTransactionEntity.getSaleTransactionLineItemEntities()) {
-//                System.err.println(xyz.getMenuItemEntity().getMenuItemName());
-//                VendorEntity vendor = xyz.getMenuItemEntity().getVendorEntity();
-//                OrderEntity oe = orderEntityControllerLocal.createOrder(new OrderEntity(calendarEnd, xyz.getSubTotal(), Boolean.FALSE));
-//                oe.getSaleTransactionLineItemEntities().add(xyz);
-//                xyz.setOrderEntity(oe);
-//                oe.setVendorEntity(vendor);
-//                vendor.getOrderEntities().add(oe);
-//                oe.setCustomerEntity(customerEntity);
-//                customerEntity.getOrderEntities().add(oe);
-//                System.err.println("WOO LA LA LA LA");
-//                
-//            }
-//            System.err.println("WAKANDA");
-//            newSaleTransactionEntity.setCustomerEntity(customerEntity);
-//            customerEntity.getSaleTransactionEntities().add(newSaleTransactionEntity);
-//            System.err.println("KABOOOOMM KABOOOOW");
             ReviewEntity review = reviewEntityControllerLocal.createReview(new ReviewEntity("thissnkandksiasd ihfiafhiahis adjsiadafhifhn kbkfbssjda   hsiahi h aisdhaiodao ihao ihaoi sahoi ahshidhihiwiwdhwidhidhiiishiiihq    p oihoidhoah oihis dha", 1));
             ReviewEntity review2 = reviewEntityControllerLocal.createReview(new ReviewEntity("Rendang is very crispy, bagus", 5));
             ReviewEntity review3 = reviewEntityControllerLocal.createReview(new ReviewEntity("very good", 4));
-            System.err.println("SPIDERMAN");
             review.setCustomerEntity(customerEntity);
             customerEntity.getReviewEntities().add(review);
             review.setVendorEntity(chinese);
@@ -205,7 +169,6 @@ public class DataInitializationSessionBean {
             malay.getReviewEntities().add(review3);
             malay.setRating(reviewEntityControllerLocal.averageReviewScore(malay));
 
-            System.err.println("FRIED CHICKENNNNNN");
 
             String[] tags = {"Rice", "Noodles", "Curry", "Chicken", "Fish", "Pasta", "Meat", "Soup", "Salad", "Dim Sum", "Spicy", "Sweets", "Curry", "Finger Foods", "Fruits"};
             for (String tag : tags) {
