@@ -520,6 +520,18 @@ public class ManageMenuManagedBean implements Serializable {
         }
     }
 
+    public void backToVendor(ActionEvent event) {
+        try {
+            Long vendorId = (Long) event.getComponent().getAttributes().get("vendorId");
+//            String from = (String) event.getComponent().getAttributes().get("from");
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("vendorIdToView", vendorId);
+//            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("from", from);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+        }
+    }
+
     public List<MenuEntity> getMenuEntities() {
         return menuEntities;
     }
@@ -690,5 +702,4 @@ public class ManageMenuManagedBean implements Serializable {
     public void setUnSelectedtagEntities(List<TagEntity> unSelectedtagEntities) {
         this.unSelectedtagEntities = unSelectedtagEntities;
     }
-
 }

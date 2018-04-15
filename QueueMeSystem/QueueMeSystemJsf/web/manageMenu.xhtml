@@ -25,6 +25,12 @@
             <p:menuitem url="mainPage.xhtml" value="Home"/>
             <p:menuitem url="#" value="Manage Menu"/>
         </p:breadCrumb>
+        <br/>
+        <p:commandButton value="Back" icon="fa fa-arrow-left" actionListener="#{manageMenuManagedBean.backToVendor}" rendered="#{sessionScope['accountType'] eq 'Admin'}">
+            <f:attribute name="vendorId" value="#{manageMenuManagedBean.currentVendorEntity.businessId}" />
+            <f:attribute name="from" value="back" />
+        </p:commandButton>     
+
         <h:form id="menuForm">
             <p:growl id="menuFormGrowl" showDetail="true"/>
             <p:fieldset>
@@ -385,6 +391,7 @@
                                     <p:column>
                                         <p:fileUpload required="true" requiredMessage="Please upload photo before going to the next page." id="menuPhotoUpload" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="uploadMessage" skinSimple="true" fileUploadListener="#{manageMenuManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                             <f:attribute name="from" value="create" />
+                                            <f:attribute name="vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}"/>
                                         </p:fileUpload>
                                     </p:column>
                                     <p:column>
@@ -414,7 +421,9 @@
                                 </p:row>
                                 <p:row>
                                     <p:column colspan="2">
-                                        <p:commandButton value="Create New Product" actionListener="#{manageMenuManagedBean.createNewMenuItem}" update="@form menuForm:menuItems" oncomplete="PF('wizardItemMenu').loadStep('itemDetails',false); PF('dialogCreateNewItem').hide();"/>
+                                        <p:commandButton value="Create New Product" actionListener="#{manageMenuManagedBean.createNewMenuItem}" update="@form menuForm:menuItems" oncomplete="PF('wizardItemMenu').loadStep('itemDetails',false); PF('dialogCreateNewItem').hide();">
+                                            <f:attribute name="vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}"/>
+                                        </p:commandButton>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>
