@@ -30,5 +30,7 @@ public interface CreditCardEntityControllerLocal {
     public CreditCardEntity retrieveCreditCard(Long creditCardId);
 
     public void deleteCreditCard(CreditCardEntity creditCard);
+
+    //public void selectDefaultCard(CreditCardEntity creditCardEntity);
     
 }

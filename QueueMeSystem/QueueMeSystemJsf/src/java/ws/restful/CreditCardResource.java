@@ -30,6 +30,7 @@ import ws.restful.datamodel.CreditCardRsp;
 import ws.restful.datamodel.CreditcardReq;
 import ws.restful.datamodel.ErrorRsp;
 import ws.restful.datamodel.SelectedCreditCardReq;
+import ws.restful.datamodel.SelectDefaultCardReq;
 
 /**
  * REST Web Service
@@ -64,6 +65,8 @@ public class CreditCardResource {
             for(CreditCardEntity creditCardEntity: creditCardEntities) {
                 creditCardEntity.setCustomerEntity(null);
             }
+            System.err.println("spartan!!");
+            System.err.println(creditCardEntities);
             return Response.status(Status.OK).entity(new CreditCardRsp(creditCardEntities)).build();
         } catch (Exception ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorRsp(ex.getMessage())).build();
@@ -106,20 +109,6 @@ public class CreditCardResource {
         } catch (Exception ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build(); 
         }
-//        System.err.println("it went in");
-//        if ((selectCreditcardReq != null) && (selectCreditcardReq.getValue() != null)) {
-//            try {
-//                SelectedCreditCardReq selectCreditCardReq = selectCreditcardReq.getValue();
-//                creditCardEntityControllerLocal.selectedCreditCard(selectCreditCardReq.getCustomerEntity(), selectCreditCardReq.getCreditCardEntity());
-//                System.err.println("it passed");
-//                return Response.status(Response.Status.OK).build();
-//            } catch (Exception ex) {
-//                System.err.println(ex);
-//                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
-//            }
-//        } else {
-//            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
-//        }
     }
     
     @Path("deleteCreditCard")
