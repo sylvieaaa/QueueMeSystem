@@ -33,9 +33,6 @@
                         <p:panel id="menuItemPanel" header="All Items">
                             <f:facet name="actions">
                                 <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" icon="fa fa-plus" update="formEditMenuItems" oncomplete="PF('dialogCreateNewItem').show()" title="Create new item"/>
-                                <p:commandButton styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" icon="fa fa-edit" update="formEditMenuItems" oncomplete="PF('dialogEditMenuItems').show()" title="Edit multiple items"/>
-                                <p:commandButton rendered="#{manageMenuManagedBean.deleteMultipleItems eq false}" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" icon="fa fa-trash" update="menuForm:menuItemPanel menuForm:menuItems" title="Delete multiple items" actionListener="#{manageMenuManagedBean.toggleDeleteMultipleItems}"/>
-                                <p:commandButton rendered="#{manageMenuManagedBean.deleteMultipleItems eq true}" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" icon="fa fa-trash onTrash" update="menuForm:menuItemPanel menuForm:menuItems" title="Off delete multiple items" actionListener="#{manageMenuManagedBean.toggleDeleteMultipleItems}"/>
                             </f:facet>
                             <p:dataGrid id="menuItems" var="menuItem" value="#{manageMenuManagedBean.menuItemEntities}" layout="grid" paginator="true" columns="3" rows="6" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                         rowsPerPageTemplate="6,9" style="text-align: center;">
@@ -88,11 +85,14 @@
                                 </p:selectOneMenu>
                                 <p:commandButton value="Create New Menu" oncomplete="PF('dialogCreateNewMenu').show()"/>
                                 <p:commandButton rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" disabled="#{manageMenuManagedBean.selectedMenuEntity.selected eq true}" value="Delete Menu" actionListener="#{manageMenuManagedBean.deleteMenu}"  update="@form">
+                                    <f:attribute name = "vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}" />
                                     <p:confirm header="Confirmation" message="Are you sure you want to delete #{manageMenuManagedBean.selectedMenuEntity.name}?" icon="ui-icon-alert" />
                                 </p:commandButton>
-                                <p:outputLabel style="font-size: 0.9em" for="menuOneMenu" value="display menu?" rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}"/>
+                                <p:outputLabel style="font-size: 0.9em" for="menuOneMenu" value="Display menu?" rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}"/>
                                 <p:selectBooleanCheckbox rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}" value="#{manageMenuManagedBean.selectedMenuEntity.selected}" disabled="#{manageMenuManagedBean.selectedMenuEntity.selected}">
-                                    <p:ajax update="menuPanelGrid" listener="#{manageMenuManagedBean.changeDefaultMenu}"/>
+                                    <p:ajax update="menuPanelGrid" listener="#{manageMenuManagedBean.changeDefaultMenu}">
+                                        <f:attribute name="vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}" />
+                                    </p:ajax>
                                 </p:selectBooleanCheckbox>
                             </p:panelGrid>
                             <p:panel header="Categories" rendered="#{manageMenuManagedBean.selectedMenuEntity ne null}">
@@ -436,7 +436,11 @@
                         <p:column><p:inputText value="#{manageMenuManagedBean.newMenuEntity.name}" required="true" requiredMessage="Menu name is required." /></p:column>
                     </p:row>
                     <p:row>
-                        <p:column colspan="2"><p:commandButton value="Create new menu" actionListener="#{manageMenuManagedBean.createNewMenu}" update="@form menuForm:menuCategories menuForm:menuOneMenu" oncomplete="PF('dialogCreateNewMenu').hide();"/></p:column>
+                        <p:column colspan="2">
+                            <p:commandButton value="Create new menu" actionListener="#{manageMenuManagedBean.createNewMenu}" update="@form menuForm:menuCategories menuForm:menuOneMenu" oncomplete="PF('dialogCreateNewMenu').hide();">
+                                <f:attribute name="vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}" />
+                            </p:commandButton>
+                        </p:column>
                     </p:row>
                 </p:panelGrid>
             </h:form>

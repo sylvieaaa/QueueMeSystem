@@ -5,49 +5,52 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
-    
+
     <ui:define name="content">
-        
+
+        <br/>
+        <br/>
+
+        <h:panelGroup style="display:block; text-align:center">
+
+            <h:outputText style="color: black; font-weight: bold; font-size: large" value="Welcome," /> 
+            <h:outputText style="color:blue; font-weight: bold; font-size: large" value="#{mainPageManagedBean.currentVendor.vendorName}" rendered="#{sessionScope['accountType'] ne 'Admin'}"/> &nbsp;&nbsp;
+            <h:outputText style="color:blue; font-weight: bold; font-size: large" value="#{mainPageManagedBean.currentVendor.vendorName}" rendered="#{sessionScope['accountType'] eq 'Admin'}"/> &nbsp;&nbsp;
+            <p:commandButton value="Back" actionListener="#{mainPageManagedBean.backToFoodCourt}" rendered="#{sessionScope['accountType'] eq 'Admin'}">
+                <f:attribute name="foodCourtId" value="#{mainPageManagedBean.currentVendor.foodCourtEntity.businessId}" />
+            </p:commandButton>
+
+
+            <br/>
             <br/>
             <br/>
 
-            <h:panelGroup style="display:block; text-align:center">
-                
-                <h2> Welcome, <h:outputText style="color:blue" value="#{sessionScope['businessEntity'].vendorName}"/></h2>
-                
-            <br/>
-            <br/>
-            <br/>
-            
-            <font size="4"><p:button outcome="addOrder.xhtml" value="Add Order" style="width:300; height:50">
-            </p:button>&nbsp;
-            
-            <br/>
-            <br/>
-        
-            <p:button outcome="manageMenu.xhtml" value="Manage Menu" style="width:300; height:50">
-            </p:button>&nbsp;
+            <font size="4">
+                <p:button outcome="addOrder.xhtml" value="Add Order" style="width:15%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
+                </p:button>&nbsp;
 
-            
-            <p:button outcome="manageOrders.xhtml" value="Manage Orders" style="width:300; height:50">
-            </p:button>
-                <br/>
-                <br/>
-            
-            <p:button outcome="changePassword.xhtml" value="Change Password" style="width:300; height:50">
-            </p:button>&nbsp;
-                    
-            
-            <p:button outcome="review.xhtml" value="Reviews" style="width:300; height:50">
-            </p:button>
-                        
+                <p:commandButton actionListener="#{mainPageManagedBean.manageMenu}" value="Manage Menu" style="width: 15%; height: 300">
+                    <f:attribute name="vendorId" value="#{mainPageManagedBean.currentVendor.businessId}" />
+                </p:commandButton>&nbsp;
+
+
+                <p:button outcome="manageOrders.xhtml" value="Manage Orders" style="width: 15%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
+                </p:button>&nbsp;
+
+                <p:button outcome="changePassword.xhtml" value="Change Password" style="width: 15%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
+                </p:button>&nbsp;
+
+
+                <p:button outcome="review.xhtml" value="Reviews" style="width: 15%; height: 300" disabled="#{sessionScope['accountType'] eq 'Admin'}">
+                </p:button>
+
             </font>
-            
-            
-            
-            </h:panelGroup>
-        
-        
+
+
+
+        </h:panelGroup>
+
+
     </ui:define>
 
 </ui:composition>

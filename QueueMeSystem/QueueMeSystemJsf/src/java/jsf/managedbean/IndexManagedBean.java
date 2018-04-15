@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -91,6 +92,11 @@ public class IndexManagedBean {
         }
     }
 
+    public void logout(ActionEvent event) throws IOException {
+        ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
+        FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+    }
+    
     public void forgetPassword(ActionEvent event) {
         try {
             emailControllerLocal.forgetPasswordEmail(email);
