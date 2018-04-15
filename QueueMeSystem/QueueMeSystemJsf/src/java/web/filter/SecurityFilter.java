@@ -50,8 +50,14 @@ public class SecurityFilter implements Filter {
         Boolean isLogin = (Boolean) httpSession.getAttribute("isLogin");
 
         if (isLogin && requestServletPath.equals("/index.xhtml")) {
-            System.err.println("true");
-            httpServletResponse.sendRedirect(CONTEXT_ROOT + "/mainPage.xhtml");
+            String accountType = (String) httpSession.getAttribute("accountType");
+            if (accountType.equals("Vendor")) {
+                httpServletResponse.sendRedirect(CONTEXT_ROOT + "/mainPage.xhtml");
+            } else if (accountType.equals("FoodCourt")) {
+                httpServletResponse.sendRedirect(CONTEXT_ROOT + "/foodCourtMainPage.xhtml");
+            } else if (accountType.equals("Admin")) {
+                httpServletResponse.sendRedirect(CONTEXT_ROOT + "/adminMainPage.xhtml");
+            }
         }
 
         if (!excludeLoginCheck(requestServletPath)) {
@@ -112,7 +118,13 @@ public class SecurityFilter implements Filter {
                     || path.startsWith("/changePassword.xhtml")
                     || path.equals("/createNewFoodCourt.xhtml")
                     || path.equals("/createNewVendor.xhtml")
-                    || path.equals("/foodCourtMainPage.xhtml")) {
+                    || path.equals("/foodCourtMainPage.xhtml")
+                    || path.equals("/mainPage.xhtml")
+                    || path.equals("/manageMenu.xhtml")
+                    || path.equals("/manageOrders.xhtml")
+                    || path.equals("/manageCompletedOrder.xhtml")
+                    || path.equals("/addOrder.xhtml")
+                    || path.equals("/review.xhtml")) {
 
                 return true;
             }

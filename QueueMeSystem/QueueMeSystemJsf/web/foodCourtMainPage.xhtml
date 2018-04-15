@@ -128,11 +128,14 @@
 
                         <p:row>
                             <p:column colspan="2" style="text-align: center">
-                                <p:commandButton update="updateVendorForm" oncomplete="PF('dialogUpdateVendor').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
+                                <p:commandButton update="updateVendorForm" oncomplete="PF('dialogUpdateVendor').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 10px; width: 58px">
                                     <f:setPropertyActionListener value="#{vendors}" target="#{manageFoodCourtManagedBean.vendorEntityToUpdate}" />
-                                </p:commandButton>
-                                <p:commandButton value="Delete Vendor" icon="fa fa-trash" update="deleteVendorForm" title="Delete Vendor" oncomplete="PF('dialogDeleteVendor').show()">
+                                </p:commandButton>&nbsp;&nbsp;
+                                <p:commandButton value="Delete" icon="fa fa-trash" update="deleteVendorForm" title="Delete Vendor" oncomplete="PF('dialogDeleteVendor').show()" style="font-size: 10px; width: 58px">
                                     <f:setPropertyActionListener value="#{vendors}" target="#{manageFoodCourtManagedBean.vendorToDisable}" />
+                                </p:commandButton>&nbsp;&nbsp;
+                                <p:commandButton value="View" icon="fa fa-eye" title="View" rendered="#{sessionScope['accountType'] eq 'Admin'}" actionListener="#{manageFoodCourtManagedBean.viewVendor}" style="font-size: 10px; width: 58px">
+                                    <f:attribute name="viewVendorId" value="#{vendors.businessId}"/>
                                 </p:commandButton>
                             </p:column>
                         </p:row>
@@ -276,7 +279,7 @@
             </h:form>
 
             <h:form id="deleteVendorForm">
-                <p:dialog id="dialogDeleteVendor" widgetVar="dialogDeleteVendor" header="Delete Vendor" closable="true">
+                <p:dialog id="dialogDeleteVendor" widgetVar="dialogDeleteVendor" header="Delete" closable="true">
                     <p:messages id="deleteVendor" redisplay="false" />
                     <h4 style="text-align: center"> Confirm to delete <h:outputText style="color: blue;" value="#{manageFoodCourtManagedBean.vendorToDisable.vendorName} ?"/></h4>
 

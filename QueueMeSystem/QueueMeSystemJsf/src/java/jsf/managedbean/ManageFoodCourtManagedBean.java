@@ -7,6 +7,8 @@ package jsf.managedbean;
 
 import ejb.session.stateless.FoodCourtEntityControllerLocal;
 import ejb.session.stateless.VendorEntityControllerLocal;
+import entity.AdminEntity;
+import entity.BusinessEntity;
 import entity.FoodCourtEntity;
 import entity.VendorEntity;
 import java.io.File;
@@ -112,8 +114,15 @@ public class ManageFoodCourtManagedBean implements Serializable {
     }
 
     public void upload(FileUploadEvent event) {
-        FoodCourtEntity foodCourtEntity = (FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
-
+        BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        FoodCourtEntity foodCourtEntity;
+        
+        if(businessEntity instanceof AdminEntity){
+            foodCourtEntity = (FoodCourtEntity) event.getComponent().getAttributes().get("foodCourtEntity");
+        } else {
+            foodCourtEntity = (FoodCourtEntity) businessEntity;
+        }
+        
         String from = (String) event.getComponent().getAttributes().get("from");
         String newFilePath;
         try {
@@ -172,12 +181,22 @@ public class ManageFoodCourtManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + e.getMessage(), null));
         }
     }
-    
+
     public void createVendorPage(ActionEvent event) {
         try {
             Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
             FacesContext.getCurrentInstance().getExternalContext().redirect("createNewVendor.xhtml");
+        } catch (IOException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+        }
+    }
+
+    public void viewVendor(ActionEvent event) {
+        try {
+            Long vendorIdToView = (Long) event.getComponent().getAttributes().get("viewVendorId");
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("vendorIdToView", vendorIdToView);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
         }
