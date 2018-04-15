@@ -7,6 +7,7 @@ package ws.restful;
 
 import ejb.session.stateless.CreditCardEntityControllerLocal;
 import entity.CreditCardEntity;
+import entity.CustomerEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
@@ -27,6 +29,7 @@ import javax.xml.bind.JAXBElement;
 import ws.restful.datamodel.CreditCardRsp;
 import ws.restful.datamodel.CreditcardReq;
 import ws.restful.datamodel.ErrorRsp;
+import ws.restful.datamodel.SelectDefaultCardReq;
 
 /**
  * REST Web Service
@@ -49,6 +52,7 @@ public class CreditCardResource {
 
     /**
      * Retrieves representation of an instance of ws.restful.CreditCardResource
+     *
      * @return an instance of java.lang.String
      */
     @Path("retrieveCreditCards")
@@ -58,7 +62,7 @@ public class CreditCardResource {
     public Response retrieveAllCreditCards(@QueryParam("customerId") Long customerId) {
         try {
             List<CreditCardEntity> creditCardEntities = creditCardEntityControllerLocal.retrieveAllCreditCards(customerId);
-            for(CreditCardEntity creditCardEntity: creditCardEntities) {
+            for (CreditCardEntity creditCardEntity : creditCardEntities) {
                 creditCardEntity.setCustomerEntity(null);
             }
             System.err.println("spartan!!");
@@ -68,17 +72,17 @@ public class CreditCardResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorRsp(ex.getMessage())).build();
         }
     }
-    
+
     @Path("createCard")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createCreditcard(JAXBElement<CreditcardReq> createCreditcardReq) {
         System.err.println("it went in");
-        if ((createCreditcardReq!= null) && (createCreditcardReq.getValue() != null)) {
+        if ((createCreditcardReq != null) && (createCreditcardReq.getValue() != null)) {
             try {
                 CreditcardReq createCreditcard = createCreditcardReq.getValue();
-                
+
                 CreditCardEntity creditCardEntity = creditCardEntityControllerLocal.createCreditCard(createCreditcard.getCardNum(), createCreditcard.getCardName(), createCreditcard.getCustomerEntity());
                 System.err.println("it passed");
                 return Response.status(Response.Status.OK).build();
@@ -93,41 +97,50 @@ public class CreditCardResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
-    
+
     @Path("selectedCard")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCreditCard(JAXBElement<SelectDefaultCardReq> jaxbeSelectDefaultReq) {
+
+//        System.err.println("in her");
+//        try{
+//        creditCardEntityControllerLocal.selectDefaultCard(creditCardId);
+//        return Response.status(Status.OK).build();
+//        } catch (Exception ex) {
+//            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build(); 
+//        }
+//        System.err.println("it went in");
+        if ((jaxbeSelectDefaultReq != null) && (jaxbeSelectDefaultReq.getValue() != null)) {
+            try {
+                SelectDefaultCardReq selectCreditCardReq = jaxbeSelectDefaultReq.getValue();
+                creditCardEntityControllerLocal.selectDefaultCard(selectCreditCardReq.getCreditCardEntity());
+                System.err.println("it passed");
+                return Response.status(Response.Status.OK).build();
+            } catch (Exception ex) {
+                System.err.println(ex);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
+            }
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+        }
+    }
+    
+    @Path("deleteCreditCard")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateCreditCard(@QueryParam("creditCardId") Long creditCardId) {
-        try{
-        creditCardEntityControllerLocal.selectDefaultCard(creditCardId);
-        return Response.status(Status.OK).build();
+    public Response deleteCreditCard(@QueryParam("creditCardId") Long cardId) {
+        try {
+            System.err.println(cardId);
+            CreditCardEntity ce = creditCardEntityControllerLocal.retrieveCreditCard(cardId);
+            System.err.println("IT WENT IN HERE");
+            creditCardEntityControllerLocal.deleteCreditCard(ce);
+            return Response.status(Status.OK).build();
         } catch (Exception ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build(); 
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new ErrorRsp(ex.getMessage())).build();
         }
-//        System.err.println("it went in");
-//        if ((selectCreditcardReq != null) && (selectCreditcardReq.getValue() != null)) {
-//            try {
-//                SelectedCreditCardReq selectCreditCardReq = selectCreditcardReq.getValue();
-//                creditCardEntityControllerLocal.selectedCreditCard(selectCreditCardReq.getCustomerEntity(), selectCreditCardReq.getCreditCardEntity());
-//                System.err.println("it passed");
-//                return Response.status(Response.Status.OK).build();
-//            } catch (Exception ex) {
-//                System.err.println(ex);
-//                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
-//            }
-//        } else {
-//            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
-//        }
-    }
-
-    /**
-     * PUT method for updating or creating an instance of CreditCardResource
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
     }
 
     private CreditCardEntityControllerLocal lookupCreditCardEntityControllerLocal() {
@@ -139,6 +152,5 @@ public class CreditCardResource {
             throw new RuntimeException(ne);
         }
     }
-    
-    
+
 }

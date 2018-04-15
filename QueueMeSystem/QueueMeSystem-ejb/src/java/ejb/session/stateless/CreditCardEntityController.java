@@ -50,25 +50,25 @@ public class CreditCardEntityController implements CreditCardEntityControllerLoc
         query.setParameter("inCustomerId", customerId);
         return query.getResultList();
     }
-    
+        
     @Override
-    public void selectedCreditCard(CustomerEntity customerEntity, CreditCardEntity creditCardEntity) {
-        Long customerId = customerEntity.getBusinessId();
-        System.err.println("1");
-        List<CreditCardEntity> ces = retrieveAllCreditCards(customerId);
-        for (CreditCardEntity ce : ces) {
-            ce.setDefaultCard(false);
-        }
-        System.err.println("2");
-         creditCardEntity.setDefaultCard(true);  
-    }
-    
-    @Override
-    public void selectDefaultCard(Long creditCardId) {
-        CreditCardEntity creditCardEntity = em.find(CreditCardEntity.class, creditCardId);
+    public void selectDefaultCard(CreditCardEntity creditCardEntity) {
+        creditCardEntity = em.find(CreditCardEntity.class, creditCardEntity.getCreditCardId());
         for(CreditCardEntity cce: creditCardEntity.getCustomerEntity().getCreditCardEntities()) {
             cce.setDefaultCard(false);
         }
         creditCardEntity.setDefaultCard(true);
+    }
+    
+    @Override
+    public CreditCardEntity retrieveCreditCard(Long creditCardId) {
+         CreditCardEntity creditCardEntity = em.find(CreditCardEntity.class, creditCardId);
+         return creditCardEntity;
+    }
+    
+    @Override
+    public void deleteCreditCard(CreditCardEntity creditCard) {
+        creditCard.setCustomerEntity(null);
+        em.remove(creditCard);
     }
 }
