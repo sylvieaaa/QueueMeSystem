@@ -9,6 +9,8 @@ import ejb.session.stateless.CategoryEntityControllerLocal;
 import ejb.session.stateless.MenuEntityControllerLocal;
 import ejb.session.stateless.MenuItemEntityControllerLocal;
 import ejb.session.stateless.TagEntityControllerLocal;
+import ejb.session.stateless.VendorEntityControllerLocal;
+import entity.AdminEntity;
 import entity.BusinessEntity;
 import entity.CategoryEntity;
 import entity.MenuEntity;
@@ -16,7 +18,6 @@ import entity.MenuItemEntity;
 import entity.TagEntity;
 import entity.VendorEntity;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,32 +25,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.CloseEvent;
 import org.primefaces.event.DragDropEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
-import org.primefaces.event.TabCloseEvent;
 import org.primefaces.event.UnselectEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import util.exception.CategoryNotFoundException;
 import util.exception.MenuItemNotFoundException;
 import util.exception.MenuNotFoundException;
@@ -75,6 +66,9 @@ public class ManageMenuManagedBean implements Serializable {
 
     @EJB
     private MenuEntityControllerLocal menuEntityControllerLocal;
+
+    @EJB
+    private VendorEntityControllerLocal vendorEntityControllerLocal;
 
     List<MenuEntity> menuEntities;
     List<MenuItemEntity> menuItemEntities;
@@ -107,6 +101,8 @@ public class ManageMenuManagedBean implements Serializable {
 //    Integer activeTab;
 //    StreamedContent filePhoto;
 
+    VendorEntity currentVendorEntity;
+
     public ManageMenuManagedBean() {
         //selectedMenuEntity = new MenuEntity();
         menuItemEntities = new ArrayList<>();
@@ -124,14 +120,28 @@ public class ManageMenuManagedBean implements Serializable {
         selectedTagEntities = new ArrayList<>();
         newTagEntity = new TagEntity();
 //        activeTab = 0;
+        currentVendorEntity = new VendorEntity();
     }
 
     @PostConstruct
     public void postConstruct() {
-        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
-        menuItemEntities = menuItemEntityControllerLocal.retrieveAllMenuItemEntityByVendor(vendorEntity);
+        BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+
+        if (businessEntity instanceof AdminEntity) {
+            try {
+                Long vendorId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("vendorId");
+                currentVendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorId);
+            } catch (VendorNotFoundException ex) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+                return;
+            }
+        } else {
+            currentVendorEntity = (VendorEntity) businessEntity;
+        }
+        menuItemEntities = menuItemEntityControllerLocal.retrieveAllMenuItemEntityByVendor(currentVendorEntity);
         menuItemEntitiesCopy.addAll(menuItemEntities);
-        menuEntities = menuEntityControllerLocal.retrieveMenusByVendor(vendorEntity);
+        menuEntities = menuEntityControllerLocal.retrieveMenusByVendor(currentVendorEntity);
+
         for (MenuEntity menuEntity : menuEntities) {
             selectItems.add(new SelectItem(menuEntity, menuEntity.getName(), menuEntity.getMenuId().toString()));
         }
@@ -205,7 +215,13 @@ public class ManageMenuManagedBean implements Serializable {
     }
 
     public void handleFileUpload(FileUploadEvent event) {
-        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+
+        if (businessEntity instanceof AdminEntity) {
+            currentVendorEntity = (VendorEntity) event.getComponent().getAttributes().get("vendorEntity");
+        } else {
+            currentVendorEntity = (VendorEntity) businessEntity;
+        }
         String from = (String) event.getComponent().getAttributes().get("from");
         try {
             String fileName = "";
@@ -215,7 +231,7 @@ public class ManageMenuManagedBean implements Serializable {
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
 
             file = new File(newFilePath);
-            file = File.createTempFile("V0" + vendorEntity.getBusinessId(), ".png", file);
+            file = File.createTempFile("V0" + currentVendorEntity.getBusinessId(), ".png", file);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 
             int a;
@@ -252,10 +268,17 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void createNewMenuItem(ActionEvent event) {
         newMenuItemEntity.setPhotoURL(file.getName());
-        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+
+        if (businessEntity instanceof AdminEntity) {
+            currentVendorEntity = (VendorEntity) event.getComponent().getAttributes().get("vendorEntity");
+        } else {
+            currentVendorEntity = (VendorEntity) businessEntity;
+        }
+
         try {
             newMenuItemEntity.setTagEntities(selectedTagEntities);
-            newMenuItemEntity = menuItemEntityControllerLocal.createMenuItem(newMenuItemEntity, vendorEntity);
+            newMenuItemEntity = menuItemEntityControllerLocal.createMenuItem(newMenuItemEntity, currentVendorEntity);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, newMenuItemEntity.getMenuItemName() + " successfully created", ""));
 
             menuItemEntities.add(newMenuItemEntity);
@@ -331,8 +354,15 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void createNewMenu(ActionEvent event) {
         try {
-            VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
-            menuEntityControllerLocal.createMenu(newMenuEntity, vendorEntity);
+            BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+
+            if (businessEntity instanceof AdminEntity) {
+                currentVendorEntity = (VendorEntity) event.getComponent().getAttributes().get("vendorEntity");
+            } else {
+                currentVendorEntity = (VendorEntity) businessEntity;
+            }
+
+            menuEntityControllerLocal.createMenu(newMenuEntity, currentVendorEntity);
             menuEntities.add(newMenuEntity);
             selectItems.add(new SelectItem(newMenuEntity, newMenuEntity.getName(), newMenuEntity.getMenuId().toString()));
 
@@ -345,10 +375,17 @@ public class ManageMenuManagedBean implements Serializable {
         }
     }
 
-    public void deleteMenu() {
-        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+    public void deleteMenu(ActionEvent event) {
+        BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+
+        if (businessEntity instanceof AdminEntity) {
+            currentVendorEntity = (VendorEntity) event.getComponent().getAttributes().get("vendorEntity");
+        } else {
+            currentVendorEntity = (VendorEntity) businessEntity;
+        }
+
         try {
-            menuEntityControllerLocal.removeMenuEntity(selectedMenuEntity, vendorEntity);
+            menuEntityControllerLocal.removeMenuEntity(selectedMenuEntity, currentVendorEntity);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("MenuEntityConverter.menuEntities", menuEntities);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, selectedMenuEntity.getName() + " is deleted.", ""));
             int size = selectItems.size();
@@ -411,14 +448,13 @@ public class ManageMenuManagedBean implements Serializable {
     }
 
     public void changeDefaultMenu() {
-        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         for (MenuEntity me : menuEntities) {
             if (!me.equals(selectedMenuEntity)) {
                 me.setSelected(Boolean.FALSE);
             }
         }
 
-        menuEntityControllerLocal.selectDefaultMenu(selectedMenuEntity, vendorEntity);
+        menuEntityControllerLocal.selectDefaultMenu(selectedMenuEntity, currentVendorEntity);
     }
 
     public void onTabChange(TabChangeEvent event) {
@@ -471,7 +507,7 @@ public class ManageMenuManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Tag: " + newTagEntity.getType() + " created", ""));
             tagEntities.add(newTagEntity);
             unSelectedtagEntities.add(newTagEntity);
-            
+
             newTagEntity = new TagEntity();
 //            context.addCallbackParam("isSuccess", true);
         } catch (TagAlreadyExistException ex) {
@@ -629,6 +665,30 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void setNewTagEntity(TagEntity newTagEntity) {
         this.newTagEntity = newTagEntity;
+    }
+
+    public VendorEntity getCurrentVendorEntity() {
+        return currentVendorEntity;
+    }
+
+    public void setCurrentVendorEntity(VendorEntity currentVendorEntity) {
+        this.currentVendorEntity = currentVendorEntity;
+    }
+
+    public List<MenuItemEntity> getMenuItemEntitiesCopy() {
+        return menuItemEntitiesCopy;
+    }
+
+    public void setMenuItemEntitiesCopy(List<MenuItemEntity> menuItemEntitiesCopy) {
+        this.menuItemEntitiesCopy = menuItemEntitiesCopy;
+    }
+
+    public List<TagEntity> getUnSelectedtagEntities() {
+        return unSelectedtagEntities;
+    }
+
+    public void setUnSelectedtagEntities(List<TagEntity> unSelectedtagEntities) {
+        this.unSelectedtagEntities = unSelectedtagEntities;
     }
 
 }

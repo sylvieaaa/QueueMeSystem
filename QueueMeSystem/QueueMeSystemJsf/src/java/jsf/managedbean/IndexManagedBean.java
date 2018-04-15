@@ -55,8 +55,7 @@ public class IndexManagedBean {
     public void login(ActionEvent event) throws IOException {
         try {
             BusinessEntity businessEntity = businessEntityControllerLocal.login(username, password);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);
-
+            
             String accountType;
             if (businessEntity instanceof AdminEntity) {
                 accountType = "Admin";
@@ -68,17 +67,23 @@ public class IndexManagedBean {
                 accountType = "Vendor";
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (VendorEntity) businessEntity);
             } else {
-                accountType = "Customer";
-                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("businessEntity", (CustomerEntity) businessEntity);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", ""));
+                return;
             }
 
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountType", accountType);
             
-            FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
 
         } catch (InvalidLoginCredentialException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credentials", ""));
         }
+    }
+    
+    public void logout(ActionEvent event) throws IOException {
+        ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
+        FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
     }
     
     public void forgetPassword(ActionEvent event) {
