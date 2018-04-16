@@ -99,6 +99,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
         try {
             vendorEntities = vendorEntityControllerLocal.retrieveAllVendorsByFoodCourtId(foodCourtId);
+            System.err.println(vendorEntities.get(0).getVendorName() + " " + vendorEntities.get(0).getStartTime());
         } catch (FoodCourtNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No vendors found.", null));
         }
@@ -106,7 +107,6 @@ public class ManageFoodCourtManagedBean implements Serializable {
     }
 
     public void deleteVendor(ActionEvent event) {
-
         try {
             vendorEntityControllerLocal.deleteVendor(vendorToDisable.getBusinessId());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Vendor deleted successfully", null));
@@ -164,14 +164,23 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
             if (from.equals("vendor")) {
                 if (status.equals("new")) {
+                    System.err.println("ERROR WHY IS IT HERE");
                     newVendorEntity.setPhotoURL(file.getName());
                 } else {
+                    System.err.println("HERE IT IS SUPPOSED TO BEEEEE");
+                    vendorEntityToUpdate.setPhotoURL(file.getName());
                     vendorEntityControllerLocal.updateFileUrl(vendorEntityToUpdate.getBusinessId(), file.getName());
                 }
             } else {
                 foodCourtEntityControllerLocal.updateFileUrl(currentFoodCourt.getBusinessId(), file.getName());
             }
 
+//            try {
+//                vendorEntities = vendorEntityControllerLocal.retrieveAllVendorsByFoodCourtId(foodCourtEntity.getBusinessId());
+//            } catch (FoodCourtNotFoundException ex) {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Refresh vendor error: " + ex.getMessage(), ""));
+//            }
+            
             fileOutputStream.close();
             inputStream.close();
             System.err.println(file);

@@ -73,7 +73,24 @@ public class VendorEntityController implements VendorEntityControllerLocal {
 
     @Override
     public void updateVendor(VendorEntity vendorEntity) throws VendorNotFoundException {
-        em.merge(vendorEntity);
+
+        if (vendorEntity.getBusinessId() != null) {
+            VendorEntity vendorToUpdate = retrieveVendorById(vendorEntity.getBusinessId());
+
+            vendorToUpdate.setCuisineType(vendorEntity.getCuisineType());
+            vendorToUpdate.setEndTime(vendorEntity.getEndTime());
+            vendorToUpdate.setInformation(vendorEntity.getInformation());
+            vendorToUpdate.setPhotoURL(vendorEntity.getPhotoURL());
+            vendorToUpdate.setRating(vendorEntity.getRating());
+            vendorToUpdate.setStartTime(vendorEntity.getStartTime());
+            vendorToUpdate.setVendorName(vendorEntity.getVendorName());
+            
+            em.merge(vendorToUpdate);
+            System.err.println("Photo url now:" + vendorToUpdate.getPhotoURL());
+        } else {
+            throw new VendorNotFoundException("Id not provided for vendor to be updated");
+        }
+
     }
 
     @Override
@@ -140,7 +157,7 @@ public class VendorEntityController implements VendorEntityControllerLocal {
             vendorToUpdate.setPhotoURL(url);
             em.merge(vendorToUpdate);
         } catch (VendorNotFoundException ex) {
-
+            System.err.println("VENDOR CANNOT BE FOUND");
         }
     }
 
