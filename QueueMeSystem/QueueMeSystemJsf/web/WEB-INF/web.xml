@@ -99,4 +99,22 @@
         <local>ejb.session.stateless.CreditCardEntityControllerLocal</local>
         <ejb-link>QueueMeSystem-ejb.jar#CreditCardEntityController</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>SaleTransactionEntityController</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.SaleTransactionEntityControllerLocal</local>
+        <ejb-link>QueueMeSystem-ejb.jar#SaleTransactionEntityController</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CustomerEntityController</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CustomerEntityControllerLocal</local>
+        <ejb-link>QueueMeSystem-ejb.jar#CustomerEntityController</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>MenuItemEntityController</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.MenuItemEntityControllerLocal</local>
+        <ejb-link>QueueMeSystem-ejb.jar#MenuItemEntityController</ejb-link>
+    </ejb-local-ref>
 </web-app>
