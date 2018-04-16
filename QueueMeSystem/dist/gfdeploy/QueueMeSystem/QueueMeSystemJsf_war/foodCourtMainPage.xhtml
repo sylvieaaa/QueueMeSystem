@@ -21,7 +21,7 @@
                 <h:outputText style="color:blue; font-size: x-large; font-weight: bold " value="#{manageFoodCourtManagedBean.currentFoodCourt.name}"/> &nbsp;
                 <p:commandButton id="viewFoodCourt" style="background-color: transparent; border: transparent; cursor: pointer" icon="fa fa-search" />
                 <br /><br />
-                <p:commandButton actionListener="#{manageFoodCourtManagedBean.createVendorPage}" value="Add Vendor" icon="fa fa-plus-circle">
+                <p:commandButton update="createNewVendorForm" oncomplete="PF('dialogCreateNewVendor').show()" value="Add Vendor" icon="fa fa-plus-circle">
                     <f:attribute name="foodCourtId" value="#{manageFoodCourtManagedBean.currentFoodCourt.businessId}"/>
                 </p:commandButton>&nbsp;&nbsp;
                 <p:button icon="ui-icon-locked" outcome="changePassword.xhtml" value="Change Password" rendered="#{sessionScope['accountType'] ne 'Admin'}"/> &nbsp;&nbsp;
@@ -84,7 +84,7 @@
                 </p:overlayPanel>
 
                 <p:carousel id="vendorCarousel" value="#{manageFoodCourtManagedBean.vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
-                    <p:panelGrid columns="1" style="margin-left: 60px; margin-top: 2px">
+                    <p:panelGrid columns="1" style="margin-left: 40px; margin-top: 2px">
                         <p:graphicImage  value="http://localhost:8080/queueme-uploads/vendorLogos/#{vendors.photoURL}" width="200px" height="100px"/>
                     </p:panelGrid>
                     <p:panelGrid style="margin-left: 40px;text-align: left">
@@ -158,6 +158,7 @@
                             <p:column>
                                 <p:fileUpload id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="messagesUpdateVendor" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                     <f:attribute name="from" value="vendor" />
+                                    <f:attribute name="status" value="" />
                                 </p:fileUpload>
                             </p:column>
                             <p:column>
@@ -275,6 +276,104 @@
                         </p:row>
 
                     </p:panelGrid>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="createNewVendorForm">
+                <p:dialog id="dialogCreateNewVendor" widgetVar="dialogCreateNewVendor" header="Create New Vendor" closable="true">
+                    <p:growl id="growl" showDetail="true" autoUpdate="true"/>
+
+                    <p:wizard flowListener="#{manageFoodCourtManagedBean.onFlowProcess}" id="wizardVendorLogo">
+                        <p:tab id="vendorLogo" title="Upload">
+                            <p:messages id="uploadMessage"/>
+                            <p:panel header="Upload Vendor Logo">
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel for="vendorLogoUpload" value="Upload Logo: "/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:fileUpload required="true" id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="uploadMessage" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                                <f:attribute name="from" value="vendor" />
+                                                <f:attribute name="status" value="new" />
+                                            </p:fileUpload>
+                                        </p:column>
+                                        <p:column>
+                                            <p:message for="vendorLogoUpload" />
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab id="addVendorForm" title="Add Vendor">
+                            <p:panel header="Vendor Details">
+                                <p:messages />
+                                <p:panelGrid id="test">
+                                    <p:row>
+                                        <p:column><p:outputLabel for="name" value="Name: "/></p:column>
+                                        <p:column><p:inputText id="name" value="#{manageFoodCourtManagedBean.newVendorEntity.vendorName}" required="true" requiredMessage="Vendor name required." /></p:column>
+                                        <p:column><p:message for="name" /></p:column>
+                                    </p:row>
+
+                                    <p:row>
+                                        <p:column><p:outputLabel for="cuisine" value="Cuisine: " /></p:column>
+                                        <p:column>
+                                            <p:selectOneMenu id="cuisine" value="#{manageFoodCourtManagedBean.newVendorEntity.cuisineType}" required="true" requiredMessage="Cuisine type required.">
+                                                <f:selectItem itemLabel="Select Cuisine" itemValue="null" noSelectionOption="true"/>
+                                                <f:selectItems value="#{manageFoodCourtManagedBean.vendorTypes}" var="type" itemLabel="#{type}" itemValue="#{type}"/>
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                        <p:column><p:message for="cuisine" /></p:column>
+                                    </p:row>
+
+                                    <p:row>
+                                        <p:column><p:outputLabel for="information" value="Information: " /></p:column>
+                                        <p:column><p:inputTextarea id="information" value="#{manageFoodCourtManagedBean.newVendorEntity.information}" required="true" requiredMessage="Information required."/>  </p:column>                  
+                                        <p:column><p:message for="information" /></p:column>
+                                    </p:row>
+
+                                    <p:row>
+                                        <p:column><p:outputLabel for="operatingHours" value="Operating Hours: " /></p:column>
+                                        <p:column>
+                                            <p:calendar pattern="HH:mm:ss" timeOnly="true" value="#{manageFoodCourtManagedBean.newVendorEntity.startTime}" required="true" requiredMessage="Start time required." />
+                                            &nbsp;&nbsp;<h:outputText style="font-size: 15px" value="to"></h:outputText>&nbsp;&nbsp;   
+                                            <p:calendar id="operatingHours" pattern="HH:mm:ss" timeOnly="true" value="#{manageFoodCourtManagedBean.newVendorEntity.endTime}" required="true" requiredMessage="End time required." />
+                                        </p:column>
+                                        <p:column><p:message for="operatingHours" /></p:column>
+                                    </p:row>
+
+                                    <p:row>
+                                        <p:column><p:outputLabel for="username" value="Username:  "/></p:column>
+                                        <p:column>
+                                            <p:inputText id="username" value="#{manageFoodCourtManagedBean.newVendorEntity.username}" required="true" requiredMessage="Username required." validatorMessage="Invalid email format">
+                                                <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" for="username" />
+                                            </p:inputText>
+                                        </p:column>
+                                        <p:column><p:message for="username" display="text" /></p:column>
+                                    </p:row>
+
+                                    <p:row>
+                                        <p:column><p:outputLabel for="password" value="Password: "/></p:column>
+                                        <p:column>
+                                            <p:password id="password" value="#{manageFoodCourtManagedBean.newVendorEntity.password}" required="true" requiredMessage="Password required." />
+                                        </p:column>
+                                        <p:column><p:message for="password" /></p:column>
+                                    </p:row>
+
+                                    <p:row>
+                                        <p:column colspan="3" style="text-align: center">
+                                            <p:commandButton id="addVendor" value="Add New Vendor" type="submit" actionListener="#{manageFoodCourtManagedBean.createNewVendor}" update="growl" > 
+                                                <f:ajax execute="@form" resetValues="true" />
+                                                <f:attribute name="foodCourtId" value="#{manageFoodCourtManagedBean.currentFoodCourt.businessId}"/>
+                                            </p:commandButton> &nbsp;
+                                            <p:commandButton value="Clear" type="reset"/>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                    </p:wizard>
                 </p:dialog>
             </h:form>
 

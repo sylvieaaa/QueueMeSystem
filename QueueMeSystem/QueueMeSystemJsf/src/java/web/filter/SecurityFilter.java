@@ -92,7 +92,6 @@ public class SecurityFilter implements Filter {
     public Boolean checkAccessRight(String path, BusinessEntity businessEntity) {
         if (businessEntity instanceof FoodCourtEntity) {
             if (path.equals("/foodCourtMainPage.xhtml")
-                    || path.equals("/createNewVendor.xhtml")
                     || path.startsWith("/changePassword.xhtml")) {
                 return true;
             }
@@ -117,7 +116,6 @@ public class SecurityFilter implements Filter {
                     || path.equals("/foodCourtMainPage.xhtml")
                     || path.startsWith("/changePassword.xhtml")
                     || path.equals("/createNewFoodCourt.xhtml")
-                    || path.equals("/createNewVendor.xhtml")
                     || path.equals("/foodCourtMainPage.xhtml")
                     || path.equals("/mainPage.xhtml")
                     || path.equals("/manageMenu.xhtml")

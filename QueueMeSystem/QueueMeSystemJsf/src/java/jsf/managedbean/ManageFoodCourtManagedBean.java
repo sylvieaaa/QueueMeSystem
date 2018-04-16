@@ -26,7 +26,9 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.FlowEvent;
 import util.enumeration.VendorTypeEnum;
+import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
 import util.exception.VendorNotFoundException;
 
@@ -41,6 +43,8 @@ public class ManageFoodCourtManagedBean implements Serializable {
     private VendorEntityControllerLocal vendorEntityControllerLocal;
 
     private VendorEntity vendorEntityToUpdate;
+
+    private VendorEntity newVendorEntity;
 
     private Long vendorIdToUpdate;
 
@@ -59,6 +63,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
      */
     public ManageFoodCourtManagedBean() {
         vendorEntityToUpdate = new VendorEntity();
+        newVendorEntity = new VendorEntity();
     }
 
     public void updateVendor(ActionEvent event) {
@@ -116,14 +121,15 @@ public class ManageFoodCourtManagedBean implements Serializable {
     public void upload(FileUploadEvent event) {
         BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         FoodCourtEntity foodCourtEntity;
-        
-        if(businessEntity instanceof AdminEntity){
+
+        if (businessEntity instanceof AdminEntity) {
             foodCourtEntity = (FoodCourtEntity) event.getComponent().getAttributes().get("foodCourtEntity");
         } else {
             foodCourtEntity = (FoodCourtEntity) businessEntity;
         }
-        
+
         String from = (String) event.getComponent().getAttributes().get("from");
+        String status = (String) event.getComponent().getAttributes().get("status");
         String newFilePath;
         try {
             String fileName = "";
@@ -157,7 +163,11 @@ public class ManageFoodCourtManagedBean implements Serializable {
             }
 
             if (from.equals("vendor")) {
-                vendorEntityControllerLocal.updateFileUrl(vendorEntityToUpdate.getBusinessId(), file.getName());
+                if (status.equals("new")) {
+                    newVendorEntity.setPhotoURL(file.getName());
+                } else {
+                    vendorEntityControllerLocal.updateFileUrl(vendorEntityToUpdate.getBusinessId(), file.getName());
+                }
             } else {
                 foodCourtEntityControllerLocal.updateFileUrl(currentFoodCourt.getBusinessId(), file.getName());
             }
@@ -200,6 +210,51 @@ public class ManageFoodCourtManagedBean implements Serializable {
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
         }
+    }
+
+    public void createNewVendor(ActionEvent event) throws IOException {
+        try {
+            Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
+            System.err.println("IHIHI" + foodCourtIdToView);
+            FoodCourtEntity foodCourtEntity;
+
+            try {
+                foodCourtEntity = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtIdToView);
+            } catch (FoodCourtNotFoundException ex) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+                return;
+            }
+
+            VendorEntity vendorEntity = vendorEntityControllerLocal.createVendorEntity(newVendorEntity, foodCourtEntity);
+            newVendorEntity = new VendorEntity();
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New vendor created successfully (Vendor ID: " + vendorEntity.getVendorName() + ")", null));
+            file = null;
+
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
+            } catch (IOException ex) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+            }
+
+        } catch (DuplicateEmailUserException err) {
+            System.err.println("IZZNOTUNIQUE");
+            System.err.println(err.toString());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error. Email is not Unique", null));
+        }
+    }
+
+    public String onFlowProcess(FlowEvent event) {
+        if (event.getNewStep().equals("addVendorForm")) {
+            if (file == null) {
+                System.err.println("in file");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload logo before moving to the next page.", ""));
+                return "vendorLogo";
+            }
+        }
+
+        return event.getNewStep();
     }
 
     public VendorEntity getVendorEntityToUpdate() {
@@ -256,6 +311,14 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
     public void setVendorTypes(VendorTypeEnum[] vendorTypes) {
         this.vendorTypes = vendorTypes;
+    }
+
+    public VendorEntity getNewVendorEntity() {
+        return newVendorEntity;
+    }
+
+    public void setNewVendorEntity(VendorEntity newVendorEntity) {
+        this.newVendorEntity = newVendorEntity;
     }
 
 }
