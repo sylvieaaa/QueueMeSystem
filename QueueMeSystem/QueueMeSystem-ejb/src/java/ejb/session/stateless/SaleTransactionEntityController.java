@@ -78,7 +78,7 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
         em.refresh(saleTransactionEntity);
 
         processSaleTransaction(saleTransactionEntity);
-//        sendReceipt(saleTransactionEntity);
+        sendReceipt(saleTransactionEntity);
 
         return saleTransactionEntity;
     }
@@ -150,7 +150,7 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
     @Override
     public List<SaleTransactionEntity> retrieveSaleTransaction(Long customerId) {
 
-        Query query = em.createQuery("SELECT p FROM SaleTransactionEntity p WHERE p.customerEntity.businessId = :inCustomerId");
+        Query query = em.createQuery("SELECT p FROM SaleTransactionEntity p WHERE p.customerEntity.businessId = :inCustomerId ORDER BY p.saleTransactionId DESC");
         query.setParameter("inCustomerId", customerId);
         return query.getResultList();
     }

@@ -52,18 +52,6 @@ public class CheckoutResource {
     public CheckoutResource() {
     }
 
-    /**
-     * Retrieves representation of an instance of ws.restful.CheckoutResource
-     *
-     * @return an instance of java.lang.String
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_XML)
-    public String getXml() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
-    }
-
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -94,6 +82,7 @@ public class CheckoutResource {
                 saleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(newSaleTransactionEntity);
                 return Response.status(Status.OK).build();
             } catch (Exception ex) {
+                System.err.println(ex.getMessage());
                 return Response.status(Status.INTERNAL_SERVER_ERROR).build();
             }
         } else {

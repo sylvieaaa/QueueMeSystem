@@ -92,9 +92,9 @@ public class OrderResource {
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllOrders(@QueryParam("saleTransactionId") Long saleTransactionId) {
+    public Response retrieveAllOrders(@QueryParam("saleTransactionId") Long saleTransactionId, @QueryParam("customerId") Long customerId) {
         try {
-            List<OrderEntity> orderEntities = orderEntityControllerLocal.retrieveCustomerOrders(saleTransactionId);
+            List<OrderEntity> orderEntities = orderEntityControllerLocal.retrieveCustomerOrders(saleTransactionId, customerId);
             for (OrderEntity oe : orderEntities) {
                 oe.setCustomerEntity(null);
                 oe.getVendorEntity().getOrderEntities().clear();
