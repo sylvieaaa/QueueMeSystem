@@ -30,4 +30,6 @@ public interface CustomerEntityControllerLocal {
     
     public void updateCustomerPassword(CustomerEntity customerEntity, String oldPassword, String newPassword) throws CustomerNotFoundException, PasswordDoNotMatchException;
 
+    public void updateToken(CustomerEntity customerEntity);
+
 }

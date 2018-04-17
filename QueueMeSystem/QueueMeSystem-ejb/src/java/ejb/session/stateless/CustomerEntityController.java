@@ -7,6 +7,8 @@ package ejb.session.stateless;
 
 import entity.AdminEntity;
 import entity.CustomerEntity;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -71,7 +73,7 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
         ce.setFirstName(customerEntity.getFirstName());
         ce.setLastName(customerEntity.getLastName());
     }
-    
+
     @Override
     public void updatePassword(String username, String password) {
         try {
@@ -82,15 +84,26 @@ public class CustomerEntityController implements CustomerEntityControllerLocal {
 
         }
     }
-    
+
     @Override
     public void updateCustomerPassword(CustomerEntity customerEntity, String oldPassword, String newPassword) throws CustomerNotFoundException, PasswordDoNotMatchException {
         customerEntity = retrieveCustomerByUsername(customerEntity.getUsername());
         String oldPasswordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(oldPassword + customerEntity.getSalt()));
-        if(customerEntity.getPassword().equals(oldPasswordHash)) {
+        if (customerEntity.getPassword().equals(oldPasswordHash)) {
             customerEntity.setPassword(newPassword);
         } else {
             throw new PasswordDoNotMatchException("Passwords do not match");
         }
-    }   
+    }
+
+    @Override
+    public void updateToken(CustomerEntity customerEntity) {
+        String pushToken = customerEntity.getPushToken();
+        try {
+            customerEntity = retrieveCustomerByUsername(customerEntity.getUsername());
+            customerEntity.setPushToken(pushToken);
+        } catch (CustomerNotFoundException ex) {
+        }
+
+    }
 }

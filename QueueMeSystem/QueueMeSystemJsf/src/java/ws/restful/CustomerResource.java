@@ -175,6 +175,25 @@ public class CustomerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
         }
     }
+    
+    @Path("updateToken")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateToken(JAXBElement<UpdateCustomerReq> jaxbUpdateCustomerReq) {
+        if ((jaxbUpdateCustomerReq != null) && (jaxbUpdateCustomerReq.getValue() != null)) {
+            try {
+                UpdateCustomerReq updateCustomerReq = jaxbUpdateCustomerReq.getValue();
+                CustomerEntity customerEntity = updateCustomerReq.getCustomerEntity();
+                customerEntityControllerLocal.updateToken(customerEntity);
+                return Response.status(Status.OK).build();
+            } catch (Exception ex) {
+                return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            return Response.status(Status.EXPECTATION_FAILED).build();
+        }
+    }
 
     private BusinessEntityControllerLocal lookupBusinessEntityControllerLocal() {
         try {

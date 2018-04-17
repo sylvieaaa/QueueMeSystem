@@ -26,6 +26,7 @@ import javax.persistence.Query;
 import util.exception.OrderNotFoundException;
 import javax.json.Json;
 import javax.json.JsonObject;
+
 /**
  *
  * @author User
@@ -62,14 +63,16 @@ public class OrderEntityController implements OrderEntityControllerLocal {
         System.err.println("This is orderEntity id: " + orderEntity.getOrderId());
         OrderEntity updateOrder = em.find(OrderEntity.class, orderEntity.getOrderId());
         updateOrder.setFulfilled(Boolean.TRUE);
-        try {
-            pushFCMNotification("cGMmUCfj7_k:APA91bE-KNQDPhexE3vOvMrI_50sIy_31DtHwfYNmBas3pRK0WP9H4uWoaqRgmbrUwHVARCepzBcmlyCIQbpA0VIVCp01mNgW3grteEkL2Sv_cosjk5cDzYN1fXbBZ93j6T3LgE2wIBN");
-        } catch (Exception ex) {
+        if (orderEntity.getCustomerEntity() != null) {
+            try {
+                pushFCMNotification(orderEntity.getCustomerEntity().getPushToken(), orderEntity);
+            } catch (Exception ex) {
+            }
         }
 
     }
 
-    public void pushFCMNotification(String userDeviceIdKey) throws Exception {
+    public void pushFCMNotification(String userDeviceIdKey, OrderEntity orderEntity) throws Exception {
 
         String authKey = AUTH_KEY_FCM; // You FCM AUTH key
         String FMCurl = API_URL_FCM;
@@ -85,17 +88,24 @@ public class OrderEntityController implements OrderEntityControllerLocal {
         conn.setRequestProperty("Authorization", "key=" + authKey);
         conn.setRequestProperty("Content-Type", "application/json");
 
-        
 //        StringBuilder stringBuilder = new StringBuilder();
 //        json.put("to", "cGMmUCfj7_k:APA91bE-KNQDPhexE3vOvMrI_50sIy_31DtHwfYNmBas3pRK0WP9H4uWoaqRgmbrUwHVARCepzBcmlyCIQbpA0VIVCp01mNgW3grteEkL2Sv_cosjk5cDzYN1fXbBZ93j6T3LgE2wIBN");
 //        stringBuilder.append("to : cGMmUCfj7_k:APA91bE-KNQDPhexE3vOvMrI_50sIy_31DtHwfYNmBas3pRK0WP9H4uWoaqRgmbrUwHVARCepzBcmlyCIQbpA0VIVCp01mNgW3grteEkL2Sv_cosjk5cDzYN1fXbBZ93j6T3LgE2wIBN");
         JsonObject info = Json.createObjectBuilder()
-        .add("title", "Notificatoin Title")
-        .add("body", "Hello Test notification")
-        .build();
+                .add("title", "Your food is ready")
+                .add("body", "Please collect it at " + orderEntity.getVendorEntity().getVendorName())
+                .add("click_action", "FCM_PLUGIN_ACTIVITY")
+                .add("sound","default")
+                .build();
+        JsonObject data = Json.createObjectBuilder()
+                .add("data", "Collect your food at " + orderEntity.getVendorEntity().getVendorName())
+//                .add("vibrationPattern", "[2000, 1000, 500, 500]")
+                .build();
         JsonObject json = Json.createObjectBuilder()
                 .add("to", userDeviceIdKey)
-                .add("notification", info).build();
+                .add("notification", info)
+                .add("data", data)
+                .build();
 
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
         System.err.println(json.toString());
@@ -152,10 +162,10 @@ public class OrderEntityController implements OrderEntityControllerLocal {
         Query query = em.createQuery("SELECT l FROM LineItemEntity l WHERE l.orderId =:inOrderId");
         return query.getResultList();
     }
-    
+
     @Override
-    public BigDecimal getEarnings (Long orderId) {
-        
+    public BigDecimal getEarnings(Long orderId) {
+
         Query query = em.createQuery("SELECT l FROM LineItemEntity l WHERE l.orderId =:inOrderId");
         BigDecimal earnings = BigDecimal.ZERO;
         List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = query.getResultList();
@@ -165,11 +175,11 @@ public class OrderEntityController implements OrderEntityControllerLocal {
 
         return earnings;
     }
-    
+
     @Override
-    public List<OrderEntity> retrieveCustomerOrders (Long customerId) {
+    public List<OrderEntity> retrieveCustomerOrders(Long customerId) {
         Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.customerEntity.businessId = :inCustomerId");
-         query.setParameter("inCustomerId", customerId);
+        query.setParameter("inCustomerId", customerId);
         return query.getResultList();
-    }  
+    }
 }

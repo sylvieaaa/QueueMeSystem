@@ -31,7 +31,7 @@
         <h:form id="formAllOrders">
 
             <p:messages id="messages" redisplay="false" closable="true"/>
-
+            <p:poll interval="10" listener="#{manageOrderManagedBean.retrieveOrders()}" update="@form"/>
             <p:tabView>
                 <p:tab title="Orders (Pending)">
 

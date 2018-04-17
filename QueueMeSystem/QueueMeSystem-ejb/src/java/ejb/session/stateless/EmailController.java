@@ -26,6 +26,8 @@ public class EmailController implements EmailControllerLocal {
     @EJB
     private BusinessEntityControllerLocal businessEntityControllerLocal;
     
+    private String yourAccId = "yxsoong";
+    
     @Override
     public void forgetPasswordEmail(String toEmail) throws BusinessEntityNotFoundException {
         String newPassword = businessEntityControllerLocal.generateRandomPassword(toEmail);
@@ -36,7 +38,7 @@ public class EmailController implements EmailControllerLocal {
     @Override
     public void sendReceipt(File receiptFile, CustomerEntity customerEntity) throws CustomerNotFoundException {
         customerEntity = customerEntityControllerLocal.retrieveCustomerByUsername(customerEntity.getUsername());
-        EmailManager emailManager = new EmailManager("<REPLACE_WITH_YOUR_UNIX_USERNAME>@sunfire.comp.nus.edu.sg", "<REPLACE_WITH_YOUR_UNIX_PASSWORD>");
-        emailManager.receiptEmail("your email address", customerEntity.getUsername(), receiptFile);
+        EmailManager emailManager = new EmailManager(yourAccId + "@sunfire.comp.nus.edu.sg", "<REPLACE_WITH_YOUR_UNIX_PASSWORD>");
+        emailManager.receiptEmail(yourAccId + "@sunfire.comp.nus.edu.sg", customerEntity.getUsername(), receiptFile);
     }
 }
