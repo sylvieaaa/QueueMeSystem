@@ -57,6 +57,8 @@ public class ManageFoodCourtManagedBean implements Serializable {
     private File file;
 
     private VendorTypeEnum[] vendorTypes = VendorTypeEnum.values();
+    
+    private String uploadFrom;
 
     /**
      * Creates a new instance of UpdateVendorManagedBean
@@ -128,7 +130,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
             foodCourtEntity = (FoodCourtEntity) businessEntity;
         }
 
-        String from = (String) event.getComponent().getAttributes().get("from");
+        String from = uploadFrom;
         String status = (String) event.getComponent().getAttributes().get("status");
         String newFilePath;
         try {
@@ -172,15 +174,10 @@ public class ManageFoodCourtManagedBean implements Serializable {
                     vendorEntityControllerLocal.updateFileUrl(vendorEntityToUpdate.getBusinessId(), file.getName());
                 }
             } else {
+                currentFoodCourt.setFileURL(file.getName());
                 foodCourtEntityControllerLocal.updateFileUrl(currentFoodCourt.getBusinessId(), file.getName());
             }
 
-//            try {
-//                vendorEntities = vendorEntityControllerLocal.retrieveAllVendorsByFoodCourtId(foodCourtEntity.getBusinessId());
-//            } catch (FoodCourtNotFoundException ex) {
-//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Refresh vendor error: " + ex.getMessage(), ""));
-//            }
-            
             fileOutputStream.close();
             inputStream.close();
             System.err.println(file);
@@ -328,6 +325,14 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
     public void setNewVendorEntity(VendorEntity newVendorEntity) {
         this.newVendorEntity = newVendorEntity;
+    }
+
+    public String getUploadFrom() {
+        return uploadFrom;
+    }
+
+    public void setUploadFrom(String uploadFrom) {
+        this.uploadFrom = uploadFrom;
     }
 
 }
