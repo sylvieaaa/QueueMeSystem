@@ -36,7 +36,7 @@ public class ManageOrderManagedBean implements Serializable {
 
     @EJB(name = "OrderEntityControllerLocal")
     private OrderEntityControllerLocal orderEntityControllerLocal;
-    
+
     private List<OrderEntity> pendingOrderEntities;
     private List<OrderEntity> completedOrderEntities;
     private List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities;
@@ -52,22 +52,27 @@ public class ManageOrderManagedBean implements Serializable {
         saleTransactionLineItemEntities = new ArrayList<>();
         newOrderEntity = new OrderEntity();
     }
-    
+
     @PostConstruct
-    public void postConstruct()
-    {
-         VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+    public void postConstruct() {
+        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         pendingOrderEntities = orderEntityControllerLocal.retrieveAllPendingOrders(vendorEntity);
         completedOrderEntities = orderEntityControllerLocal.retrieveAllCompletedOrders(vendorEntity);
-        
+
     }
-    
+
     public void editFulfilled(ActionEvent event) {
-        
+
         newOrderEntity = (OrderEntity) event.getComponent().getAttributes().get("orderFulfilled");
         orderEntityControllerLocal.updateOrder(newOrderEntity);
         pendingOrderEntities.remove(newOrderEntity);
         completedOrderEntities.add(newOrderEntity);
+    }
+
+    public void retrieveOrders() {
+        VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        pendingOrderEntities = orderEntityControllerLocal.retrieveAllPendingOrders(vendorEntity);
+        completedOrderEntities = orderEntityControllerLocal.retrieveAllCompletedOrders(vendorEntity);
     }
 
     public List<OrderEntity> getCompletedOrderEntities() {
@@ -101,13 +106,13 @@ public class ManageOrderManagedBean implements Serializable {
     public void setSelectedOrderEntityToView(OrderEntity selectedOrderEntityToView) {
         this.selectedOrderEntityToView = selectedOrderEntityToView;
     }
-    
+
     public List<SaleTransactionLineItemEntity> getSaleTransactionLineItemEntities() {
         return saleTransactionLineItemEntities;
     }
-    
+
     public void setSaleTransactionLineItemEntities() {
         this.saleTransactionLineItemEntities = saleTransactionLineItemEntities;
     }
- 
+
 }

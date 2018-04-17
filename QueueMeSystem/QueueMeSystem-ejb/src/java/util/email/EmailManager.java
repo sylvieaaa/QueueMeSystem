@@ -12,86 +12,75 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
+public class EmailManager {
 
-
-public class EmailManager 
-{
-    private final String emailServerName = "mailauth.comp.nus.edu.sg";     
+    private final String emailServerName = "mailauth.comp.nus.edu.sg";
     private final String mailer = "JavaMailer";
     private String smtpAuthUser;
     private String smtpAuthPassword;
-    
-    
-    
-    public EmailManager()
-    {
+
+    public EmailManager() {
     }
 
-    
-    
-    public EmailManager(String smtpAuthUser, String smtpAuthPassword)
-    {
+    public EmailManager(String smtpAuthUser, String smtpAuthPassword) {
         this.smtpAuthUser = smtpAuthUser;
         this.smtpAuthPassword = smtpAuthPassword;
     }
-    
-    
-    
-    public Boolean forgetPasswordEmail(String fromEmailAddress, String toEmailAddress, String newPassword)
-    {
+
+    public Boolean forgetPasswordEmail(String fromEmailAddress, String toEmailAddress, String newPassword) {
         String emailBody = "Your password has been reseted\n";
         emailBody += "This is your current password: " + newPassword + "\n";
         emailBody += "Please change your password.";
-        
-        
-        try 
-        {
+
+        try {
             Properties props = new Properties();
             props.put("mail.transport.protocol", "smtp");
             props.put("mail.smtp.host", emailServerName);
             props.put("mail.smtp.port", "25");
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.starttls.enable", "true");
-            props.put("mail.smtp.debug", "true");            
+            props.put("mail.smtp.debug", "true");
             javax.mail.Authenticator auth = new SMTPAuthenticator(smtpAuthUser, smtpAuthPassword);
             Session session = Session.getInstance(props, auth);
-            session.setDebug(true);            
+            session.setDebug(true);
             Message msg = new MimeMessage(session);
-                                    
-            if (msg != null)
-            {
+
+            if (msg != null) {
                 msg.setFrom(InternetAddress.parse(fromEmailAddress, false)[0]);
                 msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmailAddress, false));
                 msg.setSubject("Queue Me Forget Password");
                 msg.setText(emailBody);
                 msg.setHeader("X-Mailer", mailer);
-                
+
                 Date timeStamp = new Date();
                 msg.setSentDate(timeStamp);
-                
+
                 Transport.send(msg);
-                
+
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
-        }
-        catch (Exception e) 
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            
+
             return false;
         }
     }
-    
+
     public Boolean receiptEmail(String fromEmailAddress, String toEmailAddress, File receiptFile) {
         StringBuilder contents = new StringBuilder();
 //        String content = "";
@@ -99,7 +88,7 @@ public class EmailManager
             FileReader fr = new FileReader(receiptFile);
             BufferedReader br = new BufferedReader(fr);
             String str = "";
-            while((str=br.readLine()) != null) {
+            while ((str = br.readLine()) != null) {
                 System.err.println(str);
                 contents.append(str);
             }
@@ -109,45 +98,48 @@ public class EmailManager
         } catch (IOException ex) {
             return false;
         }
-        try 
-        {
+        try {
             Properties props = new Properties();
             props.put("mail.transport.protocol", "smtp");
             props.put("mail.smtp.host", emailServerName);
             props.put("mail.smtp.port", "25");
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.starttls.enable", "true");
-            props.put("mail.smtp.debug", "true");            
+            props.put("mail.smtp.debug", "true");
             javax.mail.Authenticator auth = new SMTPAuthenticator(smtpAuthUser, smtpAuthPassword);
             Session session = Session.getInstance(props, auth);
-            session.setDebug(true);            
+            session.setDebug(true);
             Message msg = new MimeMessage(session);
-                                    
-            if (msg != null)
-            {
+
+            if (msg != null) {
                 msg.setFrom(InternetAddress.parse(fromEmailAddress, false)[0]);
                 msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmailAddress, false));
                 msg.setSubject("Thank you for ordering through us!");
                 msg.setHeader("X-Mailer", mailer);
-                
-                
-                
+
+                BodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setContent("<h2>Enjoy your meal!</h2>", "text/html");
+                Multipart multipart = new MimeMultipart();
+                multipart.addBodyPart(messageBodyPart);
+
+                messageBodyPart = new MimeBodyPart();
+                DataSource source = new FileDataSource(receiptFile.getAbsoluteFile());
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName("receipt.pdf");
+                multipart.addBodyPart(messageBodyPart);
                 Date timeStamp = new Date();
                 msg.setSentDate(timeStamp);
-                msg.setContent(contents.toString(),"text/html");
+                //msg.setContent(contents.toString(), "text/html");
+                msg.setContent(multipart);
                 Transport.send(msg);
-                
+
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
-        }
-        catch (Exception e) 
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            
+
             return false;
         }
     }

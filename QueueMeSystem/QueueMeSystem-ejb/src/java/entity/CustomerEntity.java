@@ -24,6 +24,7 @@ public class CustomerEntity extends BusinessEntity implements Serializable{
     private String lastName;
     private String contactNumber;
     private String address;
+    private String pushToken;
 
     @OneToMany(mappedBy = "customerEntity")
     private List<CreditCardEntity> creditCardEntities;
@@ -142,6 +143,14 @@ public class CustomerEntity extends BusinessEntity implements Serializable{
 
     public void setReviewEntities(List<ReviewEntity> reviewEntities) {
         this.reviewEntities = reviewEntities;
+    }
+
+    public String getPushToken() {
+        return pushToken;
+    }
+
+    public void setPushToken(String pushToken) {
+        this.pushToken = pushToken;
     }
     
 }

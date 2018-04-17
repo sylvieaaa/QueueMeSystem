@@ -253,21 +253,24 @@ public class ManageMenuManagedBean implements Serializable {
 
             if (from.equals("edit")) {
                 menuItemEntityToEdit.setPhotoURL(file.getName());
+                System.err.println("INDEED EDIT.");
             } else if (from.equals("create")) {
                 newMenuItemEntity.setPhotoURL(file.getName());
             }
 
             fileOutputStream.close();
             inputStream.close();
-
+            System.err.println("ALL CLOSED :D");
+            System.err.println(file);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
+            System.err.println("PRINT THIS");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
         }
     }
 
     public void createNewMenuItem(ActionEvent event) {
-        newMenuItemEntity.setPhotoURL(file.getName());
+//        newMenuItemEntity.setPhotoURL(file.getName());
         BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
 
         if (businessEntity instanceof AdminEntity) {
@@ -340,9 +343,8 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void saveMenuItemEdit(ActionEvent event) {
         try {
-
             menuItemEntityControllerLocal.updateMenuItem(menuItemEntityToEdit);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item: " + menuItemEntityToEdit.getMenuItemName() + " updated successfully", ""));
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item: " + menuItemEntityToEdit.getMenuItemName() + " updated successfully", ""));
         } catch (MenuItemNotFoundException ex) {
             System.err.println("me");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve the item details", ""));

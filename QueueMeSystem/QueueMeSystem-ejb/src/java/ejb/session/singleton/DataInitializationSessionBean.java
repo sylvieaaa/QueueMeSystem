@@ -25,12 +25,14 @@ import entity.FoodCourtEntity;
 import entity.MenuEntity;
 import entity.MenuItemEntity;
 import entity.ReviewEntity;
+import entity.SaleTransactionEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.TagEntity;
 import entity.VendorEntity;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -135,8 +137,9 @@ public class DataInitializationSessionBean {
             // Initialize FoodCourt Entity
             VendorEntity chinese = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Singapore Chinese Food", "Chinese", 0, "Best Chicken rice in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "chinese", "password", "chinese.png"), foodCourtEntity);
             VendorEntity malay = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Minah's Malay Food", "Halal", 1, "Best Halal store in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "malay", "password", "malay.png"), foodCourtEntity);
+            
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Uncle Charlie's Western", "Western", 2, "Taste of USA in KR!", calendarStart, calendarEnd, BigDecimal.ZERO, "western", "password", "usa.png"), foodCourtEntity);
-            vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Ah Seng Drink Stores", "Beverages", 3, "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "drink", "password", "Seng.png"), foodCourtEntity);
+            VendorEntity drinks = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Ah Seng Drink Stores", "Beverages", 3, "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "drink", "password", "Seng.png"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Fruit Store", "Fruits", 4, "Eat me and be healthy", calendarEnd, calendarEnd, BigDecimal.ZERO, "fruit", "password", "fruit.png"), foodCourtEntity);
             vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Muthu Curry", "Indian", 5, "Cheapest prata in SG!", calendarEnd, calendarEnd, BigDecimal.ZERO, "indian", "password", "muthu.png"), foodCourtEntity);
 
@@ -144,12 +147,22 @@ public class DataInitializationSessionBean {
             MenuItemEntity duckRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roasted Duck Rice", "Authentic HK taste", new BigDecimal("2.90"), "duck_rice.png"), chinese);
             MenuItemEntity wantonMee = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Wanton Mee", "Authentic HK taste", new BigDecimal("3.90"), "wanton_mee.png"), chinese);
             MenuItemEntity beefhorfun = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Beef Hor Fun", "Best beef hor fun", new BigDecimal("7.90"), "beef_hor_fun.png"), chinese);
-
+            MenuItemEntity satay = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Satay", "best satay", new BigDecimal("1.20"),"satay.png"), malay);
+            MenuItemEntity milo = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("milo", "ice milo", new BigDecimal("1.00"), "milo.png"), drinks);
+            
             MenuEntity menuEntity = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 1", Boolean.TRUE), chinese);
+            MenuEntity menuEntity2 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 2", Boolean.TRUE), malay);
+            MenuEntity menuEntity3 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 3", Boolean.TRUE), drinks);
+            
 
             CategoryEntity categoryEntity = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity);
+            CategoryEntity categoryEntity2 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity2);
+            CategoryEntity categoryEntity3 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Drinks"), menuEntity3);
             categoryEntity.getMenuItemEntities().add(chickenRice);
             categoryEntity.getMenuItemEntities().add(duckRice);
+            categoryEntity2.getMenuItemEntities().add(satay);
+            categoryEntity3.getMenuItemEntities().add(milo);
+            
 
             ReviewEntity review = reviewEntityControllerLocal.createReview(new ReviewEntity("thissnkandksiasd ihfiafhiahis adjsiadafhifhn kbkfbssjda   hsiahi h aisdhaiodao ihao ihaoi sahoi ahshidhihiwiwdhwidhidhiiishiiihq    p oihoidhoah oihis dha", 1));
             ReviewEntity review2 = reviewEntityControllerLocal.createReview(new ReviewEntity("Rendang is very crispy, bagus", 5));
@@ -168,7 +181,47 @@ public class DataInitializationSessionBean {
             review.setVendorEntity(malay);
             malay.getReviewEntities().add(review3);
             malay.setRating(reviewEntityControllerLocal.averageReviewScore(malay));
-
+            
+            List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = new ArrayList<>();
+            Integer totalLineItem = 0;
+            Integer totalQuantity = 0;
+            Integer totalQuantity2 = 0;
+            Integer totalQuantity3 = 0;
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            Integer quantity = 0;
+            Boolean isTakeaway = null;
+            String paymentType = null;
+            Integer menuItemQuantity = 1;
+            String specialRequest = "";
+            
+            BigDecimal subTotal = chickenRice.getPrice().multiply(new BigDecimal(menuItemQuantity));
+            ++totalLineItem;
+            saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, menuItemQuantity, chickenRice.getPrice(), subTotal, specialRequest, chickenRice));
+            totalQuantity += menuItemQuantity;
+            totalAmount = totalAmount.add(subTotal);
+            
+            BigDecimal subTotal2 = satay.getPrice().multiply(new BigDecimal(menuItemQuantity));
+            ++totalLineItem;
+            saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, menuItemQuantity, satay.getPrice(), subTotal2, specialRequest, satay));
+            totalQuantity += menuItemQuantity;
+            totalAmount = totalAmount.add(subTotal2);
+            
+            BigDecimal subTotal3 = milo.getPrice().multiply(new BigDecimal(menuItemQuantity));
+            ++totalLineItem;
+            saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, menuItemQuantity, milo.getPrice(), subTotal3, specialRequest, milo));
+            totalQuantity += menuItemQuantity;
+            totalAmount = totalAmount.add(subTotal3);
+            
+            BigDecimal subTotal4 = duckRice.getPrice().multiply(new BigDecimal(menuItemQuantity));
+            ++totalLineItem;
+            saleTransactionLineItemEntities.add(new SaleTransactionLineItemEntity(totalLineItem, menuItemQuantity, duckRice.getPrice(), subTotal4, specialRequest, duckRice));
+            totalQuantity += menuItemQuantity;
+            totalAmount = totalAmount.add(subTotal4);
+            
+ 
+            SaleTransactionEntity saleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance().getTime(), Boolean.FALSE, isTakeaway, null, saleTransactionLineItemEntities));
+            saleTransactionEntity.setCustomerEntity(customerEntity);
+            customerEntity.getSaleTransactionEntities().add(saleTransactionEntity);
 
             String[] tags = {"Rice", "Noodles", "Curry", "Chicken", "Fish", "Pasta", "Meat", "Soup", "Salad", "Dim Sum", "Spicy", "Sweets", "Curry", "Finger Foods", "Fruits"};
             for (String tag : tags) {

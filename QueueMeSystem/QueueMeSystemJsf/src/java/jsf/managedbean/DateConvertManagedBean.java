@@ -25,7 +25,7 @@ public class DateConvertManagedBean {
     }
     
     public String dateConvert(Date operatingTime){
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         String converted = sdf.format(operatingTime);
         return converted;
         
