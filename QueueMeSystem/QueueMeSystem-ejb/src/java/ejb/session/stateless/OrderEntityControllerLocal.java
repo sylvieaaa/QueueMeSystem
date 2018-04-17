@@ -37,6 +37,8 @@ public interface OrderEntityControllerLocal {
     
     public BigDecimal getEarnings (Long orderId);
 
-    public List<OrderEntity> retrieveCustomerOrders(Long customerId);
+//    public List<OrderEntity> retrieveCustomerOrders(Long customerId);
+
+    public List<OrderEntity> retrieveCustomerOrders(Long saleTransactionId);
   
 }

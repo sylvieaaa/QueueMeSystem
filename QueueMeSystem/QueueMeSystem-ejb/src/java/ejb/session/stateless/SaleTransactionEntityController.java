@@ -67,8 +67,9 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
         CustomerEntity customerEntity = saleTransactionEntity.getCustomerEntity();
         HashMap<VendorEntity, List<SaleTransactionLineItemEntity>> vendorToSales = new HashMap<>();
         for(SaleTransactionLineItemEntity saleTransactionLineItemEntity: saleTransactionEntity.getSaleTransactionLineItemEntities()) {
+            // for link back 
             saleTransactionLineItemEntity.getMenuItemEntity().getSaleTransactionLineItemEntities().add(saleTransactionLineItemEntity);
-            System.err.println(saleTransactionLineItemEntity.getMenuItemEntity().getSaleTransactionLineItemEntities().size() + " m");
+            //System.err.println(saleTransactionLineItemEntity.getMenuItemEntity().getSaleTransactionLineItemEntities().size() + " m");
             MenuItemEntity menuItemEntity = saleTransactionLineItemEntity.getMenuItemEntity();
             VendorEntity vendorEntity = menuItemEntity.getVendorEntity();
             if(vendorToSales.containsKey(vendorEntity)) {
@@ -100,7 +101,7 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
     public List<SaleTransactionEntity> retrieveSaleTransaction(Long customerId) {
         
 
-        Query query = em.createQuery("SELECT c FROM CreditTransactionEntity c JOIN c.customer b WHERE b.customerId = :inCustomerId ");
+        Query query = em.createQuery("SELECT p FROM SaleTransactionEntity p WHERE p.customerEntity.businessId = :inCustomerId");
         query.setParameter("inCustomerId", customerId);
         return query.getResultList();
     }
