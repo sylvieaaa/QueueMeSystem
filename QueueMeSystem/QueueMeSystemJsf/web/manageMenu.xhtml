@@ -167,7 +167,6 @@
                         <p:column>
                             <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="formEditMenuItems:menuItemImage" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#{manageMenuManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                 <f:attribute name="from" value="edit" />
-                                <f:attribute name="vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}" />
                             </p:fileUpload>
                         </p:column>
                         <p:column>
@@ -297,9 +296,7 @@
                     <p:row>
                         <p:column colspan="2">
                             <p:commandButton value="Cancel" oncomplete="PF('dialogEditMenuItems').hide();"/>
-                            <!-- this is a problemmmmm i can't just update form since it doesn't refresh and I can't upload another file soon after.-->
                             <p:commandButton value="Save" type="submit" actionListener="#{manageMenuManagedBean.saveMenuItemEdit}" update="@form menuForm dialogUploadPhoto" oncomplete="PF('dialogEditMenuItems').hide();">
-                                <!--<f:ajax execute="@form menuForm"/>-->
                             </p:commandButton>
                         </p:column>
                     </p:row>
@@ -396,9 +393,8 @@
                                         <p:outputLabel for="menuPhotoUpload" value="Upload photo: " />
                                     </p:column>
                                     <p:column>
-                                        <p:fileUpload required="true" requiredMessage="Please upload photo before going to the next page." id="menuPhotoUpload" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="uploadMessage" skinSimple="true" fileUploadListener="#{manageMenuManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                        <p:fileUpload required="true" requiredMessage="Please upload photo before going to the next page." id="menuPhotoUpload" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="uploadMessage dialogEditMenuItems" skinSimple="true" fileUploadListener="#{manageMenuManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                             <f:attribute name="from" value="create" />
-                                            <f:attribute name="vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}"/>
                                         </p:fileUpload>
                                     </p:column>
                                     <p:column>
@@ -428,7 +424,7 @@
                                 </p:row>
                                 <p:row>
                                     <p:column colspan="2">
-                                        <p:commandButton value="Create New Product" actionListener="#{manageMenuManagedBean.createNewMenuItem}" update="@form menuForm:menuItems" oncomplete="PF('wizardItemMenu').loadStep('itemDetails',false); PF('dialogCreateNewItem').hide();">
+                                        <p:commandButton value="Create New Product" actionListener="#{manageMenuManagedBean.createNewMenuItem}" update="@form menuForm:menuItems dialogCreateNewItem dialogUploadPhoto dialogEditMenuItems formEditMenuItems" oncomplete="PF('wizardItemMenu').loadStep('itemDetails',false); PF('dialogCreateNewItem').hide();">
                                             <f:attribute name="vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}"/>
                                         </p:commandButton>
                                     </p:column>

@@ -217,11 +217,10 @@ public class ManageMenuManagedBean implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         BusinessEntity businessEntity = (BusinessEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
 
-        if (businessEntity instanceof AdminEntity) {
-            currentVendorEntity = (VendorEntity) event.getComponent().getAttributes().get("vendorEntity");
-        } else {
+        if (!(businessEntity instanceof AdminEntity)) {
             currentVendorEntity = (VendorEntity) businessEntity;
         }
+        
         String from = (String) event.getComponent().getAttributes().get("from");
         try {
             String fileName = "";
@@ -282,7 +281,7 @@ public class ManageMenuManagedBean implements Serializable {
         try {
             newMenuItemEntity.setTagEntities(selectedTagEntities);
             newMenuItemEntity = menuItemEntityControllerLocal.createMenuItem(newMenuItemEntity, currentVendorEntity);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, newMenuItemEntity.getMenuItemName() + " successfully created", ""));
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, newMenuItemEntity.getMenuItemName() + " successfully created", ""));
 
             menuItemEntities.add(newMenuItemEntity);
             menuItemEntitiesCopy.add(newMenuItemEntity);
@@ -481,6 +480,8 @@ public class ManageMenuManagedBean implements Serializable {
 
     public void dialogEditOpen(ActionEvent event) {
         menuItemEntityToEdit = (MenuItemEntity) event.getComponent().getAttributes().get("menuItemEntityToEdit");
+
+        System.err.println(menuItemEntityToEdit + " null");
         System.err.println(menuItemEntityToEdit.getTagEntities());
         if (menuItemEntityToEdit.getTagEntities() == null || menuItemEntityToEdit.getTagEntities().isEmpty()) {
             for (TagEntity tagEntity : menuItemEntityToEdit.getTagEntities()) {

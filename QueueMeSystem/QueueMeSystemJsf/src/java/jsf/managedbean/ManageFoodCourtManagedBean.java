@@ -66,6 +66,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
     public ManageFoodCourtManagedBean() {
         vendorEntityToUpdate = new VendorEntity();
         newVendorEntity = new VendorEntity();
+        uploadFrom = "";
     }
 
     public void updateVendor(ActionEvent event) {
@@ -130,13 +131,14 @@ public class ManageFoodCourtManagedBean implements Serializable {
             foodCourtEntity = (FoodCourtEntity) businessEntity;
         }
 
-        String from = uploadFrom;
+        uploadFrom = (String) event.getComponent().getAttributes().get("uploadFrom");
         String status = (String) event.getComponent().getAttributes().get("status");
         String newFilePath;
         try {
             String fileName = "";
-            if (from.equals("vendor")) {
+            if (uploadFrom.equals("vendor")) {
                 newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "vendorLogos";
+                System.err.println("IT GOT HERE OSOOSOO");
             } else {
                 newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodCourtLogos";
             }
@@ -164,7 +166,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
                 fileOutputStream.flush();
             }
 
-            if (from.equals("vendor")) {
+            if (uploadFrom.equals("vendor")) {
                 if (status.equals("new")) {
                     System.err.println("ERROR WHY IS IT HERE");
                     newVendorEntity.setPhotoURL(file.getName());
@@ -181,6 +183,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
             fileOutputStream.close();
             inputStream.close();
             System.err.println(file);
+            System.err.println(uploadFrom + " here here");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));

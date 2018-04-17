@@ -19,8 +19,9 @@
             <p:panel style="display:block; text-align:center; border-color: transparent">
 
                 <h:outputText style="color:blue; font-size: x-large; font-weight: bold " value="#{manageFoodCourtManagedBean.currentFoodCourt.name}"/> &nbsp;
-                <p:commandButton id="viewFoodCourt" style="background-color: transparent; border: transparent; cursor: pointer" icon="fa fa-search" />
                 <br /><br />
+                <p:commandButton id="viewFoodCourt" icon="fa fa-search" value="Food Court Details"/>
+                &nbsp;&nbsp;
                 <p:commandButton update="createNewVendorForm" oncomplete="PF('dialogCreateNewVendor').show()" value="Add Vendor" icon="fa fa-plus-circle">
                     <f:attribute name="foodCourtId" value="#{manageFoodCourtManagedBean.currentFoodCourt.businessId}"/>
                 </p:commandButton>&nbsp;&nbsp;
@@ -151,7 +152,7 @@
                                 <p:graphicImage id="vendorLogoUpload"  value="http://localhost:8080/queueme-uploads/vendorLogos/#{manageFoodCourtManagedBean.vendorEntityToUpdate.photoURL}" width="150px" height="78px"/>
                             </p:column>
                             <p:column>
-                                <p:commandButton value="Change Logo" oncomplete="PF('dialogUploadPhoto').show();">
+                                <p:commandButton value="Change Logo" oncomplete="PF('dialogUploadPhoto').show();" >
                                     <f:setPropertyActionListener target="#{manageFoodCourtManagedBean.uploadFrom}" value="vendor"/>
                                 </p:commandButton>
                             </p:column>
@@ -262,7 +263,7 @@
 
                         <p:row>
                             <p:column colspan="3" style="text-align: center" >
-                                <p:commandButton value="Update Food Court" update="@all" actionListener="#{manageFoodCourtManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
+                                <p:commandButton value="Update Food Court" update="@form foodCourtDetails  " actionListener="#{manageFoodCourtManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
                             </p:column>
                         </p:row>
 
@@ -285,8 +286,8 @@
                                         </p:column>
                                         <p:column>
                                             <p:fileUpload required="true" id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="uploadMessage" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
-                                                <f:attribute name="from" value="vendor" />
                                                 <f:attribute name="status" value="new" />
+                                                <f:attribute name="uploadFrom" value="vendor" />
                                                 <f:attribute name="foodCourtEntity" value="#{manageFoodCourtManagedBean.currentFoodCourt}"/>
                                             </p:fileUpload>
                                         </p:column>
@@ -355,8 +356,7 @@
 
                                     <p:row>
                                         <p:column colspan="3" style="text-align: center">
-                                            <p:commandButton id="addVendor" value="Add New Vendor" type="submit" actionListener="#{manageFoodCourtManagedBean.createNewVendor}" update="growl" > 
-                                                <f:ajax execute="@form" resetValues="true" />
+                                            <p:commandButton id="addVendor" value="Add New Vendor" type="submit" actionListener="#{manageFoodCourtManagedBean.createNewVendor}" update="growl @form updateVendorForm dialogUploadPhoto" > 
                                                 <f:attribute name="foodCourtId" value="#{manageFoodCourtManagedBean.currentFoodCourt.businessId}"/>
                                             </p:commandButton> &nbsp;
                                             <p:commandButton value="Clear" type="reset"/>
@@ -387,8 +387,9 @@
                                 <p:outputLabel for="fileUploadPhoto" value="Upload photo: " />
                             </p:column>
                             <p:column>
-                                <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="updateVendorForm:vendorLogoUpload updateFoodCourtForm:foodCourtLogoUpload" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="updateVendorForm:vendorLogoUpload updateFoodCourtForm:foodCourtLogoUpload dialogUploadPhoto" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                     <f:attribute name="status" value="" />
+                                    <f:attribute name="uploadFrom" value="" />
                                     <f:attribute name="foodCourtEntity" value="#{manageFoodCourtManagedBean.currentFoodCourt}" />
                                 </p:fileUpload>
                             </p:column>
