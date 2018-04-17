@@ -9,22 +9,15 @@ import ejb.session.stateless.OrderEntityControllerLocal;
 import entity.OrderEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.VendorEntity;
-import java.io.IOException;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
-import javax.servlet.http.HttpServletRequest;
-import org.primefaces.component.calendar.Calendar;
 
 /**
  *
@@ -51,6 +44,7 @@ public class ManageOrderManagedBean implements Serializable {
         completedOrderEntities = new ArrayList<>();
         saleTransactionLineItemEntities = new ArrayList<>();
         newOrderEntity = new OrderEntity();
+        selectedOrderEntityToView = new OrderEntity();
     }
 
     @PostConstruct

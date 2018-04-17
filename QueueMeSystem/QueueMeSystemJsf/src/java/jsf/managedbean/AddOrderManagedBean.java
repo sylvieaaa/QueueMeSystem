@@ -50,6 +50,8 @@ public class AddOrderManagedBean implements Serializable {
 
     private BigDecimal cashReceived;
 
+    private String creditCardNumber;
+
     public AddOrderManagedBean() {
         addMenuItemQty = 1;
     }
@@ -102,6 +104,8 @@ public class AddOrderManagedBean implements Serializable {
                 context.execute("PF('dialogCashCheckout').show();");
             } else if (paymentType.equals("creditCard")) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Credit Card", ""));
+                RequestContext context = RequestContext.getCurrentInstance();
+                context.execute("PF('dialogCreditCardCheckout').show();");
             } else if (paymentType.equals("nets")) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nets", ""));
             } else if (paymentType.equals("paynow")) {
@@ -109,12 +113,12 @@ public class AddOrderManagedBean implements Serializable {
             }
         }
     }
-    
+
     public void confirmCheckout() throws CreateNewSaleTransactionException {
         RequestContext context = RequestContext.getCurrentInstance();
-                
-        if(checkOutManagedBean.getPaymentType().equals("cash")) {
-            if(cashReceived.compareTo(checkOutManagedBean.getTotalAmount()) < 0) {
+
+        if (checkOutManagedBean.getPaymentType().equals("cash")) {
+            if (cashReceived.compareTo(checkOutManagedBean.getTotalAmount()) < 0) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid amount", ""));
                 context.addCallbackParam("isSuccess", false);
             } else {
@@ -122,6 +126,9 @@ public class AddOrderManagedBean implements Serializable {
                 context.addCallbackParam("isSuccess", true);
                 cashReceived = null;
             }
+        } else if (checkOutManagedBean.getPaymentType().equals("creditCard")) {
+            checkOutManagedBean.doCheckout();
+            context.addCallbackParam("isSuccess", true);
         }
     }
 
@@ -172,5 +179,13 @@ public class AddOrderManagedBean implements Serializable {
     public void setCashReceived(BigDecimal cashReceived) {
         this.cashReceived = cashReceived;
     }
-    
+
+    public String getCreditCardNumber() {
+        return creditCardNumber;
+    }
+
+    public void setCreditCardNumber(String creditCardNumber) {
+        this.creditCardNumber = creditCardNumber;
+    }
+
 }
