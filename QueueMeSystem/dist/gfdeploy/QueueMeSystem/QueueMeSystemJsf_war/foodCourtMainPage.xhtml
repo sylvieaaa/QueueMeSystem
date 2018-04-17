@@ -389,7 +389,7 @@
                             <p:column>
                                 <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="updateVendorForm:vendorLogoUpload updateFoodCourtForm:foodCourtLogoUpload dialogUploadPhoto" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                     <f:attribute name="status" value="" />
-                                    <f:attribute name="uploadFrom" value="" />
+                                    <f:attribute name="uploadFrom" value="vendor" />
                                     <f:attribute name="foodCourtEntity" value="#{manageFoodCourtManagedBean.currentFoodCourt}" />
                                 </p:fileUpload>
                             </p:column>
