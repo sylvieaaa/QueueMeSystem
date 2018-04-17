@@ -175,11 +175,20 @@ public class OrderEntityController implements OrderEntityControllerLocal {
 
         return earnings;
     }
-
+    
+//    @Override
+//    public List<OrderEntity> retrieveCustomerOrders (Long customerId) {
+//        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.customerEntity.businessId = :inCustomerId");
+//         query.setParameter("inCustomerId", customerId);
+//        return query.getResultList();
+//    }  
     @Override
-    public List<OrderEntity> retrieveCustomerOrders(Long customerId) {
-        Query query = em.createQuery("SELECT p FROM OrderEntity p WHERE p.customerEntity.businessId = :inCustomerId");
-        query.setParameter("inCustomerId", customerId);
+    public List<OrderEntity> retrieveCustomerOrders(Long saleTransactionId) {
+        Query query = em.createQuery("SELECT o FROM OrderEntity o, CustomerEntity c, IN (c.saleTransactionEntities) st WHERE o.customerEntity=null AND st.saleTransactionId = :inSaleTransactionId");
+        query.setParameter("inSaleTransactionId", saleTransactionId);
         return query.getResultList();
+        
     }
+    
+    
 }

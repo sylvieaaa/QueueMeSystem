@@ -6,6 +6,7 @@
 package ws.restful.datamodel;
 
 import entity.OrderEntity;
+import entity.SaleTransactionEntity;
 import java.util.List;
 import javax.xml.bind.annotation.XmlType;
 
@@ -21,7 +22,7 @@ public class OrderEntityRsp {
     
     public OrderEntityRsp() {
     }
-        
+
     public OrderEntityRsp(List<OrderEntity> orderEntities) {
         this.orderEntities = orderEntities;
     }
@@ -33,6 +34,5 @@ public class OrderEntityRsp {
     public void setOrderEntities(List<OrderEntity> orderEntities) {
         this.orderEntities = orderEntities;
     }
-
-    
+  
 }

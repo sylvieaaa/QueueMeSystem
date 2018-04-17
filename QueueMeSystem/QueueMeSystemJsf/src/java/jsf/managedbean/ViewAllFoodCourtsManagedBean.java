@@ -93,6 +93,7 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
 
     public void handleFileUpload(FileUploadEvent event) {
         AdminEntity fc = (AdminEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
+        String from = (String) event.getComponent().getAttributes().get("from");
         try {
             String fileName = "";
             String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodCourtLogos";
@@ -121,7 +122,12 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
                 fileOutputStream.flush();
             }
 
-            newFoodCourt.setFileURL(file.getName());
+            if (from.equals("updateFoodCourt")) {
+                foodCourtToUpdate.setFileURL(file.getName());
+                foodCourtEntityControllerLocal.updateFileUrl(foodCourtToUpdate.getBusinessId(), file.getName());
+            } else {
+                newFoodCourt.setFileURL(file.getName());
+            }
             System.out.println(file);
             fileOutputStream.close();
             inputStream.close();

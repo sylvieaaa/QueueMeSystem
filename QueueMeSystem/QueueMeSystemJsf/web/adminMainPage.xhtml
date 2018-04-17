@@ -181,13 +181,13 @@
                         <h:outputText value = "#{foodCourt.postalCode}"/>
                     </p:column>
 
-                    <p:column style="width:10%" headerText="Start Time" sortBy="#{foodCourt.startTime}" filterBy="#{foodCourt.startTime}"
+                    <p:column style="width:10%" headerText="Start Time" sortBy="#{dateConvertManagedBean.dateConvert(foodCourt.startTime)}" filterBy="#{dateConvertManagedBean.dateConvert(foodCourt.startTime)}"
                               filterMatchMode="contains">
                         <h:outputText value = "#{dateConvertManagedBean.dateConvert(foodCourt.startTime)}"/>
 
                     </p:column>
 
-                    <p:column style="width:10%" headerText="End Time" sortBy="#{foodCourt.endTime}" filterBy="#{foodCourt.startTime}"
+                    <p:column style="width:10%" headerText="End Time" sortBy="#{dateConvertManagedBean.dateConvert(foodCourt.endTime)}" filterBy="#{dateConvertManagedBean.dateConvert(foodCourt.endTime)}"
                               filterMatchMode="contains">
                         <h:outputText value = "#{dateConvertManagedBean.dateConvert(foodCourt.endTime)}"/>
 
@@ -291,6 +291,17 @@
                 <p:dialog id="dialogUpdateFoodCourt" widgetVar="dialogUpdateFoodCourt" header="Update Food Court" closable="true">
                     <p:messages id="messagesUpdateFoodCourt" redisplay="false" />
                     <p:panelGrid>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="foodCourtLogo" value="Logo: " />
+                            </p:column>
+                            <p:column>
+                                <p:graphicImage id="foodCourtLogo"  value="http://localhost:8080/queueme-uploads/foodCourtLogos/#{viewAllFoodCourtsManagedBean.foodCourtToUpdate.fileURL}" width="150px" height="78px"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Change Logo" oncomplete="PF('dialogUploadPhoto').show();"/>
+                            </p:column>
+                        </p:row>
 
                         <p:row>
                             <p:column>
@@ -369,7 +380,7 @@
 
                         <p:row>
                             <p:column colspan="3" style="text-align: center" >
-                                <p:commandButton value="Update Food Court" update="@form formAllFoodCourts:allFoodCourts" actionListener="#{viewAllFoodCourtsManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').show();" />
+                                <p:commandButton value="Update Food Court" update="@form formAllFoodCourts:allFoodCourts dialogUploadPhoto" actionListener="#{viewAllFoodCourtsManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').hide();" />
                             </p:column>
                         </p:row>
 
@@ -382,10 +393,31 @@
                     <p:messages id="messagesDisableFoodCourt" redisplay="false" />
                     <h4 style="text-align: center"> Confirm disable <h:outputText style="color: blue;" value="#{viewAllFoodCourtsManagedBean.foodCourtToDisable.name} ?"/></h4>
 
-                    <p:commandButton style="margin: auto; display: block" value="Disable" update="@form formAllFoodCourts:allFoodCourts" actionListener="#{viewAllFoodCourtsManagedBean.disableFoodCourt}" oncomplete="PF('dialogDisableFoodCourt').show();" />
+                    <p:commandButton style="margin: auto; display: block" value="Disable" update="@form formAllFoodCourts:allFoodCourts" actionListener="#{viewAllFoodCourtsManagedBean.disableFoodCourt}" oncomplete="PF('dialogDisableFoodCourt').hide();" />
 
                 </p:dialog>
             </h:form>
+
+            <p:dialog id="dialogUploadPhoto" appendTo="@(body)" modal="true" responsive="true" closeOnEscape="true" draggable="false" widgetVar="dialogUploadPhoto" header="Upload Photo" closable="true">
+                <h:form>
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="fileUploadPhoto" value="Upload photo: " />
+                            </p:column>
+                            <p:column>
+                                <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="formUpdateFoodCourt:foodCourtLogo" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#{viewAllFoodCourtsManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                    <f:attribute name="from" value="updateFoodCourt" />
+                                </p:fileUpload>
+                            </p:column>
+                            <p:column>
+                                <p:message for="fileUploadPhoto" />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+
+                </h:form>
+            </p:dialog>
         </ui:define>
     </div>
     <div class="ui-g-12 ui-md-6 ui-lg-4"></div>

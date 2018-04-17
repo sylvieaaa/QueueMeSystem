@@ -81,6 +81,7 @@ public class FoodCourtEntityController implements FoodCourtEntityControllerLocal
             foodCourtToUpdate.setStartTime(foodCourt.getStartTime());
             foodCourtToUpdate.setEndTime(foodCourt.getEndTime());
 
+            em.merge(foodCourtToUpdate);
         } else {
             throw new FoodCourtNotFoundException("Id not provided for FoodCourt to be updated");
         }

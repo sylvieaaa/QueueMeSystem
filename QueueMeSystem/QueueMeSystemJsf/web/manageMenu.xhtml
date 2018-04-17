@@ -159,6 +159,7 @@
         <p:dialog id="dialogUploadPhoto" appendTo="@(body)" modal="true" responsive="true" closeOnEscape="true" draggable="false" widgetVar="dialogUploadPhoto" header="Upload Photo" closable="true">
             <h:form>
                 <p:panelGrid>
+                    <p:messages />
                     <p:row>
                         <p:column>
                             <p:outputLabel for="fileUploadPhoto" value="Upload photo: " />
@@ -166,6 +167,7 @@
                         <p:column>
                             <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="formEditMenuItems:menuItemImage" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#{manageMenuManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                 <f:attribute name="from" value="edit" />
+                                <f:attribute name="vendorEntity" value="#{manageMenuManagedBean.currentVendorEntity}" />
                             </p:fileUpload>
                         </p:column>
                         <p:column>
@@ -295,7 +297,10 @@
                     <p:row>
                         <p:column colspan="2">
                             <p:commandButton value="Cancel" oncomplete="PF('dialogEditMenuItems').hide();"/>
-                            <p:commandButton value="Save" actionListener="#{manageMenuManagedBean.saveMenuItemEdit}" update="@form menuForm" oncomplete="PF('dialogEditMenuItems').hide();"/>
+                            <!-- this is a problemmmmm i can't just update form since it doesn't refresh and I can't upload another file soon after.-->
+                            <p:commandButton value="Save" type="submit" actionListener="#{manageMenuManagedBean.saveMenuItemEdit}" update="@form menuForm dialogUploadPhoto" oncomplete="PF('dialogEditMenuItems').hide();">
+                                <!--<f:ajax execute="@form menuForm"/>-->
+                            </p:commandButton>
                         </p:column>
                     </p:row>
                 </p:panelGrid>
@@ -457,9 +462,6 @@
             </h:form>
         </p:dialog>
 
-
-
-
         <p:dialog id="dialogCreateNewCategory" widgetVar="dialogCreateNewCategory" modal="true" appendTo="@(body)" header="Create New Category" closable="true" resizable="true">
             <p:ajax event="close" update="dialogCreateNewCategory"/>
             <h:form id="formCreateNewCategory">
@@ -475,11 +477,6 @@
                 </p:panelGrid>
             </h:form>
         </p:dialog>
-
-
-        <h:form id="formDeleteMultipleItems">
-
-        </h:form>
     </ui:define>
 
 </ui:composition>
