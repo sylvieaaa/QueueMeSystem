@@ -57,7 +57,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
     private File file;
 
     private VendorTypeEnum[] vendorTypes = VendorTypeEnum.values();
-    
+
     private String uploadFrom;
 
     /**
@@ -102,7 +102,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
         try {
             vendorEntities = vendorEntityControllerLocal.retrieveAllVendorsByFoodCourtId(foodCourtId);
-            System.err.println(vendorEntities.get(0).getVendorName() + " " + vendorEntities.get(0).getStartTime());
+//            System.err.println(vendorEntities.get(0).getVendorName() + " " + vendorEntities.get(0).getStartTime());
         } catch (FoodCourtNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No vendors found.", null));
         }
