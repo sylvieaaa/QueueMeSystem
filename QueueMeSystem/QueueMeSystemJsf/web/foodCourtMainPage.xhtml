@@ -111,18 +111,14 @@
                         <p:row>
                             <p:column><h:outputText style="font-weight: bold" value="Start Hours: " /></p:column>
                             <p:column>
-                                <h:outputText value="#{vendors.startTime}">
-                                    <f:convertDateTime type="time" dateStyle="full"/>
-                                </h:outputText> 
+                                <h:outputText value = "#{dateConvertManagedBean.dateConvert(vendors.startTime)}"/>
                             </p:column>
                         </p:row>
 
                         <p:row>
                             <p:column><h:outputText style="font-weight: bold" value="End Hours: " /></p:column>
                             <p:column>
-                                <h:outputText value="#{vendors.endTime}">
-                                    <f:convertDateTime type="time" dateStyle="full"/>
-                                </h:outputText>
+                                <h:outputText value = "#{dateConvertManagedBean.dateConvert(vendors.endTime)}"/>
                             </p:column>
                         </p:row>
 
@@ -159,6 +155,7 @@
                                 <p:fileUpload id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="messagesUpdateVendor" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                     <f:attribute name="from" value="vendor" />
                                     <f:attribute name="status" value="" />
+                                    <f:attribute name="foodCourtEntity" value="#{manageFoodCourtManagedBean.currentFoodCourt}" />
                                 </p:fileUpload>
                             </p:column>
                             <p:column>
@@ -207,7 +204,7 @@
 
                         <p:row>
                             <p:column colspan="3" style="text-align: center" >
-                                <p:commandButton value="Update Vendor" update="@form vendorCarousel" actionListener="#{manageFoodCourtManagedBean.updateVendor}" oncomplete="PF('dialogUpdateVendor').show();" />
+                                <p:commandButton value="Update Vendor" update="@form vendorCarousel" actionListener="#{manageFoodCourtManagedBean.updateVendor}" oncomplete="PF('dialogUpdateVendor').hide();" />
                             </p:column>
                         </p:row>
 
@@ -296,6 +293,7 @@
                                             <p:fileUpload required="true" id="vendorLogoUpload" widgetVar="uploader" mode="advanced" update="uploadMessage" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                                 <f:attribute name="from" value="vendor" />
                                                 <f:attribute name="status" value="new" />
+                                                <f:attribute name="foodCourtEntity" value="#{manageFoodCourtManagedBean.currentFoodCourt}"/>
                                             </p:fileUpload>
                                         </p:column>
                                         <p:column>
