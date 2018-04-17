@@ -19,42 +19,48 @@ import javax.persistence.Query;
  */
 @Stateless
 public class CreditCardEntityController implements CreditCardEntityControllerLocal {
-
+    
     @PersistenceContext(unitName = "QueueMeSystem-ejbPU")
     private EntityManager em;
-
+    
     @Override
     public CreditCardEntity createCreditCard(String cardNum, String cardName, CustomerEntity customerEntity) {
+        
         CreditCardEntity creditCard = new CreditCardEntity();
         creditCard.setCardNo(cardNum);
         creditCard.setName(cardName);
-        creditCard.setDefaultCard(false);
+        CustomerEntity customer = em.find(CustomerEntity.class, customerEntity.getBusinessId());
+        if (customer.getCreditCardEntities().isEmpty()) {
+            creditCard.setDefaultCard(true);
+        } else {
+            creditCard.setDefaultCard(false);
+        }
         em.persist(creditCard);
         em.flush();
         em.refresh(creditCard);
-        creditCard.setCustomerEntity(customerEntity);
-        customerEntity.getCreditCardEntities().add(creditCard);
+        creditCard.setCustomerEntity(customer);
+        customer.getCreditCardEntities().add(creditCard);
         
         return creditCard;
     }
     
     @Override
     public void updateCreditCard(CreditCardEntity creditCardEntity) {
-        em.merge(creditCardEntity);      
+        em.merge(creditCardEntity);        
     }
     
     @Override
     public List<CreditCardEntity> retrieveAllCreditCards(Long customerId) {
- 
+        
         Query query = em.createQuery("SELECT c FROM CreditCardEntity c WHERE c.customerEntity.businessId = :inCustomerId");
         query.setParameter("inCustomerId", customerId);
         return query.getResultList();
     }
-        
+    
     @Override
     public void selectDefaultCard(CreditCardEntity creditCardEntity) {
         creditCardEntity = em.find(CreditCardEntity.class, creditCardEntity.getCreditCardId());
-        for(CreditCardEntity cce: creditCardEntity.getCustomerEntity().getCreditCardEntities()) {
+        for (CreditCardEntity cce : creditCardEntity.getCustomerEntity().getCreditCardEntities()) {
             cce.setDefaultCard(false);
         }
         creditCardEntity.setDefaultCard(true);
@@ -62,14 +68,17 @@ public class CreditCardEntityController implements CreditCardEntityControllerLoc
     
     @Override
     public CreditCardEntity retrieveCreditCard(Long creditCardId) {
-         CreditCardEntity creditCardEntity = em.find(CreditCardEntity.class, creditCardId);
-         return creditCardEntity;
+        CreditCardEntity creditCardEntity = em.find(CreditCardEntity.class, creditCardId);
+        return creditCardEntity;
     }
     
     @Override
     public void deleteCreditCard(CreditCardEntity creditCard) {
         CreditCardEntity ce = em.find(CreditCardEntity.class, creditCard.getCreditCardId());
+        CustomerEntity customer = ce.getCustomerEntity();
+        customer.getCreditCardEntities().remove(ce);
         ce.setCustomerEntity(null);
+        em.merge(customer);
         em.merge(ce);
         em.remove(ce);
     }
