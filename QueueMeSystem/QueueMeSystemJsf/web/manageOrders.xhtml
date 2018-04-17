@@ -43,8 +43,7 @@
                         </p:column>
 
                         <p:column headerText="Date Time">
-                            <h:outputText value="#{orderEntity.dateTime.time}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            <h:outputText value="#{dateConvertManagedBean.dateTimeConvert(orderEntity.dateTime)}">
                             </h:outputText>
                         </p:column>
 
@@ -93,8 +92,7 @@
                         </p:column>
 
                         <p:column headerText="Date Time">
-                            <h:outputText value="#{orderEntity.dateTime.time}" style="text-align: center">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            <h:outputText value="#{dateConvertManagedBean.dateTimeConvert(orderEntity.dateTime)}" style="text-align: center">
                             </h:outputText>
                         </p:column>
 
@@ -146,8 +144,7 @@
                             <h:outputLabel value="Date Time: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.dateTime.time}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.dateTime}" >
                             </h:outputText>
                         </p:column>
                     </p:row>
@@ -200,8 +197,8 @@
                             <h:outputLabel value="Date Time: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.dateTime.time}" >
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.dateTime}" >
+
                             </h:outputText>
                         </p:column>
                     </p:row>
