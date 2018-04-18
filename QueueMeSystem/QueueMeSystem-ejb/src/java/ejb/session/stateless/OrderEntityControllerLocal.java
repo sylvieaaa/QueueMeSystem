@@ -39,6 +39,6 @@ public interface OrderEntityControllerLocal {
 
 //    public List<OrderEntity> retrieveCustomerOrders(Long customerId);
 
-    public List<OrderEntity> retrieveCustomerOrders(Long saleTransactionId);
+    public List<OrderEntity> retrieveCustomerOrders(Long saleTransactionId, Long customerId);
   
 }

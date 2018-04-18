@@ -38,7 +38,7 @@ public class EmailController implements EmailControllerLocal {
     @Override
     public void sendReceipt(File receiptFile, CustomerEntity customerEntity) throws CustomerNotFoundException {
         customerEntity = customerEntityControllerLocal.retrieveCustomerByUsername(customerEntity.getUsername());
-        EmailManager emailManager = new EmailManager(yourAccId + "@sunfire.comp.nus.edu.sg", "<REPLACE_WITH_YOUR_UNIX_PASSWORD>");
+        EmailManager emailManager = new EmailManager(yourAccId + "@sunfire.comp.nus.edu.sg", "");
         emailManager.receiptEmail(yourAccId + "@sunfire.comp.nus.edu.sg", customerEntity.getUsername(), receiptFile);
     }
 }

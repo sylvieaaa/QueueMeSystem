@@ -209,9 +209,34 @@
             </h:form>
         </p:dialog>
 
-        <p:dialog id="dialogCreditCardCheckout" widgetVar="dialogCreditCardCheckout" modal="true" appendTo="@(body)">
-            <h:form id="formCreditCardCheckout">
-                
+        <p:dialog id="dialogCreditCardCheckout" widgetVar="dialogCreditCardCheckout" modal="true" appendTo="@(body)" style="text-align: center">
+            <h:form id="formCreditCardCheckout" style="text-align: center">
+                <p:panelGrid style="text-align: center">
+                    <p:row>
+                        <p:column><p:outputLabel value="Card Number: " style="font-weight: bold"/></p:column>
+                        <p:column>
+                            <p:inputText id="cardNumber" value="#{addOrderManagedBean.creditCardNumber}" required="true">
+                                <f:validateLength minimum="16" maximum="16"/>
+                            </p:inputText>
+                        </p:column>
+                        <p:column><p:message for="cardNumber"/></p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column><p:outputLabel value="Security Code: " style="font-weight: bold"/></p:column>
+                        <p:column>
+                            <p:inputText id="securityCode" value="#{addOrderManagedBean.creditCardNumber}" required="true">
+                                <f:validateLength minimum="3" maximum="3"/>
+                            </p:inputText>
+                        </p:column>
+                        <p:column><p:message for="securityCode"/></p:column>
+                    </p:row>
+
+                    <br />
+                    <p:row>
+                        <p:column colspan="3"><p:commandButton value="Checkout" actionListener="#{addOrderManagedBean.confirmCheckout}" update="formShoppingCart formCreditCardCheckout globalGrowl" oncomplete="if (args.isSuccess) PF('dialogCreditCardCheckout').hide();"/></p:column>
+                    </p:row>
+                </p:panelGrid>
             </h:form>
         </p:dialog>
     </ui:define>

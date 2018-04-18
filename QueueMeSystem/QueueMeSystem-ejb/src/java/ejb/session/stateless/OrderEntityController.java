@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.CustomerEntity;
 import entity.OrderEntity;
+import entity.SaleTransactionEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.VendorEntity;
 import java.io.BufferedReader;
@@ -97,8 +98,18 @@ public class OrderEntityController implements OrderEntityControllerLocal {
                 .add("click_action", "FCM_PLUGIN_ACTIVITY")
                 .add("sound","default")
                 .build();
+        SaleTransactionEntity saleTransactionEntity = orderEntity.getSaleTransactionLineItemEntities().get(0).getSaleTransactionEntity();
+        JsonObject saleTransactionJson = Json.createObjectBuilder()
+                .add("saleTransactionId", saleTransactionEntity.getSaleTransactionId())
+                .add("totalLineItem", saleTransactionEntity.getTotalLineItem())
+                .add("totalQuantity", saleTransactionEntity.getTotalQuantity())
+                .add("transactionDateTime", saleTransactionEntity.getTransactionDateTime().toString())
+                .add("isVoided", saleTransactionEntity.getIsVoided())
+                .add("isTakeaway", saleTransactionEntity.getIsTakeaway())
+                .build();
         JsonObject data = Json.createObjectBuilder()
                 .add("data", "Collect your food at " + orderEntity.getVendorEntity().getVendorName())
+                .add("saleTransactionEntity", saleTransactionJson)
 //                .add("vibrationPattern", "[2000, 1000, 500, 500]")
                 .build();
         JsonObject json = Json.createObjectBuilder()
@@ -183,8 +194,10 @@ public class OrderEntityController implements OrderEntityControllerLocal {
 //        return query.getResultList();
 //    }  
     @Override
-    public List<OrderEntity> retrieveCustomerOrders(Long saleTransactionId) {
-        Query query = em.createQuery("SELECT o FROM OrderEntity o, CustomerEntity c, IN (c.saleTransactionEntities) st WHERE o.customerEntity=null AND st.saleTransactionId = :inSaleTransactionId");
+    public List<OrderEntity> retrieveCustomerOrders(Long saleTransactionId, Long customerId) {
+//        Query query = em.createQuery("SELECT o FROM OrderEntity o, CustomerEntity c, IN (c.saleTransactionEntities) st WHERE o.customerEntity.businessId=:inCustomerId AND st.saleTransactionId = :inSaleTransactionId");
+        Query query = em.createQuery("SELECT DISTINCT st.orderEntity FROM SaleTransactionLineItemEntity st JOIN st.saleTransactionEntity s JOIN s.customerEntity c WHERE s.saleTransactionId = :inSaleTransactionId AND c.businessId = :inCustomerId");
+        query.setParameter("inCustomerId", customerId);
         query.setParameter("inSaleTransactionId", saleTransactionId);
         return query.getResultList();
         

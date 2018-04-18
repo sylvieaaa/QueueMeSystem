@@ -28,6 +28,11 @@ public class DateConvertManagedBean {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         String converted = sdf.format(operatingTime);
         return converted;
-        
+    }
+    
+    public String dateTimeConvert(Date dateTime){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        String converted = sdf.format(dateTime);
+        return converted;
     }
 }
