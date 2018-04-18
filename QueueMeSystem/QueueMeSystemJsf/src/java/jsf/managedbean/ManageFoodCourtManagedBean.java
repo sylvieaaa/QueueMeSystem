@@ -132,6 +132,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
         }
 
         uploadFrom = (String) event.getComponent().getAttributes().get("uploadFrom");
+        System.err.println("WHAT IS THIS VALUE" + uploadFrom);
         String status = (String) event.getComponent().getAttributes().get("status");
         String newFilePath;
         try {
