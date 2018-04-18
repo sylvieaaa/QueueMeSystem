@@ -113,9 +113,9 @@ public class DataInitializationSessionBean {
             }
             // Initialize admin entities
             adminEntityControllerLocal.createAdmin(new AdminEntity("Yi Xuan", "Soong", "yxsoong", "password"));
-            adminEntityControllerLocal.createAdmin(new AdminEntity("Zhu Zhi", "Kerk", "kzhuzhi", "password"));
-            adminEntityControllerLocal.createAdmin(new AdminEntity("Sylvia", "Swee", "sylvia", "password"));
-            adminEntityControllerLocal.createAdmin(new AdminEntity("Rui Jia", "Low", "lruijia", "password"));
+            adminEntityControllerLocal.createAdmin(new AdminEntity("Zhu Zhi", "Kerk", "kzhuzhi@gmail.com", "password"));
+            adminEntityControllerLocal.createAdmin(new AdminEntity("Sylvia", "Swee", "sylvia@gmail.com", "password"));
+            adminEntityControllerLocal.createAdmin(new AdminEntity("Rui Jia", "Low", "lruijia@gmail.com", "password"));
 
             CustomerEntity customerEntity = customerEntityControllerLocal.createCustomer(new CustomerEntity("Doe", "John", "98765432", "abc street", "yxsoong@gmail.com", "password"));
 
