@@ -42,8 +42,11 @@ import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import util.enumeration.VendorTypeEnum;
 import util.exception.AdminNotFoundException;
 import util.exception.TagAlreadyExistException;
+
+
 
 @Singleton
 @LocalBean
@@ -132,17 +135,17 @@ public class DataInitializationSessionBean {
 //            customerEntity.getCreditCardEntities().add(creditCard);
 //            creditCard.setCustomerEntity(customerEntity);
             // Initialize FoodCourt Entity
-            VendorEntity chinese = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Chicken and Duck Rice", "Chinese", 5, "Best Chicken and Duck rice in Vivocity!", calendarStart, calendarEnd, BigDecimal.ZERO, "tiantian@gmail.com", "password", "chinese.png"), vivoFC);
-            VendorEntity chinese2 = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Authentic Chicken and Duck Rice", "Chinese", 5, "Best Chicken and Duck rice in 313!", calendarStart, calendarEnd, BigDecimal.ZERO, "authenticchinese@gmail.com", "password", "chinese.png"), somersetFC);
-            VendorEntity malay = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Ahmad Satay", "Halal", 1, "Best satay in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "ahmadsatay@gmail.com", "password", "malay.png"), vivoFC);
-            VendorEntity malay2 = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Bagus Satay", "Halal", 1, "Best satay in Nex!", calendarStart, calendarEnd, BigDecimal.ZERO, "bagussatay@gmail.com", "password", "malay.png"), somersetFC);
-            VendorEntity western = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Uncle Charlie Western", "Western", 2, "Taste of USA!", calendarStart, calendarEnd, BigDecimal.ZERO, "unclecharlie@gmail.com", "password", "usa.png"), vivoFC);
-            VendorEntity western2 = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Western Delight", "Western", 2, "Taste of USA!", calendarStart, calendarEnd, BigDecimal.ZERO, "westerndelight@gmail.com", "password", "usa.png"), somersetFC);
-            VendorEntity drinks = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Drinks & Beverages", "Beverages", 3, "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "vivodrinks@gmail.com", "password", "Seng.png"), vivoFC);
-            VendorEntity drinks2 = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Drinks Hub", "Beverages", 3, "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "drinkshub@gmail.com", "password", "Seng.png"), somersetFC);
-            VendorEntity fruitStore = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Fruit Store", "Fruits", 4, "Eat me and be healthy", calendarEnd, calendarEnd, BigDecimal.ZERO, "vivofruit@gmail.com", "password", "fruit.png"), vivoFC);
-            VendorEntity indian = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Muthu Curry", "Indian", 5, "Cheapest prata in SG!", calendarEnd, calendarEnd, BigDecimal.ZERO, "muthuprata@gmail.com", "password", "muthu.png"), vivoFC);
-           
+            VendorEntity chinese = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Chicken and Duck Rice", VendorTypeEnum.CHINESE.toString(), 5, "Best Chicken and Duck rice in Vivocity!", calendarStart, calendarEnd, BigDecimal.ZERO, "tiantian@gmail.com", "password", "chinese.png"), vivoFC);
+            VendorEntity chinese2 = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Authentic Chicken and Duck Rice", VendorTypeEnum.CHINESE.toString(), 5, "Best Chicken and Duck rice in 313!", calendarStart, calendarEnd, BigDecimal.ZERO, "authenticchinese@gmail.com", "password", "chinese.png"), somersetFC);
+            VendorEntity malay = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Ahmad Satay", VendorTypeEnum.MALAY.toString(), 1, "Best satay in SG!", calendarStart, calendarEnd, BigDecimal.ZERO, "ahmadsatay@gmail.com", "password", "malay.png"), vivoFC);
+            VendorEntity malay2 = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Bagus Satay", VendorTypeEnum.MALAY.toString(), 1, "Best satay in Nex!", calendarStart, calendarEnd, BigDecimal.ZERO, "bagussatay@gmail.com", "password", "malay.png"), somersetFC);
+            VendorEntity western = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Uncle Charlie Western", VendorTypeEnum.WESTERN.toString(), 2, "Taste of USA!", calendarStart, calendarEnd, BigDecimal.ZERO, "unclecharlie@gmail.com", "password", "usa.png"), vivoFC);
+            VendorEntity western2 = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Western Delight", VendorTypeEnum.WESTERN.toString(), 2, "Taste of USA!", calendarStart, calendarEnd, BigDecimal.ZERO, "westerndelight@gmail.com", "password", "usa.png"), somersetFC);
+            VendorEntity drinks = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Drinks & Beverages", VendorTypeEnum.DRINKS.toString(), 3, "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "vivodrinks@gmail.com", "password", "Seng.png"), vivoFC);
+            VendorEntity drinks2 = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Drinks Hub", VendorTypeEnum.DRINKS.toString(), 3, "Thirsty no more!", calendarStart, calendarEnd, BigDecimal.ZERO, "drinkshub@gmail.com", "password", "Seng.png"), somersetFC);
+            VendorEntity fruitStore = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Best Fruit Store", VendorTypeEnum.FRUITS.toString(), 4, "Eat me and be healthy", calendarEnd, calendarEnd, BigDecimal.ZERO, "vivofruit@gmail.com", "password", "fruit.png"), vivoFC);
+            VendorEntity indian = vendorEntityControllerLocal.createVendorEntity(new VendorEntity("Muthu Curry", VendorTypeEnum.INDIAN.toString(), 5, "Cheapest prata in SG!", calendarEnd, calendarEnd, BigDecimal.ZERO, "muthuprata@gmail.com", "password", "muthu.png"), vivoFC);
+
             MenuItemEntity chickenRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Rice", "Roasted & white", new BigDecimal("2.90"), "chicken_rice.png"), chinese);
             MenuItemEntity chickenRice2 = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Rice", "Roasted & white", new BigDecimal("2.90"), "chicken_rice.png"), chinese2);
             MenuItemEntity duckRice = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roasted Duck Rice", "Authentic HK taste", new BigDecimal("2.90"), "duck_rice.png"), chinese);
@@ -164,10 +167,10 @@ public class DataInitializationSessionBean {
 
             MenuItemEntity prata = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roti Prata", "Crispy Prata", new BigDecimal("0.90"), "prata.png"), indian);
             MenuItemEntity curry = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Curry", "Best chicken curry!", new BigDecimal("1.50"), "curry_chicken.png"), indian);
-            
+
             MenuItemEntity papaya = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Papaya", "Papaya fruit", new BigDecimal("1.00"), "papaya.png"), fruitStore);
             MenuItemEntity watermelon = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Watermelon", "Watermelon fruit", new BigDecimal("1.00"), "watermelon.png"), fruitStore);
-            
+
             MenuEntity menuEntity = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 1", Boolean.TRUE), chinese);
             MenuEntity menuEntity2 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 2", Boolean.TRUE), malay);
             MenuEntity menuEntity3 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 3", Boolean.TRUE), drinks);
@@ -178,7 +181,7 @@ public class DataInitializationSessionBean {
             MenuEntity menuEntity8 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 8", Boolean.TRUE), malay2);
             MenuEntity menuEntity9 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 9", Boolean.TRUE), western2);
             MenuEntity menuEntity10 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 10", Boolean.TRUE), drinks2);
-           
+
             CategoryEntity categoryEntity = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity);
             CategoryEntity categoryEntity2 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity2);
             CategoryEntity categoryEntity3 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Drinks"), menuEntity3);
@@ -189,7 +192,7 @@ public class DataInitializationSessionBean {
             CategoryEntity categoryEntity8 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity8);
             CategoryEntity categoryEntity9 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity9);
             CategoryEntity categoryEntity10 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity10);
-            
+
             categoryEntity.getMenuItemEntities().add(chickenRice);
             categoryEntity.getMenuItemEntities().add(duckRice);
             categoryEntity2.getMenuItemEntities().add(satay);
@@ -207,8 +210,6 @@ public class DataInitializationSessionBean {
             categoryEntity9.getMenuItemEntities().add(chickenChop2);
             categoryEntity9.getMenuItemEntities().add(steak);
             categoryEntity10.getMenuItemEntities().add(milo2);
-            
-            
 
             ReviewEntity review = reviewEntityControllerLocal.createReview(new ReviewEntity("Food does not taste good.", 1));
             ReviewEntity review2 = reviewEntityControllerLocal.createReview(new ReviewEntity("Food and service is top notch!", 5));
