@@ -164,7 +164,10 @@ public class DataInitializationSessionBean {
 
             MenuItemEntity prata = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Roti Prata", "Crispy Prata", new BigDecimal("0.90"), "prata.png"), indian);
             MenuItemEntity curry = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Chicken Curry", "Best chicken curry!", new BigDecimal("1.50"), "curry_chicken.png"), indian);
-
+            
+            MenuItemEntity papaya = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Papaya", "Papaya fruit", new BigDecimal("1.00"), "papaya.png"), fruitStore);
+            MenuItemEntity watermelon = menuItemEntityControllerLocal.createMenuItem(new MenuItemEntity("Watermelon", "Watermelon fruit", new BigDecimal("1.00"), "watermelon.png"), fruitStore);
+            
             MenuEntity menuEntity = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 1", Boolean.TRUE), chinese);
             MenuEntity menuEntity2 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 2", Boolean.TRUE), malay);
             MenuEntity menuEntity3 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 3", Boolean.TRUE), drinks);
@@ -175,7 +178,7 @@ public class DataInitializationSessionBean {
             MenuEntity menuEntity8 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 8", Boolean.TRUE), malay2);
             MenuEntity menuEntity9 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 9", Boolean.TRUE), western2);
             MenuEntity menuEntity10 = menuEntityControllerLocal.createMenu(new MenuEntity("Menu 10", Boolean.TRUE), drinks2);
-            
+           
             CategoryEntity categoryEntity = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity);
             CategoryEntity categoryEntity2 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Main"), menuEntity2);
             CategoryEntity categoryEntity3 = categoryEntityControllerLocal.createCategory(new CategoryEntity("Drinks"), menuEntity3);
@@ -192,9 +195,12 @@ public class DataInitializationSessionBean {
             categoryEntity2.getMenuItemEntities().add(satay);
             categoryEntity3.getMenuItemEntities().add(milo);
             categoryEntity4.getMenuItemEntities().add(prata);
+            categoryEntity4.getMenuItemEntities().add(curry);
             categoryEntity5.getMenuItemEntities().add(chickenChop);
             categoryEntity5.getMenuItemEntities().add(steak);
             categoryEntity5.getMenuItemEntities().add(fries);
+            categoryEntity6.getMenuItemEntities().add(papaya);
+            categoryEntity6.getMenuItemEntities().add(watermelon);
             categoryEntity7.getMenuItemEntities().add(wantonMee);
             categoryEntity7.getMenuItemEntities().add(beefhorfun);
             categoryEntity8.getMenuItemEntities().add(satay2);
