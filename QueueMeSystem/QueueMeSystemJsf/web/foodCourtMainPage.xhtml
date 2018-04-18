@@ -73,6 +73,7 @@
                                 <p:column colspan="2" style="text-align: center">
                                     <p:commandButton update="updateFoodCourtForm dialogUploadPhoto" oncomplete="PF('dialogUpdateFoodCourt').show()" value="Update" icon="fa fa-fw fa-edit" style="font-size: 12px; text-align: center">
                                         <f:setPropertyActionListener value="#{manageFoodCourtManagedBean.currentFoodCourt}" target="#{manageFoodCourtManagedBean.currentFoodCourt}" />
+                                        <f:attribute name="uploadFrom" value="foodcourt"/>
                                     </p:commandButton>
                                 </p:column>
                             </p:row>
@@ -154,6 +155,7 @@
                             <p:column>
                                 <p:commandButton value="Change Logo" oncomplete="PF('dialogUploadPhoto').show();" >
                                     <f:setPropertyActionListener target="#{manageFoodCourtManagedBean.uploadFrom}" value="vendor"/>
+                                    <!--<f:attribute name="uploadFrom" value="vendor"/>-->
                                 </p:commandButton>
                             </p:column>
                         </p:row>
@@ -221,6 +223,7 @@
                             <p:column>
                                 <p:commandButton value="Change Logo" oncomplete="PF('dialogUploadPhoto').show();">
                                     <f:setPropertyActionListener target="#{manageFoodCourtManagedBean.uploadFrom}" value="foodcourt"/>
+                                    <f:attribute name="uploadFrom" value="foodcourt"/>
                                 </p:commandButton>
                             </p:column>
                         </p:row>
@@ -387,9 +390,9 @@
                                 <p:outputLabel for="fileUploadPhoto" value="Upload photo: " />
                             </p:column>
                             <p:column>
-                                <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="updateVendorForm:vendorLogoUpload updateFoodCourtForm:foodCourtLogoUpload dialogUploadPhoto" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                                <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="updateVendorForm:vendorLogoUpload updateFoodCourtForm:foodCourtLogoUpload dialogUploadPhoto @form vendorCarousel" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#{manageFoodCourtManagedBean.upload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
                                     <f:attribute name="status" value="" />
-                                    <f:attribute name="uploadFrom" value="vendor" />
+                                    <f:attribute name="uploadFrom" value="#{manageFoodCourtManagedBean.uploadFrom}" />
                                     <f:attribute name="foodCourtEntity" value="#{manageFoodCourtManagedBean.currentFoodCourt}" />
                                 </p:fileUpload>
                             </p:column>
@@ -401,7 +404,7 @@
                 </h:form>
             </p:dialog>
 
-           
+
         </ui:define>
     </div>
     <div class="ui-g-12 ui-md-6 ui-lg-4"></div>
