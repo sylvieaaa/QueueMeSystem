@@ -78,7 +78,7 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
         em.refresh(saleTransactionEntity);
 
         processSaleTransaction(saleTransactionEntity);
-        //sendReceipt(saleTransactionEntity);
+        sendReceipt(saleTransactionEntity);
 
         return saleTransactionEntity;
     }

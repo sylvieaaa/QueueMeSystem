@@ -17,11 +17,13 @@ import javax.faces.event.ActionEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import util.email.EmailManager;
 import util.exception.BusinessEntityNotFoundException;
@@ -44,12 +46,19 @@ public class IndexManagedBean {
     private String username;
     private String password;
     private String email;
+    
+    private String serverName;
 
     /**
      * Creates a new instance of IndexManagedBean
      */
     public IndexManagedBean() {
         System.out.println("created");
+    }
+    
+    @PostConstruct
+    public void postConstruct() {
+        serverName = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getServerName();;
     }
 
     public void login(ActionEvent event) throws IOException {
@@ -128,6 +137,14 @@ public class IndexManagedBean {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 
 }

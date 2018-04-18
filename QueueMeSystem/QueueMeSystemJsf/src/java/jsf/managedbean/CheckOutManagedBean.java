@@ -149,7 +149,7 @@ public class CheckOutManagedBean implements Serializable {
 
         VendorEntity vendorEntity = (VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity");
         SaleTransactionEntity newSaleTransactionEntity = saleTransactionEntityControllerLocal.createSaleTransaction(new SaleTransactionEntity(totalLineItem, totalQuantity, totalAmount, Calendar.getInstance(Locale.CHINA).getTime(), Boolean.FALSE, isTakeaway, null, saleTransactionLineItemEntities));
-        generateReport(newSaleTransactionEntity.getSaleTransactionId());
+//        generateReport(newSaleTransactionEntity.getSaleTransactionId());
         initialiseState();
 
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Checkout completed successfully (Sales Transaction ID: " + newSaleTransactionEntity.getSaleTransactionId() + ")", null));
