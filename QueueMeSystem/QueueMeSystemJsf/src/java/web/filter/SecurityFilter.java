@@ -64,7 +64,7 @@ public class SecurityFilter implements Filter {
             if (isLogin) {
                 BusinessEntity businessEntity = (BusinessEntity) httpSession.getAttribute("businessEntity");
 
-                if (httpServletRequest.getRequestURL().toString().startsWith("http://localhost:8080/queueme-uploads/")) {
+                if (httpServletRequest.getRequestURL().toString().startsWith("http://localhost:8080/queueme-uploads/") || httpServletRequest.getRequestURL().toString().startsWith("http://localhost:80/queueme-uploads/")) {
                     chain.doFilter(request, response);
                     return;
                 }
