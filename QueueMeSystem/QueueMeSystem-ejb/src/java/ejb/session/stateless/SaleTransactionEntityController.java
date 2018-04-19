@@ -78,7 +78,9 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
         em.refresh(saleTransactionEntity);
 
         processSaleTransaction(saleTransactionEntity);
-        sendReceipt(saleTransactionEntity);
+        if (saleTransactionEntity.getCustomerEntity() != null) {
+            sendReceipt(saleTransactionEntity);
+        }
 
         return saleTransactionEntity;
     }
@@ -88,7 +90,7 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
         System.err.println(saleTransactionEntity.getSaleTransactionLineItemEntities());
         CustomerEntity customerEntity = saleTransactionEntity.getCustomerEntity();
         HashMap<VendorEntity, List<SaleTransactionLineItemEntity>> vendorToSales = new HashMap<>();
-        for(SaleTransactionLineItemEntity saleTransactionLineItemEntity: saleTransactionEntity.getSaleTransactionLineItemEntities()) {
+        for (SaleTransactionLineItemEntity saleTransactionLineItemEntity : saleTransactionEntity.getSaleTransactionLineItemEntities()) {
             // for link back 
             saleTransactionLineItemEntity.getMenuItemEntity().getSaleTransactionLineItemEntities().add(saleTransactionLineItemEntity);
             //System.err.println(saleTransactionLineItemEntity.getMenuItemEntity().getSaleTransactionLineItemEntities().size() + " m");
@@ -137,7 +139,7 @@ public class SaleTransactionEntityController implements SaleTransactionEntityCon
             String newFilePath = newPdfFile.getAbsolutePath();
             newPdfFile.delete();
             JasperExportManager.exportReportToPdfFile(print, newFilePath);
-            
+
             emailControllerLocal.sendReceipt(new File(newFilePath), saleTransactionEntity.getCustomerEntity());
         } catch (FileNotFoundException ex) {
         } catch (SQLException ex) {

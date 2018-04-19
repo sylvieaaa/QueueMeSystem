@@ -168,7 +168,7 @@ public class CustomerResource {
                 customerEntityControllerLocal.updateCustomerPassword(updatePasswordReq.getCustomerEntity(), updatePasswordReq.getOldPassword(), updatePasswordReq.getNewPassword());
                 return Response.status(Response.Status.OK).build();
             } catch (Exception ex) {
-                System.err.println(ex);
+                System.err.println(ex.getMessage());
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
             }
         } else {
