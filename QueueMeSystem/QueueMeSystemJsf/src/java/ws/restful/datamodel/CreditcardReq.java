@@ -25,7 +25,7 @@ public class CreditcardReq {
     public CreditcardReq() {
     }
 
-    public CreditcardReq(CreditCardEntity creditCardEntity, String cardNum, String cardName) {
+    public CreditcardReq(String cardNum, String cardName, CustomerEntity customerEntity) {
         this.cardNum = cardNum;
         this.cardName = cardName;
         this.customerEntity = customerEntity;

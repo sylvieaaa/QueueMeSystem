@@ -5,10 +5,13 @@
  */
 package ejb.session.stateless;
 
+import entity.CustomerEntity;
 import entity.ReviewEntity;
 import entity.VendorEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.CustomerNotFoundException;
+import util.exception.VendorNotFoundException;
 
 /**
  *
@@ -17,11 +20,11 @@ import javax.ejb.Local;
 @Local
 public interface ReviewEntityControllerLocal {
 
-    public ReviewEntity createReview(ReviewEntity reviewEntity);
+     public ReviewEntity createReview(ReviewEntity reviewEntity, CustomerEntity customerEntity, VendorEntity vendorEntity) throws VendorNotFoundException, CustomerNotFoundException;
     
     public List<ReviewEntity> retrieveAllReviews(VendorEntity vendorEntity);
     
     public int averageReviewScore(VendorEntity vendorEntity);
-    
+
 }
 

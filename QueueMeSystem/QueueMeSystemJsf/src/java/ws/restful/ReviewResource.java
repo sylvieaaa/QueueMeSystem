@@ -17,14 +17,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
+import util.exception.CustomerNotFoundException;
+import util.exception.VendorNotFoundException;
 import ws.restful.datamodel.ReviewReq;
 
 /**
@@ -39,37 +38,34 @@ public class ReviewResource {
 
     @Context
     private UriInfo context;
-    
-    
 
     /**
      * Creates a new instance of ReviewResource
      */
     public ReviewResource() {
-        
+
     }
-    
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateReview(JAXBElement<ReviewReq> reviewReq) {
-       if (reviewReq != null){
-           System.out.println(reviewReq.getValue().getCustomerEntity());
-            return Response.status(Response.Status.OK).build();
-       }
-       else{
-             return Response.status(Response.Status.BAD_REQUEST).build();
-       }
-        
-    }
+    public Response updateReview(JAXBElement<ReviewReq> jaxbeReviewReq) {
+        if ((jaxbeReviewReq != null) && (jaxbeReviewReq.getValue() != null)) {
+            ReviewReq reviewReq = jaxbeReviewReq.getValue();
+            ReviewEntity reviewEntity = reviewReq.getReviewEntity();
+            VendorEntity vendorEntity = reviewReq.getVendorEntity();
+            CustomerEntity customerEntity = reviewReq.getCustomerEntity();
+            try {
+                reviewEntityControllerLocal.createReview(reviewEntity, customerEntity, vendorEntity);
+                return Response.status(Response.Status.OK).build();
+            } catch (VendorNotFoundException | CustomerNotFoundException ex) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
 
-    /**
-     * PUT method for updating or creating an instance of ReviewResource
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
     }
 
     private ReviewEntityControllerLocal lookupReviewEntityControllerLocal() {

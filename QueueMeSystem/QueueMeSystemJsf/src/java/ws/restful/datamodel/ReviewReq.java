@@ -16,7 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "reviewReq", propOrder = {
     "vendorEntity",
-    "reviewEntity", "customerEntiy"
+    "reviewEntity",
+    "customerEntity"
 })
 public class ReviewReq {
     private VendorEntity vendorEntity;
