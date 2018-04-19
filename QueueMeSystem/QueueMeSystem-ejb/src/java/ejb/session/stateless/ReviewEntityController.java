@@ -51,4 +51,11 @@
             return (score / size);
             }
         }
+        
+        public void updateReview(VendorEntity vendorEntity){
+            VendorEntity vendor = em.find(VendorEntity.class, vendorEntity.getBusinessId());
+            
+        }
+        
+        
     }
