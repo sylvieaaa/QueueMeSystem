@@ -32,7 +32,7 @@
                     <h:form id="foodCourtDetails">
                         <p:panelGrid style="text-align: left; border: #000000">
                             <p:row>
-                                <p:column colspan="2"><p:graphicImage style="text-align: center" value="http://#{indexManagedBean.serverName}:8080/queueme-uploads/foodCourtLogos/#{manageFoodCourtManagedBean.currentFoodCourt.fileURL}" width="200px" height="100px"/></p:column>
+                                <p:column colspan="2"><p:graphicImage style="text-align: center" value="http://#{indexManagedBean.serverName}/queueme-uploads/foodCourtLogos/#{manageFoodCourtManagedBean.currentFoodCourt.fileURL}" width="200px" height="100px"/></p:column>
                             </p:row>
 
                             <p:row>
@@ -83,7 +83,7 @@
 
                 <p:carousel id="vendorCarousel" value="#{manageFoodCourtManagedBean.vendorEntities}" var="vendors" numVisible="4" style="width: 97%; margin: 10px 10px; text-align: center" circular="true">
                     <p:panelGrid columns="1" style="margin-left: 40px; margin-top: 2px">
-                        <p:graphicImage  value="http://#{indexManagedBean.serverName}:8080/queueme-uploads/vendorLogos/#{vendors.photoURL}" width="200px" height="100px"/>
+                        <p:graphicImage  value="http://#{indexManagedBean.serverName}/queueme-uploads/vendorLogos/#{vendors.photoURL}" width="200px" height="100px"/>
                     </p:panelGrid>
                     <p:panelGrid style="margin-left: 40px;text-align: left">
                         <p:row>
@@ -150,7 +150,7 @@
                                 <p:outputLabel for="vendorLogoUpload" value="Logo: " />
                             </p:column>
                             <p:column>
-                                <p:graphicImage id="vendorLogoUpload"  value="http://#{indexManagedBean.serverName}:8080/queueme-uploads/vendorLogos/#{manageFoodCourtManagedBean.vendorEntityToUpdate.photoURL}" width="150px" height="78px"/>
+                                <p:graphicImage id="vendorLogoUpload"  value="http://#{indexManagedBean.serverName}/queueme-uploads/vendorLogos/#{manageFoodCourtManagedBean.vendorEntityToUpdate.photoURL}" width="150px" height="78px"/>
                             </p:column>
                             <p:column>
                                 <p:commandButton value="Change Logo" oncomplete="PF('dialogUploadPhoto').show();" >
@@ -218,7 +218,7 @@
                                 <p:outputLabel for="foodCourtLogoUpload" value="Logo: " />
                             </p:column>
                             <p:column>
-                                <p:graphicImage id="foodCourtLogoUpload"  value="http://#{indexManagedBean.serverName}:8080/queueme-uploads/foodCourtLogos/#{manageFoodCourtManagedBean.currentFoodCourt.fileURL}" width="150px" height="78px"/>
+                                <p:graphicImage id="foodCourtLogoUpload"  value="http://#{indexManagedBean.serverName}/queueme-uploads/foodCourtLogos/#{manageFoodCourtManagedBean.currentFoodCourt.fileURL}" width="150px" height="78px"/>
                             </p:column>
                             <p:column>
                                 <p:commandButton value="Change Logo" oncomplete="PF('dialogUploadPhoto').show();">
