@@ -87,8 +87,8 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
         Long foodCourtId;
         if (accountType.equals("Admin")) {
-            System.err.println(FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate"));
-            foodCourtId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate");
+            System.err.println(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("foodCourtIdToUpdate"));
+            foodCourtId = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("foodCourtIdToUpdate");
             System.err.println("ENTERED HERE ADMIN");
         } else {
             foodCourtId = ((FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity")).getBusinessId();
@@ -205,7 +205,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
     public void createVendorPage(ActionEvent event) {
         try {
             Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("foodCourtIdToUpdate", foodCourtIdToView);
             FacesContext.getCurrentInstance().getExternalContext().redirect("createNewVendor.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -215,7 +215,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
     public void viewVendor(ActionEvent event) {
         try {
             Long vendorIdToView = (Long) event.getComponent().getAttributes().get("viewVendorId");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("vendorIdToView", vendorIdToView);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("vendorIdToView", vendorIdToView);
             FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -242,7 +242,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
             file = null;
 
             try {
-                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("foodCourtIdToUpdate", foodCourtIdToView);
                 FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
             } catch (IOException ex) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));

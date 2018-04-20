@@ -20,11 +20,10 @@ import util.exception.VendorNotFoundException;
 @Local
 public interface ReviewEntityControllerLocal {
 
-     public ReviewEntity createReview(ReviewEntity reviewEntity, CustomerEntity customerEntity, VendorEntity vendorEntity) throws VendorNotFoundException, CustomerNotFoundException;
-    
+    public ReviewEntity createReview(ReviewEntity reviewEntity, CustomerEntity customerEntity, VendorEntity vendorEntity) throws VendorNotFoundException, CustomerNotFoundException;
+
     public List<ReviewEntity> retrieveAllReviews(VendorEntity vendorEntity);
-    
+
     public int averageReviewScore(VendorEntity vendorEntity);
 
 }
-

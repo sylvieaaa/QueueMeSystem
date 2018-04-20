@@ -129,7 +129,7 @@ public class ManageMenuManagedBean implements Serializable {
 
         if (businessEntity instanceof AdminEntity) {
             try {
-                Long vendorId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("vendorId");
+                Long vendorId = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("vendorIdToView");
                 currentVendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorId);
             } catch (VendorNotFoundException ex) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -220,7 +220,7 @@ public class ManageMenuManagedBean implements Serializable {
         if (!(businessEntity instanceof AdminEntity)) {
             currentVendorEntity = (VendorEntity) businessEntity;
         }
-        
+
         String from = (String) event.getComponent().getAttributes().get("from");
         try {
             String fileName = "";
@@ -526,9 +526,7 @@ public class ManageMenuManagedBean implements Serializable {
     public void backToVendor(ActionEvent event) {
         try {
             Long vendorId = (Long) event.getComponent().getAttributes().get("vendorId");
-//            String from = (String) event.getComponent().getAttributes().get("from");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("vendorIdToView", vendorId);
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("from", from);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("vendorIdToView", vendorId);
             FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));

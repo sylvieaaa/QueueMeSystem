@@ -164,12 +164,9 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
 
     public void viewFoodCourt(ActionEvent event) {
         try {
-            System.err.println("HEREEEEEEEEEEEEE");
             Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
-            System.err.println("NUM1" + foodCourtIdToView);
-            System.err.println("LOL " + FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate"));
-            System.err.println("NUM2");
+//            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("foodCourtIdToUpdate", foodCourtIdToView);
             FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -242,7 +239,7 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
 
     public void viewFoodCourtDetails(ActionEvent event) throws IOException {
         Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToView", foodCourtIdToView);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("foodCourtIdToView", foodCourtIdToView);
         FacesContext.getCurrentInstance().getExternalContext().redirect("viewFoodCourtDetails.xhtml");
     }
 
