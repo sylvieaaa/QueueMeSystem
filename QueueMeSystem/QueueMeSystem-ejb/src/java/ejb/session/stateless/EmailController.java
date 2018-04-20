@@ -27,7 +27,7 @@ public class EmailController implements EmailControllerLocal {
     private BusinessEntityControllerLocal businessEntityControllerLocal;
     
     private String yourAccId = "yxsoong";
-    private String password = "2hgrygz!@#";
+    private String password = "";
     
     @Override
     public void forgetPasswordEmail(String toEmail) throws BusinessEntityNotFoundException {
