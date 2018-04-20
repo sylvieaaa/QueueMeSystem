@@ -136,7 +136,7 @@ public class CustomerResource {
         if ((createCustomerReq != null) && (createCustomerReq.getValue() != null)) {
             try {
                 CreateCustomerReq createCustomer = createCustomerReq.getValue();
-
+                System.err.println(createCustomer.getCustomerEntity().getPassword());
                 CustomerEntity customerEntity = customerEntityControllerLocal.createCustomer(createCustomer.getCustomerEntity());
 
                 return Response.status(Response.Status.OK).build();
