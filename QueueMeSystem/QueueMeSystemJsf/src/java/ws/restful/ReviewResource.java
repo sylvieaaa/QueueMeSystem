@@ -25,7 +25,6 @@ import javax.xml.bind.JAXBElement;
 import util.exception.CustomerNotFoundException;
 import util.exception.VendorNotFoundException;
 import ws.restful.datamodel.ReviewReq;
-import ws.restful.datamodel.ReviewRsp;
 
 /**
  * REST Web Service
