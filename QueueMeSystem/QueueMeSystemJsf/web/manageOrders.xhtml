@@ -54,11 +54,16 @@
                         </p:column>
 
 
-                        <p:column headerText="Details" >
+                        <p:column headerText="Details">
+                            <pre><h:outputText value="#{orderEntity.listItemName()}" style="text-align: center">
+                            </h:outputText></pre>
+                        </p:column>
+                        
+<!--                        <p:column headerText="Details" >
                             <p:commandButton update="formViewPendingOrder" oncomplete="PF('dialogViewPendingOrder').show()" icon="ui-icon-document" title="View">
                                 <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
                             </p:commandButton>
-                        </p:column>
+                        </p:column>-->
 
                         <p:column headerText="Fulfilment Status">     
                             <p:commandButton class="icon-only" icon="fa fa-check" actionListener="#{manageOrderManagedBean.editFulfilled}" update="@form">     
@@ -101,14 +106,19 @@
                                 <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
                             </h:outputText>
                         </p:column>
+                        
+                       <p:column headerText="Details">
+                           <pre> <h:outputText value="#{orderEntity.listItemName()}" style="text-align: center">
+                            </h:outputText></pre>
+                        </p:column>
 
 
-                        <p:column headerText="Details" >
+<!--                        <p:column headerText="Details" >
                             <p:commandButton update="formViewCompletedOrder" oncomplete="PF('dialogViewCompletedOrder').show()" icon="ui-icon-document" title="View">
                                 <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
                             </p:commandButton>
 
-                        </p:column>
+                        </p:column>-->
 
 
                     </p:dataTable>
@@ -121,113 +131,6 @@
                 </p:tab>
 
             </p:tabView>
-        </h:form>
-
-        <h:form id="formViewPendingOrder">
-
-            <p:dialog id="dialogViewPendingOrder" widgetVar="dialogViewPendingOrder" header="View Order" closable="true">
-
-
-                <p:panelGrid>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Order ID: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.orderId}" />
-                        </p:column>
-                    </p:row>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Date Time: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.dateTime}" >
-                            </h:outputText>
-                        </p:column>
-                    </p:row>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Earnings: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.totalEarnings}" >
-                                <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
-                            </h:outputText>
-                        </p:column>
-                    </p:row>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Items: " />
-                        </p:column>
-                        <p:column>
-                            <pre><h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.listItemName()}" /></pre>
-                        </p:column>
-                    </p:row>
-
-
-                </p:panelGrid>
-
-            </p:dialog>
-
-        </h:form>
-
-        <h:form id="formViewCompletedOrder">
-
-            <p:dialog id="dialogViewCompletedOrder" widgetVar="dialogViewCompletedOrder" header="View Order" closable="true">
-
-
-                <p:panelGrid>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Order ID: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.orderId}" />
-                        </p:column>
-                    </p:row>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Date Time: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.dateTime}" >
-
-                            </h:outputText>
-                        </p:column>
-                    </p:row>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Earnings: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.totalEarnings}" >
-                                <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
-                            </h:outputText>
-                        </p:column>
-                    </p:row>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Order Items: " />
-                        </p:column>
-                        <p:column>
-                            <pre><h:outputText value="#{manageOrderManagedBean.selectedOrderEntityToView.listItemName()}" /></pre>
-                        </p:column>
-                    </p:row>
-
-
-                </p:panelGrid>
-
-            </p:dialog>
-
         </h:form>
 
     </ui:define>
