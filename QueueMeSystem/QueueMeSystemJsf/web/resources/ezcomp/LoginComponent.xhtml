@@ -21,8 +21,8 @@
                     <p:growl autoUpdate="true" />
 
                     <p:outputLabel for="username" value="Username"/>&nbsp;
-                    <p:inputText id="username" value="#{indexManagedBean.username}" required="true" requiredMessage="Username is required">
-                        <f:validateLength minimum="4" />
+                    <p:inputText id="username" value="#{indexManagedBean.username}" required="true" requiredMessage="Username is required" validatorMessage="Username needs to be a valid email address!">
+                        <f:validateLength minimum="4"/><f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                     </p:inputText>
                     &nbsp;
                     <br/>
