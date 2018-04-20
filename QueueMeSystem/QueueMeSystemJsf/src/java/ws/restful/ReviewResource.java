@@ -25,6 +25,7 @@ import javax.xml.bind.JAXBElement;
 import util.exception.CustomerNotFoundException;
 import util.exception.VendorNotFoundException;
 import ws.restful.datamodel.ReviewReq;
+import ws.restful.datamodel.ReviewRsp;
 
 /**
  * REST Web Service
@@ -56,8 +57,11 @@ public class ReviewResource {
             VendorEntity vendorEntity = reviewReq.getVendorEntity();
             CustomerEntity customerEntity = reviewReq.getCustomerEntity();
             try {
-                reviewEntityControllerLocal.createReview(reviewEntity, customerEntity, vendorEntity);
-                return Response.status(Response.Status.OK).build();
+                ReviewEntity review = reviewEntityControllerLocal.createReview(reviewEntity, customerEntity, vendorEntity);
+                System.out.println(review.getVendorEntity().getRating());
+                Integer rating = review.getVendorEntity().getRating();
+                
+                return Response.status(Response.Status.OK).entity(""+rating).build();
             } catch (VendorNotFoundException | CustomerNotFoundException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
