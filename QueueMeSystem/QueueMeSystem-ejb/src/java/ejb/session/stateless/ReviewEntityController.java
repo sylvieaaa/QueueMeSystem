@@ -51,7 +51,7 @@ public class ReviewEntityController implements ReviewEntityControllerLocal {
 
         return reviewEntity;
     }
-
+    
     @Override
     public List<ReviewEntity> retrieveAllReviews(VendorEntity vendorEntity) {
         return vendorEntity.getReviewEntities();
@@ -66,13 +66,11 @@ public class ReviewEntityController implements ReviewEntityControllerLocal {
         } else {
             for (ReviewEntity review : vendorEntity.getReviewEntities()) {
                 score += review.getRating();
+                
             }
-            return (score / size);
+            vendorEntity.setRating(score/size);
+            return vendorEntity.getRating();
         }
-    }
-
-    public void updateReview(VendorEntity vendorEntity) {
-        VendorEntity vendor = em.find(VendorEntity.class, vendorEntity.getBusinessId());
     }
 
 }

@@ -56,8 +56,11 @@ public class ReviewResource {
             VendorEntity vendorEntity = reviewReq.getVendorEntity();
             CustomerEntity customerEntity = reviewReq.getCustomerEntity();
             try {
-                reviewEntityControllerLocal.createReview(reviewEntity, customerEntity, vendorEntity);
-                return Response.status(Response.Status.OK).build();
+                ReviewEntity review = reviewEntityControllerLocal.createReview(reviewEntity, customerEntity, vendorEntity);
+                System.out.println(review.getVendorEntity().getRating());
+                Integer rating = review.getVendorEntity().getRating();
+                
+                return Response.status(Response.Status.OK).entity(""+rating).build();
             } catch (VendorNotFoundException | CustomerNotFoundException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
