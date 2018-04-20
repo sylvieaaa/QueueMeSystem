@@ -152,9 +152,15 @@ public class OrderEntity implements Serializable {
         
         String lineItemMenuName = "";
         String listItemName = "";
+        String specialRequest = "";
         for (SaleTransactionLineItemEntity xyz: saleTransactionLineItemEntities) {
             lineItemMenuName = xyz.getMenuItemEntity().getMenuItemName();
-            listItemName += lineItemMenuName + ", " + "Quantity = " + xyz.getQuantity() + "\n";
+            specialRequest = xyz.getSpecialRequest();
+            if (specialRequest.equals("")) {
+                listItemName += lineItemMenuName + ", " + "Quantity: " + xyz.getQuantity() + "\n" + " Special Request: None." + "\n" + "\n";
+            } else {
+            listItemName += lineItemMenuName + ", " + "Quantity: " + xyz.getQuantity() + "\n" + " Special Request: "+ specialRequest + "\n" + "\n";
+            }
         }
         return listItemName;
     }
