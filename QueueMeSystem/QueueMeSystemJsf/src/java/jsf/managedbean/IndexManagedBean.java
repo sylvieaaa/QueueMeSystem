@@ -60,7 +60,6 @@ public class IndexManagedBean {
     public void postConstruct() {
         int port = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getLocalPort();
         serverName = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getServerName() + ":" + port;
-        
     }
 
     public void login(ActionEvent event) throws IOException {

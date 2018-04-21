@@ -87,12 +87,9 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
         Long foodCourtId;
         if (accountType.equals("Admin")) {
-            System.err.println(FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate"));
-            foodCourtId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("foodCourtIdToUpdate");
-            System.err.println("ENTERED HERE ADMIN");
+            foodCourtId = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("foodCourtIdToUpdate");
         } else {
             foodCourtId = ((FoodCourtEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity")).getBusinessId();
-            System.err.println("ENTERED HERE FOODCOURT");
         }
         try {
             currentFoodCourt = foodCourtEntityControllerLocal.retrieveFoodCourtById(foodCourtId);
@@ -102,7 +99,6 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
         try {
             vendorEntities = vendorEntityControllerLocal.retrieveAllVendorsByFoodCourtId(foodCourtId);
-//            System.err.println(vendorEntities.get(0).getVendorName() + " " + vendorEntities.get(0).getStartTime());
         } catch (FoodCourtNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No vendors found.", null));
         }
@@ -132,19 +128,15 @@ public class ManageFoodCourtManagedBean implements Serializable {
         }
 
         uploadFrom = (String) event.getComponent().getAttributes().get("uploadFrom");
-        System.err.println("WHAT IS THIS VALUE" + uploadFrom);
         String status = (String) event.getComponent().getAttributes().get("status");
         String newFilePath;
         try {
             String fileName = "";
             if (uploadFrom.equals("vendor")) {
                 newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "vendorLogos";
-                System.err.println("IT GOT HERE OSOOSOO");
             } else {
                 newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodCourtLogos";
             }
-            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
-            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
 
             file = new File(newFilePath);
             file = File.createTempFile("F0" + foodCourtEntity.getBusinessId(), ".png", file);
@@ -169,10 +161,8 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
             if (uploadFrom.equals("vendor")) {
                 if (status.equals("new")) {
-                    System.err.println("ERROR WHY IS IT HERE");
                     newVendorEntity.setPhotoURL(file.getName());
                 } else {
-                    System.err.println("HERE IT IS SUPPOSED TO BEEEEE");
                     vendorEntityToUpdate.setPhotoURL(file.getName());
                     vendorEntityControllerLocal.updateFileUrl(vendorEntityToUpdate.getBusinessId(), file.getName());
                 }
@@ -183,8 +173,6 @@ public class ManageFoodCourtManagedBean implements Serializable {
 
             fileOutputStream.close();
             inputStream.close();
-            System.err.println(file);
-            System.err.println(uploadFrom + " here here");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
@@ -205,7 +193,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
     public void createVendorPage(ActionEvent event) {
         try {
             Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("foodCourtIdToUpdate", foodCourtIdToView);
             FacesContext.getCurrentInstance().getExternalContext().redirect("createNewVendor.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -215,7 +203,7 @@ public class ManageFoodCourtManagedBean implements Serializable {
     public void viewVendor(ActionEvent event) {
         try {
             Long vendorIdToView = (Long) event.getComponent().getAttributes().get("viewVendorId");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("vendorIdToView", vendorIdToView);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("vendorIdToView", vendorIdToView);
             FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -225,7 +213,6 @@ public class ManageFoodCourtManagedBean implements Serializable {
     public void createNewVendor(ActionEvent event) throws IOException {
         try {
             Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
-            System.err.println("IHIHI" + foodCourtIdToView);
             FoodCourtEntity foodCourtEntity;
 
             try {
@@ -242,15 +229,13 @@ public class ManageFoodCourtManagedBean implements Serializable {
             file = null;
 
             try {
-                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("foodCourtIdToUpdate", foodCourtIdToView);
                 FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
             } catch (IOException ex) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
             }
 
         } catch (DuplicateEmailUserException err) {
-            System.err.println("IZZNOTUNIQUE");
-            System.err.println(err.toString());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error. Email is not Unique", null));
         }
     }
@@ -258,7 +243,6 @@ public class ManageFoodCourtManagedBean implements Serializable {
     public String onFlowProcess(FlowEvent event) {
         if (event.getNewStep().equals("addVendorForm")) {
             if (file == null) {
-                System.err.println("in file");
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload logo before moving to the next page.", ""));
                 return "vendorLogo";
             }

@@ -129,7 +129,7 @@ public class ManageMenuManagedBean implements Serializable {
 
         if (businessEntity instanceof AdminEntity) {
             try {
-                Long vendorId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("vendorId");
+                Long vendorId = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("vendorIdToView");
                 currentVendorEntity = vendorEntityControllerLocal.retrieveVendorById(vendorId);
             } catch (VendorNotFoundException ex) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -202,7 +202,6 @@ public class ManageMenuManagedBean implements Serializable {
     public void removeItemFromCategory(ActionEvent event) {
         MenuItemEntity menuItemToBeRemoved = (MenuItemEntity) event.getComponent().getAttributes().get("menuItem");
         selectedCategoryEntity.getMenuItemEntities().remove(menuItemToBeRemoved);
-        System.err.println(menuItemToBeRemoved);
         try {
             categoryEntityControllerLocal.removeMenuItem(selectedCategoryEntity, menuItemToBeRemoved);
 
@@ -220,14 +219,11 @@ public class ManageMenuManagedBean implements Serializable {
         if (!(businessEntity instanceof AdminEntity)) {
             currentVendorEntity = (VendorEntity) businessEntity;
         }
-        
+
         String from = (String) event.getComponent().getAttributes().get("from");
         try {
             String fileName = "";
             String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodPhotos";
-            System.out.println(newFilePath);
-            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
-            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
 
             file = new File(newFilePath);
             file = File.createTempFile("V0" + currentVendorEntity.getBusinessId(), ".png", file);
@@ -252,17 +248,13 @@ public class ManageMenuManagedBean implements Serializable {
 
             if (from.equals("edit")) {
                 menuItemEntityToEdit.setPhotoURL(file.getName());
-                System.err.println("INDEED EDIT.");
             } else if (from.equals("create")) {
                 newMenuItemEntity.setPhotoURL(file.getName());
             }
 
             fileOutputStream.close();
             inputStream.close();
-            System.err.println("ALL CLOSED :D");
-            System.err.println(file);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "File uploaded successfully", ""));
-            System.err.println("PRINT THIS");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "File upload error: " + ex.getMessage(), ""));
         }
@@ -315,7 +307,6 @@ public class ManageMenuManagedBean implements Serializable {
     public String onFlowProcess(FlowEvent event) {
         if (event.getNewStep().equals("itemConfirmation")) {
             if (file == null) {
-                System.err.println("in file");
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload photo before moving to the next page.", ""));
                 return "itemImage";
             }
@@ -336,8 +327,6 @@ public class ManageMenuManagedBean implements Serializable {
 //            menuItemEntitiesToDelete.add(menuItemEntity);
 //        }
 
-//        System.err.println("Added " + menuItemEntity.getMenuItemName() + " " + menuItemEntitiesToDelete.size());
-//        System.err.println("in ");
     }
 
     public void saveMenuItemEdit(ActionEvent event) {
@@ -345,10 +334,8 @@ public class ManageMenuManagedBean implements Serializable {
             menuItemEntityControllerLocal.updateMenuItem(menuItemEntityToEdit);
 //            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu item: " + menuItemEntityToEdit.getMenuItemName() + " updated successfully", ""));
         } catch (MenuItemNotFoundException ex) {
-            System.err.println("me");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error occurred while trying to retrieve the item details", ""));
         } catch (Exception ex) {
-            System.err.println("ex");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), ""));
         }
     }
@@ -392,7 +379,6 @@ public class ManageMenuManagedBean implements Serializable {
             int size = selectItems.size();
             for (int i = 0; i < size; i++) {
                 if (selectItems.get(i).getValue().equals(selectedMenuEntity)) {
-                    System.err.println("remove selected");
                     selectItems.remove(i);
                     break;
                 }
@@ -412,7 +398,6 @@ public class ManageMenuManagedBean implements Serializable {
             categoryEntityControllerLocal.createCategory(newCategoryEntity, selectedMenuEntity);
 
             if (selectedMenuEntity.getCategoryEntities().isEmpty()) {
-                System.err.println("empty");
                 selectedCategoryEntity = newCategoryEntity;
             }
             selectedMenuEntity.getCategoryEntities().add(newCategoryEntity);
@@ -481,8 +466,6 @@ public class ManageMenuManagedBean implements Serializable {
     public void dialogEditOpen(ActionEvent event) {
         menuItemEntityToEdit = (MenuItemEntity) event.getComponent().getAttributes().get("menuItemEntityToEdit");
 
-        System.err.println(menuItemEntityToEdit + " null");
-        System.err.println(menuItemEntityToEdit.getTagEntities());
         if (menuItemEntityToEdit.getTagEntities() == null || menuItemEntityToEdit.getTagEntities().isEmpty()) {
             for (TagEntity tagEntity : menuItemEntityToEdit.getTagEntities()) {
                 unSelectedtagEntities.remove(tagEntity);
@@ -514,7 +497,6 @@ public class ManageMenuManagedBean implements Serializable {
             newTagEntity = new TagEntity();
 //            context.addCallbackParam("isSuccess", true);
         } catch (TagAlreadyExistException ex) {
-            System.err.println("tex");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
 //            context.addCallbackParam("isSuccess", false);
         } catch (Exception ex) {
@@ -526,9 +508,7 @@ public class ManageMenuManagedBean implements Serializable {
     public void backToVendor(ActionEvent event) {
         try {
             Long vendorId = (Long) event.getComponent().getAttributes().get("vendorId");
-//            String from = (String) event.getComponent().getAttributes().get("from");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("vendorIdToView", vendorId);
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("from", from);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("vendorIdToView", vendorId);
             FacesContext.getCurrentInstance().getExternalContext().redirect("mainPage.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -600,12 +580,10 @@ public class ManageMenuManagedBean implements Serializable {
     }
 
     public HashMap<MenuItemEntity, Boolean> getMenuItemEntitiesToDelete() {
-        System.err.println("getting");
         return menuItemEntitiesToDelete;
     }
 
     public void setMenuItemEntitiesToDelete(HashMap<MenuItemEntity, Boolean> menuItemEntitiesToDelete) {
-        System.err.println("setting");
         this.menuItemEntitiesToDelete = menuItemEntitiesToDelete;
     }
 
@@ -614,7 +592,6 @@ public class ManageMenuManagedBean implements Serializable {
     }
 
     public void setMenuItemEntityToEdit(MenuItemEntity menuItemEntityToEdit) {
-        System.err.println(menuItemEntityToEdit.getTagEntities());
         this.menuItemEntityToEdit = menuItemEntityToEdit;
     }
 
@@ -651,7 +628,6 @@ public class ManageMenuManagedBean implements Serializable {
     }
 
 //    public Integer getActiveTab() {
-//        System.err.println(activeTab);
 //        return activeTab;
 //    }
 //

@@ -9,7 +9,6 @@ import ejb.session.stateless.VendorEntityControllerLocal;
 import entity.VendorEntity;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -41,19 +40,17 @@ public class MainPageManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         String accountType = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("accountType");
-        System.err.println(accountType);
         //temp variables
         Long vendorId = 0L;
         String from = "";
         if (accountType.equals("Admin")) {
-            vendorId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("vendorIdToView");
+            vendorId = (Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("vendorIdToView");
         } else {
             vendorId = ((VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity")).getBusinessId();
         }
 
-        System.err.println("THIS IS LINE 63");
         try {
-                currentVendor = vendorEntityControllerLocal.retrieveVendorById(vendorId);
+            currentVendor = vendorEntityControllerLocal.retrieveVendorById(vendorId);
         } catch (VendorNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
         }
@@ -63,7 +60,7 @@ public class MainPageManagedBean implements Serializable {
     public void backToFoodCourt(ActionEvent event) {
         try {
             Long foodCourtIdToView = (Long) event.getComponent().getAttributes().get("foodCourtId");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("foodCourtIdToUpdate", foodCourtIdToView);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("foodCourtIdToUpdate", foodCourtIdToView);
             FacesContext.getCurrentInstance().getExternalContext().redirect("foodCourtMainPage.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
@@ -73,7 +70,7 @@ public class MainPageManagedBean implements Serializable {
     public void manageMenu(ActionEvent event) {
         try {
             Long vendorIdToManage = (Long) event.getComponent().getAttributes().get("vendorId");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("vendorId", vendorIdToManage);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("vendorId", vendorIdToManage);
             FacesContext.getCurrentInstance().getExternalContext().redirect("manageMenu.xhtml");
         } catch (IOException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
