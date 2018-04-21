@@ -31,6 +31,7 @@ import util.exception.BusinessEntityNotFoundException;
 import util.exception.CreateCustomerException;
 import util.exception.InvalidLoginCredentialException;
 import ws.restful.datamodel.CreateCustomerReq;
+import ws.restful.datamodel.CustomerLoginReq;
 import ws.restful.datamodel.CustomerRsp;
 import ws.restful.datamodel.ErrorRsp;
 import ws.restful.datamodel.UpdateCustomerReq;
@@ -61,32 +62,43 @@ public class CustomerResource {
     }
 
     @Path("login")
-    @GET
+    @POST
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response customerLogin(@QueryParam("username") String username, @QueryParam("password") String password) {
-        try {
-            //TODO return proper representation object
-            BusinessEntity businessEntity = businessEntityControllerLocal.login(username, password);
-            if (businessEntity instanceof CustomerEntity) {
+    public Response customerLogin(JAXBElement<CustomerLoginReq> jaxbeCustomerLoginReq) {
 
-                CustomerEntity customerEntity = (CustomerEntity) businessEntity;
-                customerEntity.getCreditCardEntities().clear();
-                customerEntity.getOrderEntities().clear();
-                customerEntity.getReviewEntities().clear();
-                customerEntity.getSaleTransactionEntities().clear();
-                
-                customerEntity.setPassword(null);
+        //TODO return proper representation object
+        if (jaxbeCustomerLoginReq != null || jaxbeCustomerLoginReq.getValue() != null) {
+            CustomerLoginReq customerLoginReq = jaxbeCustomerLoginReq.getValue();
+            String username = customerLoginReq.getUsername();
+            String password = customerLoginReq.getPassword();
+            try {
+                BusinessEntity businessEntity = businessEntityControllerLocal.login(username, password);
 
-                CustomerRsp customerLoginRsp = new CustomerRsp(customerEntity);
+                if (businessEntity instanceof CustomerEntity) {
+                    CustomerEntity customerEntity = (CustomerEntity) businessEntity;
+                    customerEntity.getCreditCardEntities().clear();
+                    customerEntity.getOrderEntities().clear();
+                    customerEntity.getReviewEntities().clear();
+                    customerEntity.getSaleTransactionEntities().clear();
 
-                return Response.status(Status.OK).entity(customerLoginRsp).build();
-            } else {
-                return Response.status(Status.UNAUTHORIZED).entity("Create a customer account to make purchase!").build();
+                    customerEntity.setPassword(null);
+
+                    CustomerRsp customerLoginRsp = new CustomerRsp(customerEntity);
+
+                    return Response.status(Status.OK).entity(customerLoginRsp).build();
+
+                } else {
+                    return Response.status(Status.UNAUTHORIZED).entity("Create a customer account to make purchase!").build();
+                }
+
+            } catch (InvalidLoginCredentialException ex) {
+                return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-        } catch (InvalidLoginCredentialException ex) {
-            return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+        } else {
+            return Response.status(Status.EXPECTATION_FAILED).entity("Null values not supported").build();
         }
+
     }
 
     @Path("resetPassword")
@@ -99,7 +111,7 @@ public class CustomerResource {
             emailControllerLocal.forgetPasswordEmail(username);
             return Response.status(Status.OK).build();
         } catch (BusinessEntityNotFoundException ex) {
-            return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            return Response.status(Status.EXPECTATION_FAILED).entity(ex.getMessage()).build();
         }
     }
 
@@ -119,7 +131,7 @@ public class CustomerResource {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
             }
         } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+            return Response.status(Status.EXPECTATION_FAILED).entity("Bad Request").build();
         }
     }
 
@@ -152,10 +164,9 @@ public class CustomerResource {
         } else {
             ErrorRsp errorRsp = new ErrorRsp("Invalid create customer request");
 
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Status.EXPECTATION_FAILED).entity(errorRsp).build();
         }
     }
-    
 
     @Path("changePassword")
     @POST
@@ -172,10 +183,10 @@ public class CustomerResource {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Exception Ex").build();
             }
         } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Bad Request").build();
+            return Response.status(Status.EXPECTATION_FAILED).entity("Bad Request").build();
         }
     }
-    
+
     @Path("updateToken")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -225,4 +236,3 @@ public class CustomerResource {
         }
     }
 }
-
