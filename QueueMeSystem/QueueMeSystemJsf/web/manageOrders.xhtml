@@ -16,8 +16,6 @@
         <p style="font-size: xx-small"></p>
         <p:commandButton value="Back" icon="fa fa-arrow-left" action="mainPage.xhtml" />
 
-
-
         <style>
             .ui-datatable-data {
                 text-align: center;
@@ -27,14 +25,11 @@
         <h2 style="text-align: center">Order List</h2>
         <br/>
 
-
         <h:form id="formAllOrders">
-
             <p:messages id="messages" redisplay="false" closable="true"/>
             <p:poll interval="10" listener="#{manageOrderManagedBean.retrieveOrders()}" update="@form"/>
             <p:tabView>
                 <p:tab title="Orders (Pending)">
-
                     <p:dataTable id="dataTableAllPendingOrders" widgetVar="dataTableAllPendingOrders" value="#{manageOrderManagedBean.pendingOrderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"    
                                  rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
@@ -53,17 +48,10 @@
                             </h:outputText>
                         </p:column>
 
-
                         <p:column headerText="Details">
                             <pre><h:outputText value="#{orderEntity.listItemName()}" style="text-align: center">
                             </h:outputText></pre>
                         </p:column>
-                        
-<!--                        <p:column headerText="Details" >
-                            <p:commandButton update="formViewPendingOrder" oncomplete="PF('dialogViewPendingOrder').show()" icon="ui-icon-document" title="View">
-                                <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
-                            </p:commandButton>
-                        </p:column>-->
 
                         <p:column headerText="Fulfilment Status">     
                             <p:commandButton class="icon-only" icon="fa fa-check" actionListener="#{manageOrderManagedBean.editFulfilled}" update="@form">     
@@ -71,26 +59,19 @@
                             </p:commandButton>
                         </p:column>
 
-
                     </p:dataTable>
 
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                     </p:confirmDialog>
-
                 </p:tab>
 
 
                 <!-- 2nd Tab --> 
-
                 <p:tab title="Orders (Completed)">
-
                     <p:dataTable id="dataTableAllCompletedOrders" widgetVar="dataTableAllCompletedOrders" value="#{manageOrderManagedBean.completedOrderEntities}" var="orderEntity" rowKey="#{orderEntity.orderId}" rowIndexVar="row"
-
                                  rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
-
-
 
                         <p:column headerText="Order ID">
                             <h:outputText value="#{orderEntity.orderId}" />
@@ -106,20 +87,11 @@
                                 <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
                             </h:outputText>
                         </p:column>
-                        
-                       <p:column headerText="Details">
-                           <pre> <h:outputText value="#{orderEntity.listItemName()}" style="text-align: center">
+
+                        <p:column headerText="Details">
+                            <pre> <h:outputText value="#{orderEntity.listItemName()}" style="text-align: center">
                             </h:outputText></pre>
                         </p:column>
-
-
-<!--                        <p:column headerText="Details" >
-                            <p:commandButton update="formViewCompletedOrder" oncomplete="PF('dialogViewCompletedOrder').show()" icon="ui-icon-document" title="View">
-                                <f:setPropertyActionListener value="#{orderEntity}" target="#{manageOrderManagedBean.selectedOrderEntityToView}" />
-                            </p:commandButton>
-
-                        </p:column>-->
-
 
                     </p:dataTable>
 
@@ -127,9 +99,7 @@
                         <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                     </p:confirmDialog>
-
                 </p:tab>
-
             </p:tabView>
         </h:form>
 

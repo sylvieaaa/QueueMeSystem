@@ -69,7 +69,6 @@ public class AddOrderManagedBean implements Serializable {
 
     public void addMenuItem() {
         checkOutManagedBean.addItem(menuItemEntityToAdd, addMenuItemSpecialReq, addMenuItemQty);
-        System.err.println(checkOutManagedBean.getSaleTransactionLineItemEntities().size());
         addMenuItemQty = 1;
         addMenuItemSpecialReq = "";
     }
@@ -82,7 +81,6 @@ public class AddOrderManagedBean implements Serializable {
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
-        System.err.println(oldValue + " " + newValue);
         if (newValue != null && !newValue.equals(oldValue)) {
             SaleTransactionLineItemEntity saleTransactionLineItemEntity = (SaleTransactionLineItemEntity) event.getComponent().getAttributes().get("lineItem");
 

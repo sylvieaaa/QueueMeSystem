@@ -104,7 +104,6 @@
                                         </p:column>
                                         <p:column>
                                             <p:inputText id="username" value="#{viewAllFoodCourtsManagedBean.newFoodCourt.username}" required="true" validatorMessage="Username must be in an email format!">
-                                                <!--                                        <f:validateLength minimum="4" />-->
                                                 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" for="username" />
                                             </p:inputText>
                                         </p:column>
@@ -198,9 +197,6 @@
                         <p:commandButton update="formViewFoodCourt" oncomplete="PF('dialogViewFoodCourt').show()" icon="ui-icon-document" title="View">
                             <f:setPropertyActionListener value="#{foodCourt}" target="#{viewAllFoodCourtsManagedBean.foodCourtToView}" />
                         </p:commandButton>
-<!--                        <p:commandButton update="formUpdateFoodCourt" oncomplete="PF('dialogUpdateFoodCourt').show()" icon="ui-icon-pencil" title="Update">
-                            <f:setPropertyActionListener value="#/{foodCourt}" target="#/{viewAllFoodCourtsManagedBean.foodCourtToUpdate}" />
-                        </p:commandButton>-->
                         <p:commandButton update="formDisableFoodCourt" oncomplete="PF('dialogDisableFoodCourt').show()" icon="ui-icon-trash" title="Disable">
                             <f:setPropertyActionListener value="#{foodCourt}" target="#{viewAllFoodCourtsManagedBean.foodCourtToDisable}" />
                         </p:commandButton>
@@ -288,107 +284,6 @@
                 </p:dialog>
             </h:form>
 
-<!--            <h:form id="formUpdateFoodCourt">
-                <p:dialog id="dialogUpdateFoodCourt" widgetVar="dialogUpdateFoodCourt" header="Update Food Court" closable="true">
-                    <p:messages id="messagesUpdateFoodCourt" redisplay="false" />
-                    <p:panelGrid>
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="foodCourtLogo" value="Logo: " />
-                            </p:column>
-                            <p:column>
-                                <p:graphicImage id="foodCourtLogo"  value="http://localhost:8080/queueme-uploads/foodCourtLogos/#/{viewAllFoodCourtsManagedBean.foodCourtToUpdate.fileURL}" width="150px" height="78px"/>
-                            </p:column>
-                            <p:column>
-                                <p:commandButton value="Change Logo" oncomplete="PF('dialogUploadPhoto').show();"/>
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="name" value="Name: " />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="name" value="#/{viewAllFoodCourtsManagedBean.foodCourtToUpdate.name}" required="true" requiredMessage="Name is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="name" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="address" value="Address: " />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="address" value="#/{viewAllFoodCourtsManagedBean.foodCourtToUpdate.address}" required="true" requiredMessage="Address is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="address" />
-                            </p:column>
-                        </p:row>
-
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="postal" value="Postal: " />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="postal" value="#/{viewAllFoodCourtsManagedBean.foodCourtToUpdate.postalCode}" required="true" requiredMessage="Postal is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="postal" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="description" value="Description: " />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="description" value="#/{viewAllFoodCourtsManagedBean.foodCourtToUpdate.description}" required="true" requiredMessage="Description is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="description" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="startTime" value="Opening Hours: " />
-                            </p:column>
-                            <p:column>
-                                <p:calendar id="startTime" value="#/{viewAllFoodCourtsManagedBean.foodCourtToUpdate.startTime}" pattern="HH:mm:ss" timeOnly="true" requiredMessage="Start Time required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="startTime" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="endTime" value="Closing Hours: " />
-                            </p:column>
-                            <p:column>
-                                <p:calendar id="endTime" value="#/{viewAllFoodCourtsManagedBean.foodCourtToUpdate.endTime}" pattern="HH:mm:ss" timeOnly="true" requiredMessage="End Time required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="endTime" />
-                            </p:column>
-                        </p:row>
-
-
-
-                        <p:row>
-                            <p:column colspan="3" style="text-align: center" >
-                                <p:commandButton value="Update Food Court" update="@form formAllFoodCourts:allFoodCourts dialogUploadPhoto" actionListener="#/{viewAllFoodCourtsManagedBean.updateFoodCourt}" oncomplete="PF('dialogUpdateFoodCourt').hide();" />
-                            </p:column>
-                        </p:row>
-
-                    </p:panelGrid>
-                </p:dialog>
-            </h:form>-->
-
             <h:form id="formDisableFoodCourt">
                 <p:dialog id="dialogDisableFoodCourt" widgetVar="dialogDisableFoodCourt" header="Disable Food Court" closable="true">
                     <p:messages id="messagesDisableFoodCourt" redisplay="false" />
@@ -399,26 +294,6 @@
                 </p:dialog>
             </h:form>
 
-<!--            <p:dialog id="dialogUploadPhoto" appendTo="@(body)" modal="true" responsive="true" closeOnEscape="true" draggable="false" widgetVar="dialogUploadPhoto" header="Upload Photo" closable="true">
-                <h:form>
-                    <p:panelGrid>
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="fileUploadPhoto" value="Upload photo: " />
-                            </p:column>
-                            <p:column>
-                                <p:fileUpload id="fileUploadPhoto" widgetVar="uploader" mode="advanced" dragDropSupport="true" update="formUpdateFoodCourt:foodCourtLogo" oncomplete="PF('dialogUploadPhoto').hide()" skinSimple="true" fileUploadListener="#/{viewAllFoodCourtsManagedBean.handleFileUpload}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
-                                    <f:attribute name="from" value="updateFoodCourt" />
-                                </p:fileUpload>
-                            </p:column>
-                            <p:column>
-                                <p:message for="fileUploadPhoto" />
-                            </p:column>
-                        </p:row>
-                    </p:panelGrid>
-
-                </h:form>
-            </p:dialog>-->
         </ui:define>
     </div>
     <div class="ui-g-12 ui-md-6 ui-lg-4"></div>

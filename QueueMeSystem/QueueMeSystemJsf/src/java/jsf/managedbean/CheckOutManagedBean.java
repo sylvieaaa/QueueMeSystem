@@ -174,7 +174,6 @@ public class CheckOutManagedBean implements Serializable {
 //            JasperReport report = JasperCompileManager.compileReport(input);
             JasperPrint print = JasperFillManager.fillReport(input, map, conn);
             JasperExportManager.exportReportToHtmlFile(print, newFilePath);
-            System.err.println("done");
             File outputFile = new File(newFilePath);
             try {
                 emailControllerLocal.sendReceipt(outputFile, new CustomerEntity());

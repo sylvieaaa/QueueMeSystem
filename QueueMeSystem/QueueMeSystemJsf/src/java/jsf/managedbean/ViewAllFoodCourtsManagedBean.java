@@ -15,8 +15,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -28,7 +26,6 @@ import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
-import util.exception.DeleteFoodCourtException;
 import util.exception.DuplicateEmailUserException;
 import util.exception.FoodCourtNotFoundException;
 
@@ -97,9 +94,6 @@ public class ViewAllFoodCourtsManagedBean implements Serializable {
         try {
             String fileName = "";
             String newFilePath = System.getProperty("user.dir").replaceAll("config", "docroot").replaceFirst("docroot", "config") + System.getProperty("file.separator") + "queueme-uploads" + System.getProperty("file.separator") + "foodCourtLogos";
-
-            System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
-            System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
 
             file = new File(newFilePath);
             file = File.createTempFile("V0" + fc.getBusinessId(), ".png", file);

@@ -40,7 +40,6 @@ public class MainPageManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         String accountType = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("accountType");
-        System.err.println(accountType);
         //temp variables
         Long vendorId = 0L;
         String from = "";
@@ -50,9 +49,8 @@ public class MainPageManagedBean implements Serializable {
             vendorId = ((VendorEntity) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("businessEntity")).getBusinessId();
         }
 
-        System.err.println("THIS IS LINE 63");
         try {
-                currentVendor = vendorEntityControllerLocal.retrieveVendorById(vendorId);
+            currentVendor = vendorEntityControllerLocal.retrieveVendorById(vendorId);
         } catch (VendorNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
         }
