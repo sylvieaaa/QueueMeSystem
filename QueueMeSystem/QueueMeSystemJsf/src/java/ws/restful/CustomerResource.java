@@ -63,7 +63,7 @@ public class CustomerResource {
 
     @Path("login")
     @POST
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response customerLogin(JAXBElement<CustomerLoginReq> jaxbeCustomerLoginReq) {
 
